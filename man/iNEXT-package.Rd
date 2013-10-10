@@ -3,10 +3,10 @@
 \alias{iNEXT}
 \docType{package}
 \title{
-iNterpolation and EXTrapolation for speecies diversity
+iNterpolation and EXTrapolation for species diversity
 }
 \description{
-iNterpolation and EXTrapolation for speecies diversity: a unified approach for both individual-based (abundance) data and sample-based (incidence) data
+iNterpolation and EXTrapolation for species diversity: a unified approach for both individual-based (abundance) data and sample-based (incidence) data
 }
 \details{
 \tabular{ll}{

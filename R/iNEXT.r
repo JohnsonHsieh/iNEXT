@@ -1,15 +1,55 @@
+summary.Ind <- function(dat){
+  Fun <- function(x){
+    n <- sum(x)
+    fk <- sapply(1:10, function(k) sum(x==k))
+    f1 <- fk[1]
+    f2 <- fk[2]
+    Sobs <- sum(x>0)
+    f0hat <- (n-1) / n *ifelse(f2>0,  f1^2/(2*f2), f1*(f1-1)/2)
+    Shat <- Sobs + round(f0hat, 2)
+    Chat <- round(1 - f1/n*(n-1)*f1/((n-1)*f1+2*max(f2,0)),4)
+    c(n, Sobs, Shat, Chat, fk)
+  }
+  out <- t(apply(as.matrix(dat), 2, Fun))
+  colnames(out) <- c("n", "S.obs", "S.hat", "C.hat", paste("f",1:10, sep=""))
+  as.data.frame(out, row.names="")
+}
+
+
+summary.Sam <- function(dat){
+  Fun <- function(x){
+    nT <- x[1]
+    x <- x[-1]
+    U <- sum(x)
+    Qk <- sapply(1:10, function(k) sum(x==k))
+    Q1 <- Qk[1]
+    Q2 <- Qk[2]
+    Sobs <- sum(x>0)
+    f0hat <- (nT-1)/nT*ifelse(Q2>0, Q1^2/(2*Q2), Q1*(Q1-1)/2)
+    Shat <- Sobs + round(f0hat, 2)
+    Chat <- round(1 - Q1/U*(nT-1)*Q1/((nT-1)*Q1+2*max(Q2,0)),4)
+    out <- c(nT, U, Sobs, Shat, Chat, Qk)
+    #colnames(out) <- c("T", "U", "Sobs", "Shat", "Chat", paste("Q",1:10, sep=""))
+    out
+  }
+  out <- t(apply(as.matrix(dat), 2, Fun))
+  colnames(out) <- c("T", "U", "S.obs", "S.hat", "C.hat", paste("Q",1:10, sep=""))
+  as.data.frame(out)
+}
+
+
 #
 #
 ###########################################
-#' Draw confidence band plot
-#' 
-#' \code{conf.reg} uses polygon to draw a confidence band plot
-#' 
-#' @param x a vector of estimator
-#' @param LCL a vector of lower bound
-#' @param UCL a vector of upwer bound
-#' @param ... further arguments to be passed to \code{polygon}
-#' @return a polygon plot
+# Draw confidence band plot
+# 
+# \code{conf.reg} uses polygon to draw a confidence band plot
+# 
+# @param x a vector of estimator
+# @param LCL a vector of lower bound
+# @param UCL a vector of upwer bound
+# @param ... further arguments to be passed to \code{polygon}
+# @return a polygon plot
 conf.reg=function(x,LCL,UCL,...) {
   x.sort <- order(x)
   x <- x[x.sort]
@@ -85,14 +125,14 @@ EstiBootComm.Sam <- function(Spec)
 #
 #
 ###########################################
-#' iNterpolation and EXTrapolation of abundance-based Hill number
-#' 
-#' \code{Dqhat.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
-#' 
-#' @param x a vector of species abundances
-#' @param q a numerical value of the order of Hill number
-#' @param m a integer vector of rarefaction/extrapolation sample size
-#' @return a vector of estimated interpolation and extrapolation function of Hill number with order q
+# iNterpolation and EXTrapolation of abundance-based Hill number
+# 
+# \code{Dqhat.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
+# 
+# @param x a vector of species abundances
+# @param q a numerical value of the order of Hill number
+# @param m a integer vector of rarefaction/extrapolation sample size
+# @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 
 Dqhat.Ind <- function(x, q, m){
 	x <- x[x > 0]
@@ -189,14 +229,14 @@ Dqhat.Ind <- function(x, q, m){
 #
 #
 ###########################################
-#' iNterpolation and EXTrapolation of incidence-based Hill number
-#' 
-#' \code{Dqhat.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number
-#' 
-#' @param y a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
-#' @param q a numerical value of the order of Hill number
-#' @param t a integer vector of rarefaction/extrapolation sample size
-#' @return a vector of estimated interpolation and extrapolation function of Hill number with order q
+# iNterpolation and EXTrapolation of incidence-based Hill number
+# 
+# \code{Dqhat.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number
+# 
+# @param y a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
+# @param q a numerical value of the order of Hill number
+# @param t a integer vector of rarefaction/extrapolation sample size
+# @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 Dqhat.Sam <- function(y, q, t){
 
 	nT <- y[1]
@@ -288,13 +328,13 @@ Dqhat.Sam <- function(y, q, t){
 #
 #
 ###############################################
-#' Abundance-based sample coverage
-#' 
-#' \code{Chat.Ind} Estimation of abundance-based sample coverage function
-#' 
-#' @param x a vector of species abundances
-#' @param m a integer vector of rarefaction/extrapolation sample size
-#' @return a vector of estimated sample coverage function
+# Abundance-based sample coverage
+# 
+# \code{Chat.Ind} Estimation of abundance-based sample coverage function
+# 
+# @param x a vector of species abundances
+# @param m a integer vector of rarefaction/extrapolation sample size
+# @return a vector of estimated sample coverage function
 Chat.Ind <- function(x, m){
 	x <- x[x>0]
 	n <- sum(x)
@@ -315,13 +355,13 @@ Chat.Ind <- function(x, m){
 #
 #
 ###############################################
-#' Incidence-based sample coverage
-#' 
-#' \code{Chat.Sam} Estimation of incidence-based sample coverage function
-#' 
-#' @param x a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
-#' @param t a integer vector of rarefaction/extrapolation sample size
-#' @return a vector of estimated sample coverage function
+# Incidence-based sample coverage
+# 
+# \code{Chat.Sam} Estimation of incidence-based sample coverage function
+# 
+# @param x a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
+# @param t a integer vector of rarefaction/extrapolation sample size
+# @return a vector of estimated sample coverage function
 Chat.Sam <- function(x, t){
 	nT <- x[1]
 	y <- x[-1]
@@ -398,12 +438,14 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), Knots=40, se=TRUE
 		out <- cbind("m"=m, "qD"=Dq.hat, "SC"=C.hat)
 	}
 	out <- data.frame(out)
+  
+  
 	if(max(m) > n){
 		out.int <- out[m<=n,]
 		out.ext <- out[m>n,]
-		return(list("interpolation"=out.int, "extrapolation"=out.ext))
+		return(list("summary"=summary.Ind(Spec), "interpolation"=out.int, "extrapolation"=out.ext))
 	} else {
-		return(list("interpolation"=out))
+		return(list("summary"=summary.Ind(Spec), "interpolation"=out))
 	}
 }
 
@@ -471,9 +513,9 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), Knots=40, se=TRUE
 	if(max(t) > nT){
 		out.int <- out[t<=nT,]
 		out.ext <- out[t>nT,]
-		return(list("interpolation"=out.int, "extrapolation"=out.ext))
+		return(list("summary"=summary.Sam(Spec), "interpolation"=out.int, "extrapolation"=out.ext))
 	} else {
-		return(list("interpolation"=out))
+		return(list("summary"=summary.Sam(Spec), "interpolation"=out))
 	}
 }
 
