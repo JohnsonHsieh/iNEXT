@@ -531,7 +531,7 @@ N2D<- function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
     if(is.null(ylim)){ylim=range(out$interpolation[,2],out$extrapolation[,2])}
     if(method=="plot")
     {
-      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
     }
   }
   
@@ -543,24 +543,24 @@ N2D<- function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
     if(is.null(ylim)){ylim=range(Mat[,3],Mat[,4])}
     if(method=="plot")
     {
-      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
     }
     conf.reg(Mat[,1], Mat$qD.95.LCL, Mat$qD.95.UCL, col=adjustcolor(col, 0.25), border=NA)  
-    
+
   }
   if(is.null(out$summary[["T"]]))
   {
-    if(out$summary[1]<=xlim[2])
-    {
-      points(out$summary[1],out$interpolation$qD[out$interpolation$m==out$summary$n],lwd=5, col=col, pch=pch)
-    }
+     if(out$summary[1]<=xlim[2])
+     {
+        points(out$summary[1],out$interpolation$qD[out$interpolation$m==out$summary$n],lwd=5, col=col, pch=pch)
+     }
   }
   if(is.null(out$summary[["n"]]))
   {
-    if(out$summary[1]<=xlim[2])
-    {
-      points(out$summary[1],out$interpolation$qD[out$interpolation$t==out$summary$T],lwd=5, col=col, pch=pch)
-    }
+     if(out$summary[1]<=xlim[2])
+     {
+        points(out$summary[1],out$interpolation$qD[out$interpolation$t==out$summary$T],lwd=5, col=col, pch=pch)
+     }
   }
   lines(out$interpolation[,1],out$interpolation[,2], lty=1, lwd=2, col=col)
   lines(out$extrapolation[,1],out$extrapolation[,2], lty=2, lwd=2, col=col)
@@ -576,7 +576,7 @@ N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
     }
     lines(out$interpolation[,1],out$interpolation[,3], lty=1, lwd=2, col=col)
-    lines(out$extrapolation[,1],out$extrapolation[,3], lty=2, lwd=2, col=col)  
+    lines(out$extrapolation[,1],out$extrapolation[,3], lty=2, lwd=2, col=col)	
   }
   
   else
@@ -594,7 +594,7 @@ N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
   }
   if(out$summary[1]<=xlim[2])
   {
-    points(out$summary[1],out$summary$C.hat,lwd=5, col=col, pch=pch)
+     points(out$summary[1],out$summary$C.hat,lwd=5, col=col, pch=pch)
   }
   
 }
@@ -628,7 +628,7 @@ SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=N
   }
   if(out$summary$C.hat<=xlim[2])
   {
-    points(out$summary$C.hat,out$interpolation$qD[out$interpolation[,1]==out$summary[1]],lwd=5, col=col, pch=pch)
+     points(out$summary$C.hat,out$interpolation$qD[out$interpolation[,1]==out$summary[1,1]],lwd=5, col=col, pch=pch)
   }
 }
 
