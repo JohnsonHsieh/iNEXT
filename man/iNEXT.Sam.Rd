@@ -1,6 +1,6 @@
 \name{iNEXT.Sam}
 \alias{iNEXT.Sam}
-\title{iNterpolation and EXTrapolation of abundance-based Hill number}
+\title{iNterpolation and EXTrapolation of incidence-based Hill number}
 \usage{
   iNEXT.Sam(Spec, t = NULL, q = 0,
     endpoint = 2 * max(Spec), Knots = 40, se = TRUE,

@@ -456,7 +456,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), Knots=40, se=TRUE
 #
 #
 ###############################################
-#' iNterpolation and EXTrapolation of abundance-based Hill number
+#' iNterpolation and EXTrapolation of incidence-based Hill number
 #' 
 #' \code{iNEXT.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number with order q
 #' 
