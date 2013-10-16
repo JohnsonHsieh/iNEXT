@@ -11,9 +11,10 @@ The user provides a vector of abundances of individual species (abundance data) 
 
 Start R(studio) and copy-and-paste the commands below:
 
-    install.packages('devtools')
+    #install.packages('devtools')
     library(devtools)
     install_github('iNEXT','JohnsonHsieh')
+    library(iNEXT)
 
 ### License
 The iNEXT package is licensed under the GPLv2. See the files listed below for additional details.
