@@ -443,10 +443,12 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), Knots=40, se=TRUE
 	if(max(m) > n){
 		out.int <- out[m<=n,]
 		out.ext <- out[m>n,]
-		return(list("summary"=summary.Ind(Spec), "interpolation"=out.int, "extrapolation"=out.ext))
+		z <- list("summary"=summary.Ind(Spec), "order"=q, "interpolation"=out.int, "extrapolation"=out.ext)
 	} else {
-		return(list("summary"=summary.Ind(Spec), "interpolation"=out))
+		z <- list("summary"=summary.Ind(Spec), "order"=q, "interpolation"=out)
 	}
+	class(z) <- c("iNEXT")      
+	return(z)
 }
 
 
@@ -513,12 +515,201 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), Knots=40, se=TRUE
 	if(max(t) > nT){
 		out.int <- out[t<=nT,]
 		out.ext <- out[t>nT,]
-		return(list("summary"=summary.Sam(Spec), "interpolation"=out.int, "extrapolation"=out.ext))
+    z <- list("summary"=summary.Sam(Spec), "order"=q, "interpolation"=out.int, "extrapolation"=out.ext)
 	} else {
-		return(list("summary"=summary.Sam(Spec), "interpolation"=out))
+		z <- list("summary"=summary.Sam(Spec), "order"=q, "interpolation"=out)
 	}
+	class(z) <- c("iNEXT")      
+	return(z)
 }
 
+N2D<- function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NULL, main=paste("q =", out$order), pch=19,...)
+{
+  if(is.null(xlim)){xlim=range(out$interpolation[,1],out$extrapolation[,1])}
+  if(ncol(out$interpolation) < 4)
+  {
+    if(is.null(ylim)){ylim=range(out$interpolation[,2],out$extrapolation[,2])}
+    if(method=="plot")
+    {
+      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+    }
+  }
+  
+  else
+  {
+    Inte <- as.data.frame(out$interpolation)
+    Extr <- as.data.frame(out$extrapolation)
+    Mat <- rbind(Inte, Extr)
+    if(is.null(ylim)){ylim=range(Mat[,3],Mat[,4])}
+    if(method=="plot")
+    {
+      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+    }
+    conf.reg(Mat[,1], Mat$qD.95.LCL, Mat$qD.95.UCL, col=adjustcolor(col, 0.25), border=NA)  
+    
+  }
+  if(is.null(out$summary[["T"]]))
+  {
+    if(out$summary[1]<=xlim[2])
+    {
+      points(out$summary[1],out$interpolation$qD[out$interpolation$m==out$summary$n],lwd=5, col=col, pch=pch)
+    }
+  }
+  if(is.null(out$summary[["n"]]))
+  {
+    if(out$summary[1]<=xlim[2])
+    {
+      points(out$summary[1],out$interpolation$qD[out$interpolation$t==out$summary$T],lwd=5, col=col, pch=pch)
+    }
+  }
+  lines(out$interpolation[,1],out$interpolation[,2], lty=1, lwd=2, col=col)
+  lines(out$extrapolation[,1],out$extrapolation[,2], lty=2, lwd=2, col=col)
+}
+
+N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NULL, main="", pch=19, ...)
+{
+  if(is.null(xlim)){xlim=range(out$interpolation[,1],out$extrapolation[,1])}
+  if(ncol(out$interpolation) < 4)
+  {
+    if(is.null(ylim)){ylim=range(out$interpolation[,3],out$extrapolation[,3])}
+    if(method=="plot"){
+      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+    }
+    lines(out$interpolation[,1],out$interpolation[,3], lty=1, lwd=2, col=col)
+    lines(out$extrapolation[,1],out$extrapolation[,3], lty=2, lwd=2, col=col)  
+  }
+  
+  else
+  {
+    Inte <- as.data.frame(out$interpolation)
+    Extr <- as.data.frame(out$extrapolation)
+    Mat <- rbind(Inte, Extr)
+    if(is.null(ylim)){ylim=range(Mat[,6],Mat[,7])}
+    if(method=="plot"){
+      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+    }
+    conf.reg(Mat[,1], Mat$SC.95.LCL, Mat$SC.95.UCL, col=adjustcolor(col, 0.25), border=NA)
+    lines(out$interpolation[,1],out$interpolation[,5], lty=1, lwd=2, col=col)
+    lines(out$extrapolation[,1],out$extrapolation[,5], lty=2, lwd=2, col=col)
+  }
+  if(out$summary[1]<=xlim[2])
+  {
+    points(out$summary[1],out$summary$C.hat,lwd=5, col=col, pch=pch)
+  }
+  
+}
+
+SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=NULL, main=paste("q =", out$order), pch=19,...)
+{
+  if(ncol(out$interpolation) < 4)
+  {
+    if(is.null(xlim)){xlim=range(out$interpolation[,3],out$extrapolation[,3])}
+    if(is.null(ylim)){ylim=range(out$interpolation[,2],out$extrapolation[,2])}
+    if(method=="plot"){
+      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+    }
+    lines(out$interpolation[,3],out$interpolation[,2], lty=1, lwd=2, col=col)
+    lines(out$extrapolation[,3],out$extrapolation[,2], lty=2, lwd=2, col=col) 
+  }
+  
+  else
+  {
+    if(is.null(xlim)){ xlim=range(out$interpolation[,5],out$extrapolation[,5]) }
+    Inte <- as.data.frame(out$interpolation)
+    Extr <- as.data.frame(out$extrapolation)
+    Mat <- rbind(Inte, Extr)
+    if(is.null(ylim)){ylim=range(Mat[,3],Mat[,4])}
+    if(method=="plot"){
+      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
+    }
+    conf.reg(Mat[,5], Mat$qD.95.LCL, Mat$qD.95.UCL, col=adjustcolor(col, 0.25), border=NA)
+    lines(out$interpolation[,5],out$interpolation[,2], lty=1, lwd=2, col=col)
+    lines(out$extrapolation[,5],out$extrapolation[,2], lty=2, lwd=2, col=col) 
+  }
+  if(out$summary$C.hat<=xlim[2])
+  {
+    points(out$summary$C.hat,out$interpolation$qD[out$interpolation[,1]==out$summary[1]],lwd=5, col=col, pch=pch)
+  }
+}
+
+#
+#
+###############################################
+#' Plot Method for an iNEXT Object
+#' 
+#' \code{plot.iNEXT} the \code{\link{plot}} method for \code{\link{iNEXT}} Object
+#' @S3method plot iNEXT
+#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT.Ind}} or \code{\link{iNEXT.Sam}}
+#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"), 
+#' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
+#' @param ... further plotting parameters will accept the following arguments:
+#'        \code{main} an overall title for the plot.
+#'        \code{xlab, ylab} a title for the x and yaxis.
+#'        \code{xlim, ylim} numeric vectors of length 2, giving the x and y coordinates ranges.
+#'        \code{pch} either an integer specifying a symbol or a single character to be used as the default in plotting points.
+#'        
+#' @seealso \code{\link{lines.iNEXT}}
+#' @examples
+#' data(spider)
+#' x <- iNEXT.Ind(spider$Girdled, q=0)
+#' plot(x)
+#' data(ant)
+#' y <- iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
+#' plot(y)
+#' @export
+plot.iNEXT <- function(x, style="N2D", col=1,...) 
+{
+  if(is.null(x$summary[["T"]]))
+  {
+    switch(style,N2D = N2D (x,xlab="Number of individuals",ylab="Diversity",col=col, method="plot",...),
+           N2SC= N2SC(x,xlab="Number of individuals",ylab="Sample coverage",col=col, method="plot",...),
+           SC2D= SC2D(x,xlab="Sample coverage",ylab="Diversity",col=col, method="plot",...))
+  }
+  else
+  {
+    switch(style,N2D = N2D (x,xlab="Number of samlpes",ylab="Diversity",col=col, method="plot",...),
+           N2SC= N2SC(x,xlab="Number of samlpes",ylab="Sample coverage",col=col, method="plot",...),
+           SC2D= SC2D(x,xlab="Sample coverage",ylab="Diversity",col=col, method="plot",...))
+  }
+}
+
+
+#
+#
+###############################################
+#' Lines Method for an iNEXT Object
+#' 
+#' \code{lines.iNEXT} the \code{\link{lines}} method for \code{\link{iNEXT}} Object
+#' @S3method lines iNEXT
+
+#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT.Ind}} or \code{\link{iNEXT.Sam}}
+#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"), 
+#' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
+#' @param ... further plotting parameters (see \code{\link{par}}) may also be accepted.
+#'        
+#' @seealso \code{\link{lines.iNEXT}}
+#' @examples
+#' data(ant)
+#' x50 <- iNEXT.Sam(ant$h50m, q=0)
+#' x500 <- iNEXT.Sam(ant$h500m, q=0)
+#' plot(x50, ylim=c(1, 300))
+#' lines(x500, col=2)
+#' @export
+lines.iNEXT <- function(x, style="N2D", col=1, ...)
+{
+  if(is.null(x$summary[["T"]]))
+  {
+    switch(style,N2D = N2D (x,col=col, method="lines",...),
+           N2SC= N2SC(x,col=col, method="lines",...),
+           SC2D= SC2D(x,col=col, method="lines",...))
+  }
+  else
+  {
+    switch(style, N2D = N2D (x,col=col, method="lines",...),
+           N2SC= N2SC(x,col=col, method="lines",...),
+           SC2D= SC2D(x,col=col, method="lines",...))
+  }
+}
 
 
 ##
