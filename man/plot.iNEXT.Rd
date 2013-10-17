@@ -6,7 +6,7 @@
 }
 \arguments{
   \item{x}{a \code{\link{iNEXT}} objext computed by
-  \code{\link{iNEXT.Ind}} or \code{\link{iNEXT.Sam}}}
+  \code{\link{iNEXT}}}
 
   \item{style}{three different plotting style = c("N2D",
   "N2SC", "SC2D"),}
@@ -28,10 +28,10 @@
 }
 \examples{
 data(spider)
-x <- iNEXT.Ind(spider$Girdled, q=0)
+x <- iNEXT(spider$Girdled, q=0, datatype="abundance")
 plot(x)
 data(ant)
-y <- iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
+y <- iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 plot(y)
 }
 \seealso{

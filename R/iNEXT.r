@@ -62,17 +62,17 @@ conf.reg=function(x,LCL,UCL,...) {
 #
 #
 ###########################################
-#' Estimation of species reletive abundance distribution
-#' 
-#' \code{EstiBootComm.Ind} Estimation of species reletive abundance distribution to obtain bootstrap s.e.
-#' 
-#' @param Spec a vector of species abundances
-#' @return a vector of reltavie abundance
-#' @seealso \code{\link{EstiBootComm.Sam}}
-#' @examples 
-#' data(spider)
-#' EstiBootComm.Ind(spider$Girdled)
-#' @export
+# Estimation of species reletive abundance distribution
+# 
+# \code{EstiBootComm.Ind} Estimation of species reletive abundance distribution to obtain bootstrap s.e.
+# 
+# @param Spec a vector of species abundances
+# @return a vector of reltavie abundance
+# @seealso \code{\link{EstiBootComm.Sam}}
+# @examples 
+# data(spider)
+# EstiBootComm.Ind(spider$Girdled)
+# @export
 EstiBootComm.Ind <- function(Spec)
 {
   Sobs <- sum(Spec > 0)   #observed species
@@ -93,17 +93,17 @@ EstiBootComm.Ind <- function(Spec)
 #
 #
 ###########################################
-#' Estimation of species detection distribution
-#' 
-#' \code{EstiBootComm.Sam} Estimation of species detection distribution to obtain bootstrap s.e.
-#' 
-#' @param Spec a vector of species incidence, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
-#' @return a vector of estimated detection probability
-#' @seealso \code{\link{EstiBootComm.Sam}}
-#' @examples 
-#' data(ant)
-#' EstiBootComm.Sam(ant$h50m)
-#' @export
+# Estimation of species detection distribution
+# 
+# \code{EstiBootComm.Sam} Estimation of species detection distribution to obtain bootstrap s.e.
+# 
+# @param Spec a vector of species incidence, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
+# @return a vector of estimated detection probability
+# @seealso \code{\link{EstiBootComm.Sam}}
+# @examples 
+# data(ant)
+# EstiBootComm.Sam(ant$h50m)
+# @export
 EstiBootComm.Sam <- function(Spec)
 {
   nT <- Spec[1]
@@ -384,38 +384,38 @@ Chat.Sam <- function(x, t){
 #
 #
 ###############################################
-#' iNterpolation and EXTrapolation of abundance-based Hill number
-#' 
-#' \code{iNEXT.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
-#' 
-#' @param Spec a vector of species abundances
-#' @param q a numeric value, the order of Hill number 
-#' @param m a integer vector of rarefaction/extrapolation sample size, default is NULL. If m is not be specified, then the program will compute sample units due to endpoint and knots.
-#' @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double the original sample size.
-#' @param Knots a number of knots of computation, default is 40
-#' @param se calculate bootstrap standard error and 95% confidence interval; default is TRUE
-#' @param nboot the number of bootstrap resampling times, default is 200
-#' @return a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
-#' @seealso \code{\link{iNEXT.Sam}}
-#' @examples
-#' data(spider)
-#' # q = 0 with specific endpoint
-#' iNEXT.Ind(spider$Girdled, q=0, endpoint=500)
-#' # q = 1 with specific sample size m and don't calculate standard error
-#' iNEXT.Ind(spider$Girdled, q=1, m=c(1, 10, 20, 50, 100, 200, 400, 600), se=FALSE)
-#' @export
-iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), Knots=40, se=TRUE, nboot=200)
+# iNterpolation and EXTrapolation of abundance-based Hill number
+# 
+# \code{iNEXT.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
+# 
+# @param Spec a vector of species abundances
+# @param q a numeric value, the order of Hill number 
+# @param m a integer vector of rarefaction/extrapolation sample size, default is NULL. If m is not be specified, then the program will compute sample units due to endpoint and knots.
+# @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double the original sample size.
+# @param knots a number of knots of computation, default is 40
+# @param se calculate bootstrap standard error and 95% confidence interval; default is TRUE
+# @param nboot the number of bootstrap resampling times, default is 200
+# @return a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
+# @seealso \code{\link{iNEXT.Sam}}
+# @examples
+# data(spider)
+# # q = 0 with specific endpoint
+# iNEXT.Ind(spider$Girdled, q=0, endpoint=500)
+# # q = 1 with specific sample size m and don't calculate standard error
+# iNEXT.Ind(spider$Girdled, q=1, m=c(1, 10, 20, 50, 100, 200, 400, 600), se=FALSE)
+# @export
+iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE, nboot=200)
 {
 	n <- sum(Spec)		  	#sample size
 	if(is.null(m)) {
 		if(endpoint <= n) {
-			m <- floor(seq(1, endpoint, length=floor(Knots)))
+			m <- floor(seq(1, endpoint, length=floor(knots)))
 		} else {
-			m <- c(floor(seq(1, sum(Spec)-1, length.out=floor(Knots/2)-1)), sum(Spec), floor(seq(sum(Spec)+1, to=endpoint, length.out=floor(Knots/2))))
+			m <- c(floor(seq(1, sum(Spec)-1, length.out=floor(knots/2)-1)), sum(Spec), floor(seq(sum(Spec)+1, to=endpoint, length.out=floor(knots/2))))
 		}
 		m <- c(1, m[-1])
 	} else if(is.null(m)==FALSE) {	
-		if(max(m)>n & length(m[m==n])==0)  m <- c(m, n)
+		if(max(m)>n & length(m[m==n])==0)  m <- c(m, n-1, n)
 		m <- sort(m)
 	}
 	
@@ -456,39 +456,39 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), Knots=40, se=TRUE
 #
 #
 ###############################################
-#' iNterpolation and EXTrapolation of incidence-based Hill number
-#' 
-#' \code{iNEXT.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number with order q
-#' 
-#' @param Spec a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
-#' @param q a numeric value, the order of Hill number 
-#' @param t a integer vector of rarefaction/extrapolation sample size, default is NULL. If m is not be specified, then the program will compute sample units due to endpoint and knots.
-#' @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double the original sample size.
-#' @param Knots a number of knots of computation, default is 40
-#' @param se calculate bootstrap standard error and 95% confidence interval; default is TRUE
-#' @param nboot the number of bootstrap resampling times, default is 200
-#' @return a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
-#' @seealso \code{\link{iNEXT.Ind}}
-#' @examples
-#' data(ant)
-#' # q = 0 with specific endpoint
-#' iNEXT.Sam(ant$h50m, q=0, endpoint=100)
-#' # q = 1 with specific sample size m and don't calculate standard error
-#' iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
-#' @export
-iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), Knots=40, se=TRUE, nboot=200)
+# iNterpolation and EXTrapolation of incidence-based Hill number
+# 
+# \code{iNEXT.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number with order q
+# 
+# @param Spec a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
+# @param q a numeric value, the order of Hill number 
+# @param t a integer vector of rarefaction/extrapolation sample size, default is NULL. If m is not be specified, then the program will compute sample units due to endpoint and knots.
+# @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double the original sample size.
+# @param knots a number of knots of computation, default is 40
+# @param se calculate bootstrap standard error and 95% confidence interval; default is TRUE
+# @param nboot the number of bootstrap resampling times, default is 200
+# @return a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
+# @seealso \code{\link{iNEXT.Ind}}
+# @examples
+# data(ant)
+# # q = 0 with specific endpoint
+# iNEXT.Sam(ant$h50m, q=0, endpoint=100)
+# # q = 1 with specific sample size m and don't calculate standard error
+# iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
+# @export
+iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE, nboot=200)
 {
 	if(which.max(Spec)!=1) {return(warning("Wrong input format!"))}
 	nT <- Spec[1]
 	if(is.null(t)) {
 		if(endpoint <= nT) {
-			t <- floor(seq(1, endpoint, length.out=floor(Knots)))
+			t <- floor(seq(1, endpoint, length.out=floor(knots)))
 		} else {
-			t <- c(floor(seq(1, nT-1, length.out=floor(Knots/2)-1)), nT, floor(seq(nT+1, to=endpoint, length.out=floor(Knots/2))))
+			t <- c(floor(seq(1, nT-1, length.out=floor(knots/2)-1)), nT, floor(seq(nT+1, to=endpoint, length.out=floor(knots/2))))
 		}
 		t <- c(1, t[-1])
 	} else if(is.null(t)==FALSE) {	
-		if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT)
+		if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT-1, nT)
 		t <- sort(t)
 	}
 	
@@ -523,6 +523,68 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), Knots=40, se=TRUE
 	return(z)
 }
 
+
+#
+#
+###############################################
+#' iNterpolation and EXTrapolation of Hill number
+#' 
+#' \code{iNEXT} Estimation of interpolation and extrapolation of Hill number with order q
+#' 
+#' @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
+#' @param q a numeric value, the order of Hill number .
+#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
+#' @param size a integer vector of rarefaction/extrapolation sample size (number of individuals or sampling units), default is NULL. If \code{size} is not be specified, it would compute rarefaction/extrapolation by endpoint and knots.
+#' @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double reference sample size.
+#' @param knots a number of knots (say K, default is 40) specifying separate sample size between 1 and \code{endpoint}. 
+#' If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} compute rarefaction part only and divided by approximately equall spaced K. 
+#' If \code{endpoint} os larger than reference sample size, then \code{iNEXT()} will compute approximately K/2 equally spaced for rarefaction part and divided extrapolation part as approximately K/2 equally spaced between reference sample size and \code{endpoint}.
+#' @param se calculate bootstrap standard error and show 95% confidence interval; default is TRUE.
+#' @param nboot the number of bootstrap resampling times, default is 50.
+#' @return a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
+#' @examples
+#' data(spider)
+#' iNEXT(spider$Girdled, q=0, datatype="abundance")
+#' data(ant)
+#' iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
+#' @export
+iNEXT <- function(x, q = 0, datatype=c("abundance", "incidence"), size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50) 
+{
+  datatype <- match.arg(datatype)
+  if(datatype == "abundance") out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot)
+  if(datatype == "incidence") out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot)
+  out 
+}
+
+
+#
+#
+###########################################
+#' Estimation of the rank of species relative abundance distribution or detection probability
+#' 
+#' \code{EstDis} Estimation of the rank of species relative abundance distribution or detection probability to obtain bootstrap s.e.
+#' 
+#' @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
+#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
+#' @return a vector of the rank of estimated relative abundance distribution or detection probability
+#' @examples 
+#' data(spider)
+#' EstDis(spider$Girdled, datatype="incidence")
+#' data(ant)
+#' EstDis(ant$h50m, datatype="incidence")
+#' @export
+EstDis <- function(x, datatype=c("abundance", "incidence")){
+  datatype <- match.arg(datatype)
+  if(datatype == "abundance") out <- EstiBootComm.Ind(Spec=x)                                                      
+  if(datatype == "incidence") out <- EstiBootComm.Sam(Spec=x)
+  out 
+}
+
+#
+#
+###############################################
+# sub-plot function
+#
 N2D<- function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NULL, main=paste("q =", out$order), pch=19,...)
 {
   if(is.null(xlim)){xlim=range(out$interpolation[,1],out$extrapolation[,1])}
@@ -639,7 +701,7 @@ SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=N
 #' 
 #' \code{plot.iNEXT} the \code{\link{plot}} method for \code{\link{iNEXT}} Object
 #' @S3method plot iNEXT
-#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT.Ind}} or \code{\link{iNEXT.Sam}}
+#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
 #' @param style three different plotting style = c("N2D", "N2SC", "SC2D"), 
 #' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
 #' @param ... further plotting parameters will accept the following arguments:
@@ -651,10 +713,10 @@ SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=N
 #' @seealso \code{\link{lines.iNEXT}}
 #' @examples
 #' data(spider)
-#' x <- iNEXT.Ind(spider$Girdled, q=0)
+#' x <- iNEXT(spider$Girdled, q=0, datatype="abundance")
 #' plot(x)
 #' data(ant)
-#' y <- iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
+#' y <- iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 #' plot(y)
 #' @export
 plot.iNEXT <- function(x, style="N2D", col=1,...) 
@@ -682,18 +744,18 @@ plot.iNEXT <- function(x, style="N2D", col=1,...)
 #' \code{lines.iNEXT} the \code{\link{lines}} method for \code{\link{iNEXT}} Object
 #' @S3method lines iNEXT
 
-#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT.Ind}} or \code{\link{iNEXT.Sam}}
+#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
 #' @param style three different plotting style = c("N2D", "N2SC", "SC2D"), 
 #' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
 #' @param ... further plotting parameters (see \code{\link{par}}) may also be accepted.
 #'        
 #' @seealso \code{\link{lines.iNEXT}}
 #' @examples
-#' data(ant)
-#' x50 <- iNEXT.Sam(ant$h50m, q=0)
-#' x500 <- iNEXT.Sam(ant$h500m, q=0)
-#' plot(x50, ylim=c(1, 300))
-#' lines(x500, col=2)
+#' data(spider)
+#' x1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
+#' x2 <- iNEXT(spider$Logged, q=0, datatype="abundance")
+#' plot(x1, ylim=c(1, 300))
+#' lines(x2, col=2)
 #' @export
 lines.iNEXT <- function(x, style="N2D", col=1, ...)
 {
