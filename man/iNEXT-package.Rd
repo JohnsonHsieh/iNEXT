@@ -1,6 +1,5 @@
 \name{iNEXT-package}
 \alias{iNEXT-package}
-\alias{iNEXT}
 \docType{package}
 \title{
 iNterpolation and EXTrapolation for species diversity
