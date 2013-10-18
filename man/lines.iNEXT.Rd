@@ -9,7 +9,11 @@
   \code{\link{iNEXT}}}
 
   \item{style}{three different plotting style = c("N2D",
-  "N2SC", "SC2D"),}
+  "N2SC", "SC2D"); N2D means to plot number of individuals
+  or number of samples to diversity; N2SC means to plot
+  number of individuals or number of samples to sample
+  coverage; SC2D means to plot sample coverage to
+  diversity.}
 
   \item{col}{a specification for the default plotting
   color, see \code{\link{par}} for detail.}
@@ -29,6 +33,6 @@ plot(x1, ylim=c(1, 300))
 lines(x2, col=2)
 }
 \seealso{
-  \code{\link{lines.iNEXT}}
+  \code{\link{plot.iNEXT}}
 }
 

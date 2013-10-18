@@ -746,7 +746,8 @@ plot.iNEXT <- function(x, style="N2D", col=1,...)
 #' @S3method lines iNEXT
 
 #' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
-#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"), 
+#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"); N2D means to plot number of individuals or number of samples to diversity;
+#'              N2SC means to plot number of individuals or number of samples to sample coverage; SC2D means to plot sample coverage to diversity.                 
 #' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
 #' @param ... further plotting parameters (see \code{\link{par}}) may also be accepted.
 #'        

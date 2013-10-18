@@ -20,11 +20,11 @@
   "abundance"}) or sample-based incidence data
   (\code{datatype = "incidence"}).}
 
-  \item{size}{a integer vector of rarefaction/extrapolation
-  sample size (number of individuals or sampling units),
-  default is NULL. If \code{size} is not be specified, it
-  would compute rarefaction/extrapolation by endpoint and
-  knots.}
+  \item{size}{an integer vector of
+  rarefaction/extrapolation sample size (number of
+  individuals or sampling units), default is NULL. If
+  \code{size} is not be specified, it would compute
+  rarefaction/extrapolation by endpoint and knots.}
 
   \item{endpoint}{a integer of sample size that is the
   endpoint for rarefaction/extrapolation. Default is double
