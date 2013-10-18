@@ -534,7 +534,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
 #' @param q a numeric value, the order of Hill number .
 #' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @param size a integer vector of rarefaction/extrapolation sample size (number of individuals or sampling units), default is NULL. If \code{size} is not be specified, it would compute rarefaction/extrapolation by endpoint and knots.
+#' @param size an integer vector of rarefaction/extrapolation sample size (number of individuals or sampling units), default is NULL. If \code{size} is not be specified, it would compute rarefaction/extrapolation by endpoint and knots.
 #' @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double reference sample size.
 #' @param knots a number of knots (say K, default is 40) specifying separate sample size between 1 and \code{endpoint}. 
 #' If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} compute rarefaction part only and divided by approximately equall spaced K. 
@@ -702,7 +702,8 @@ SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=N
 #' \code{plot.iNEXT} the \code{\link{plot}} method for \code{\link{iNEXT}} Object
 #' @S3method plot iNEXT
 #' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
-#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"), 
+#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"); N2D means to plot number of individuals or number of samples to diversity;
+#'              N2SC means to plot number of individuals or number of samples to sample coverage; SC2D means to plot sample coverage to diversity.                 
 #' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
 #' @param ... further plotting parameters will accept the following arguments:
 #'        \code{main} an overall title for the plot.
@@ -749,7 +750,7 @@ plot.iNEXT <- function(x, style="N2D", col=1,...)
 #' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
 #' @param ... further plotting parameters (see \code{\link{par}}) may also be accepted.
 #'        
-#' @seealso \code{\link{lines.iNEXT}}
+#' @seealso \code{\link{plot.iNEXT}}
 #' @examples
 #' data(spider)
 #' x1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
