@@ -415,7 +415,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 		}
 		m <- c(1, m[-1])
 	} else if(is.null(m)==FALSE) {	
-		if(max(m)>n & length(m[m==n])==0)  m <- c(m, n-1, n)
+		if(max(m)>n & length(m[m==n])==0)  m <- c(m, n, n+1)
 		m <- sort(m)
 	}
 	
@@ -488,7 +488,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 		}
 		t <- c(1, t[-1])
 	} else if(is.null(t)==FALSE) {	
-		if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT-1, nT)
+		if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT, nT+1)
 		t <- sort(t)
 	}
 	
