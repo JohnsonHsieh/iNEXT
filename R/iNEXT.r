@@ -281,7 +281,7 @@ Dqhat.Sam <- function(y, q, t){
 	D1.hat <- function(y, nT, t){
 		U <- sum(y)
 		Sub <- function(t){
-		  if(t < T){
+		  if(t < nT){
 			k <- 1:t	
 			Ut.hat <- t / nT * U
 			exp(-sum(k / Ut.hat * log(k / Ut.hat) * Qk.hat(y, nT, t)))
@@ -291,7 +291,7 @@ Dqhat.Sam <- function(y, q, t){
 			Q1 <- sum(y == 1)
 			Q2 <- sum(y == 2)
 			A <- 1 - ifelse(Q2 > 0, (nT-1)*Q1/((nT-1)*Q1+2*Q2), (nT-1)*Q1/((nT-1)*Q1+2))
-			B=sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k})))
+			B <- sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k})))
 			H.hat <- UE+B
 			H.hat <- nT/U*H.hat-log(nT/U)
 		  
