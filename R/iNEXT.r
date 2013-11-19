@@ -422,7 +422,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 	Dq.hat <- Dqhat.Ind(Spec, q, m)
 	C.hat <- Chat.Ind(Spec, m)
 	
-	if(se==TRUE & nboot > 0 & length(Spec) > 2) {
+	if(se==TRUE & nboot > 0 & length(Spec) > 1) {
 		Prob.hat <- EstiBootComm.Ind(Spec)
 		Abun.Mat <- rmultinom(nboot, n, Prob.hat)
 	
