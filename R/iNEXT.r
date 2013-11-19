@@ -585,8 +585,10 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 ###############################################
 # sub-plot function
 #
-N2D<- function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NULL, main=paste("q =", out$order), pch=19,...)
+N2D<- function(out, method="plot", xlab=NULL, ylab=NULL, col, xlim=NULL, ylim=NULL, main=paste("q =", out$order), pch=19,...)
 {
+  if(is.null(xlab)){xlab="Number of individuals"}
+  if(is.null(ylab)){ylab="Diversity"}
   if(is.null(xlim)){xlim=range(out$interpolation[,1],out$extrapolation[,1])}
   if(ncol(out$interpolation) < 4)
   {
@@ -630,8 +632,10 @@ N2D<- function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
   lines(c(a,out$extrapolation[,1]),c(b,out$extrapolation[,2]), lty=2, lwd=2, col=col)
 }
 
-N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NULL, main="", pch=19, ...)
+N2SC<-function(out, method="plot", xlab=NULL, ylab=NULL, col, xlim=NULL, ylim=NULL, main="", pch=19, ...)
 {
+  if(is.null(xlab)){xlab="Number of individuals"}
+  if(is.null(ylab)){ylab="Sample coverage"}
   if(is.null(xlim)){xlim=range(out$interpolation[,1],out$extrapolation[,1])}
   if(ncol(out$interpolation) < 4)
   {
@@ -667,8 +671,11 @@ N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
   
 }
 
-SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=NULL, main=paste("q =", out$order), pch=19,...)
+SC2D<- function(out, method="plot", xlab=NULL, ylab=NULL, col, xlim=NULL,ylim=NULL, main=paste("q =", out$order), pch=19,...)
 {
+  
+  if(is.null(xlab)){xlab="Sample coverage"}
+  if(is.null(ylab)){ylab="Diversity"}
   if(ncol(out$interpolation) < 4)
   {
     if(is.null(xlim)){xlim=range(out$interpolation[,3],out$extrapolation[,3])}
@@ -730,19 +737,19 @@ SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=N
 #' y <- iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 #' plot(y)
 #' @export
-plot.iNEXT <- function(x, style="N2D", col=1,...) 
+plot.iNEXT <- function(x, style="N2D", col=1, ...) 
 {
   if(is.null(x$summary[["T"]]))
   {
-    switch(style,N2D = N2D (x,xlab="Number of individuals",ylab="Diversity",col=col, method="plot",...),
-           N2SC= N2SC(x,xlab="Number of individuals",ylab="Sample coverage",col=col, method="plot",...),
-           SC2D= SC2D(x,xlab="Sample coverage",ylab="Diversity",col=col, method="plot",...))
+    switch(style,N2D = N2D (x,col=col, method="plot",...),
+           N2SC= N2SC(x,,col=col, method="plot",...),
+           SC2D= SC2D(x,col=col, method="plot",...))
   }
   else
   {
-    switch(style,N2D = N2D (x,xlab="Number of samlpes",ylab="Diversity",col=col, method="plot",...),
-           N2SC= N2SC(x,xlab="Number of samlpes",ylab="Sample coverage",col=col, method="plot",...),
-           SC2D= SC2D(x,xlab="Sample coverage",ylab="Diversity",col=col, method="plot",...))
+    switch(style,N2D = N2D (x,col=col, method="plot",...),
+           N2SC= N2SC(x,col=col, method="plot",...),
+           SC2D= SC2D(x,col=col, method="plot",...))
   }
 }
 
