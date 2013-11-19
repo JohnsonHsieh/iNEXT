@@ -80,7 +80,7 @@ EstiBootComm.Ind <- function(Spec)
   f1 <- sum(Spec == 1)   #singleton 
   f2 <- sum(Spec == 2)   #doubleton
   f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
-  A <- n*f0.hat/(n*f0.hat+f1)
+  A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
   a <- f1/n*A
   b <- sum(Spec / n * (1 - Spec / n) ^ n)
   w <- a / b    		#adjusted factor for rare species in the sample
@@ -112,7 +112,7 @@ EstiBootComm.Sam <- function(Spec)
   Q1 <- sum(Spec == 1) 	#singleton 
   Q2 <- sum(Spec == 2) 	#doubleton
   Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)	#estimation of unseen species via Chao2
-  A <- nT*Q0.hat/(nT*Q0.hat+Q1)
+  A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
   a <- Q1/nT*A
   b <- sum(Spec / nT * (1 - Spec / nT) ^ nT)
   w <- a / b  			#adjusted factor for rare species in the sample
@@ -341,7 +341,7 @@ Chat.Ind <- function(x, m){
 	f1 <- sum(x == 1)
 	f2 <- sum(x == 2)
 	f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
-	A <- n*f0.hat/(n*f0.hat+f1)
+	A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
 	Sub <- function(m){
 		if(m < n) out <- 1-sum(x / n * exp(lchoose(n - x, m)-lchoose(n - 1, m)))
 		if(m == n) out <- 1-f1/n*A
@@ -370,7 +370,7 @@ Chat.Sam <- function(x, t){
 	Q1 <- sum(y == 1)
 	Q2 <- sum(y == 2)
 	Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)  #estimation of unseen species via Chao2
-	A <- nT*Q0.hat/(nT*Q0.hat+Q1)
+	A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
 	Sub <- function(t){
 		if(t < nT) out <- 1 - sum(y / U * exp(lchoose(nT - y, t) - lchoose(nT - 1, t)))
 		if(t == nT) out <- 1 - Q1 / U * A
