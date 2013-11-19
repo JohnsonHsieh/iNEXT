@@ -737,7 +737,7 @@ SC2D<- function(out, method="plot", xlab=NULL, ylab=NULL, col, xlim=NULL,ylim=NU
 #' y <- iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 #' plot(y)
 #' @export
-plot.iNEXT <- function(x, style="N2D", col=1, xlab, ylab, ...) 
+plot.iNEXT <- function(x, style="N2D", col=1, ...) 
 {
   if(is.null(x$summary[["T"]]))
   {
