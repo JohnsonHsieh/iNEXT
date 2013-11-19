@@ -422,7 +422,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 	Dq.hat <- Dqhat.Ind(Spec, q, m)
 	C.hat <- Chat.Ind(Spec, m)
 	
-	if(se==TRUE & nboot > 0) {
+	if(se==TRUE & nboot > 0 & length(Spec) > 2) {
 		Prob.hat <- EstiBootComm.Ind(Spec)
 		Abun.Mat <- rmultinom(nboot, n, Prob.hat)
 	
@@ -495,7 +495,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 	Dq.hat <- Dqhat.Sam(Spec, q, t)
 	C.hat <- Chat.Sam(Spec, t)
 	
-	if(se==TRUE & nboot > 0){
+	if(se==TRUE & nboot > 0 & length(Spec) > 2){
 		Prob.hat <- EstiBootComm.Sam(Spec)
 		Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
 		Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
@@ -624,8 +624,10 @@ N2D<- function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
         points(out$summary[1],out$interpolation$qD[out$interpolation$t==out$summary$T],lwd=5, col=col, pch=pch)
      }
   }
+  a <- max(out$interpolation[,1])
+  b <- max(out$interpolation[,2])
   lines(out$interpolation[,1],out$interpolation[,2], lty=1, lwd=2, col=col)
-  lines(out$extrapolation[,1],out$extrapolation[,2], lty=2, lwd=2, col=col)
+  lines(c(a,out$extrapolation[,1]),c(b,out$extrapolation[,2]), lty=2, lwd=2, col=col)
 }
 
 N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NULL, main="", pch=19, ...)
@@ -637,8 +639,10 @@ N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
     if(method=="plot"){
       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
     }
+    a <- max(out$interpolation[,1])
+    b <- max(out$interpolation[,3])
     lines(out$interpolation[,1],out$interpolation[,3], lty=1, lwd=2, col=col)
-    lines(out$extrapolation[,1],out$extrapolation[,3], lty=2, lwd=2, col=col)	
+    lines(c(a,out$extrapolation[,1]),c(b,out$extrapolation[,3]), lty=2, lwd=2, col=col)	
   }
   
   else
@@ -650,9 +654,11 @@ N2SC<-function(out, method="plot", xlab=xlab, ylab=ylab, col, xlim=NULL, ylim=NU
     if(method=="plot"){
       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
     }
+    a <- max(out$interpolation[,1])
+    b <- max(out$interpolation[,5])
     conf.reg(Mat[,1], Mat$SC.95.LCL, Mat$SC.95.UCL, col=adjustcolor(col, 0.25), border=NA)
     lines(out$interpolation[,1],out$interpolation[,5], lty=1, lwd=2, col=col)
-    lines(out$extrapolation[,1],out$extrapolation[,5], lty=2, lwd=2, col=col)
+    lines(c(a,out$extrapolation[,1]),c(b,out$extrapolation[,5]), lty=2, lwd=2, col=col)
   }
   if(out$summary[1]<=xlim[2])
   {
@@ -670,8 +676,10 @@ SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=N
     if(method=="plot"){
       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
     }
+    a <- max(out$interpolation[,3])
+    b <- max(out$interpolation[,2])
     lines(out$interpolation[,3],out$interpolation[,2], lty=1, lwd=2, col=col)
-    lines(out$extrapolation[,3],out$extrapolation[,2], lty=2, lwd=2, col=col) 
+    lines(c(a,out$extrapolation[,3]),c(b,out$extrapolation[,2]), lty=2, lwd=2, col=col) 
   }
   
   else
@@ -684,9 +692,11 @@ SC2D<- function(out, method="plot", xlab=xlab, ylab=xlab , col, xlim=NULL,ylim=N
     if(method=="plot"){
       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
     }
+    a <- max(out$interpolation[,5])
+    b <- max(out$interpolation[,2])
     conf.reg(Mat[,5], Mat$qD.95.LCL, Mat$qD.95.UCL, col=adjustcolor(col, 0.25), border=NA)
     lines(out$interpolation[,5],out$interpolation[,2], lty=1, lwd=2, col=col)
-    lines(out$extrapolation[,5],out$extrapolation[,2], lty=2, lwd=2, col=col) 
+    lines(c(a,out$extrapolation[,5]),c(b,out$extrapolation[,2]), lty=2, lwd=2, col=col) 
   }
   if(out$summary$C.hat<=xlim[2])
   {
