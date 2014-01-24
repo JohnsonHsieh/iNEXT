@@ -35,7 +35,7 @@
   \code{endpoint}. If \code{endpoint} is smaller than
   reference sample size, then \code{iNEXT()} compute
   rarefaction part only and divided by approximately equall
-  spaced K. If \code{endpoint} os larger than reference
+  spaced K. If \code{endpoint} is larger than reference
   sample size, then \code{iNEXT()} will compute
   approximately K/2 equally spaced for rarefaction part and
   divided extrapolation part as approximately K/2 equally
