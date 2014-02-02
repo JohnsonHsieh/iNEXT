@@ -19,3 +19,5 @@ Start R(studio) and copy-and-paste the commands below:
 ### License
 The iNEXT package is licensed under the GPLv2. See the files listed below for additional details.
 
+- COPYING - radyant package license (GPLv2)
+- NOTICE - Copyright notices for additional included software
