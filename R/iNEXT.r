@@ -6,7 +6,7 @@ summary.Ind <- function(dat){
     f2 <- fk[2]
     Sobs <- sum(x>0)
     f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
-    Shat <- Sobs + round(f0hat, 2)
+    Shat <- Sobs + round(f0.hat, 2)
     A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
     Chat <- round(1 - f1/n*A, 4)
     c(n, Sobs, Shat, Chat, fk)
@@ -28,7 +28,7 @@ summary.Sam <- function(dat){
     Sobs <- sum(x>0)
     Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)  #estimation of unseen species via Chao2
     A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
-    Shat <- Sobs + round(Q0hat, 2)
+    Shat <- Sobs + round(Q0.hat, 2)
     Chat <- round(1 - Q1/U*A,4)
     out <- c(nT, U, Sobs, Shat, Chat, Qk)
     #colnames(out) <- c("T", "U", "Sobs", "Shat", "Chat", paste("Q",1:10, sep=""))
