@@ -795,6 +795,32 @@ lines.iNEXT <- function(x, style="N2D", col=1, ...)
 }
 
 
+#
+#
+###############################################
+#' Plot Method for an iNEXT Object
+#' 
+#' \code{print.iNEXT} the \code{\link{print}} method for \code{\link{iNEXT}} Object
+#' @S3method print iNEXT
+#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
+#' @param ... further arguments passed to or from other methods.
+#' @examples
+#' data(spider)
+#' x <- iNEXT(spider$Girdled, q=0, datatype="abundance")
+#' print(x)
+#' @export
+print.iNEXT <- function(x, digits = max(3L, getOption("digits") - 3L), ...) 
+{
+  cat("\n(1)BASIC DATA INFORMATION:\n")
+  print(x$summary)
+  cat("\n(2) DIVERSITY ORDER:\t",paste("q =", x$order,"\n"))
+  cat("\n(3) INTERPOLATION:\n")
+  print(x$interpolation)
+  cat("\n(4) EXTRAPOLATION:\n")
+  print(x$extrapolation)
+}
+
+
 ##
 ##
 ###########################################
