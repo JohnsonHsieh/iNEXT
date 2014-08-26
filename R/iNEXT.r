@@ -1,44 +1,3 @@
-summary.Ind <- function(dat){
-  Fun <- function(x){
-    n <- sum(x)
-    fk <- sapply(1:10, function(k) sum(x==k))
-    f1 <- fk[1]
-    f2 <- fk[2]
-    Sobs <- sum(x>0)
-    f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
-    Shat <- Sobs + round(f0.hat, 2)
-    A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
-    Chat <- round(1 - f1/n*A, 4)
-    c(n, Sobs, Shat, Chat, fk)
-  }
-  out <- t(apply(as.matrix(dat), 2, Fun))
-  colnames(out) <- c("n", "S.obs", "S.hat", "C.hat", paste("f",1:10, sep=""))
-  as.data.frame(out, row.names="")
-}
-
-
-summary.Sam <- function(dat){
-  Fun <- function(x){
-    nT <- x[1]
-    x <- x[-1]
-    U <- sum(x)
-    Qk <- sapply(1:10, function(k) sum(x==k))
-    Q1 <- Qk[1]
-    Q2 <- Qk[2]
-    Sobs <- sum(x>0)
-    Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)  #estimation of unseen species via Chao2
-    A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
-    Shat <- Sobs + round(Q0.hat, 2)
-    Chat <- round(1 - Q1/U*A,4)
-    out <- c(nT, U, Sobs, Shat, Chat, Qk)
-    #colnames(out) <- c("T", "U", "Sobs", "Shat", "Chat", paste("Q",1:10, sep=""))
-    out
-  }
-  out <- t(apply(as.matrix(dat), 2, Fun))
-  colnames(out) <- c("T", "U", "S.obs", "S.hat", "C.hat", paste("Q",1:10, sep=""))
-  as.data.frame(out)
-}
-
 
 #
 #
@@ -74,7 +33,6 @@ conf.reg=function(x,LCL,UCL,...) {
 # @examples 
 # data(spider)
 # EstiBootComm.Ind(spider$Girdled)
-# @export
 EstiBootComm.Ind <- function(Spec)
 {
   Sobs <- sum(Spec > 0)   #observed species
@@ -105,7 +63,6 @@ EstiBootComm.Ind <- function(Spec)
 # @examples 
 # data(ant)
 # EstiBootComm.Sam(ant$h50m)
-# @export
 EstiBootComm.Sam <- function(Spec)
 {
   nT <- Spec[1]
@@ -135,7 +92,7 @@ EstiBootComm.Sam <- function(Spec)
 # @param q a numerical value of the order of Hill number
 # @param m a integer vector of rarefaction/extrapolation sample size
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
-
+# @export
 Dqhat.Ind <- function(x, q, m){
 	x <- x[x > 0]
 	n <- sum(x)
@@ -239,6 +196,7 @@ Dqhat.Ind <- function(x, q, m){
 # @param q a numerical value of the order of Hill number
 # @param t a integer vector of rarefaction/extrapolation sample size
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
+# @export
 Dqhat.Sam <- function(y, q, t){
 
 	nT <- y[1]
@@ -337,6 +295,7 @@ Dqhat.Sam <- function(y, q, t){
 # @param x a vector of species abundances
 # @param m a integer vector of rarefaction/extrapolation sample size
 # @return a vector of estimated sample coverage function
+# @export
 Chat.Ind <- function(x, m){
 	x <- x[x>0]
 	n <- sum(x)
@@ -364,6 +323,7 @@ Chat.Ind <- function(x, m){
 # @param x a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
 # @param t a integer vector of rarefaction/extrapolation sample size
 # @return a vector of estimated sample coverage function
+# @export
 Chat.Sam <- function(x, t){
 	nT <- x[1]
 	y <- x[-1]
@@ -405,10 +365,10 @@ Chat.Sam <- function(x, t){
 # iNEXT.Ind(spider$Girdled, q=0, endpoint=500)
 # # q = 1 with specific sample size m and don't calculate standard error
 # iNEXT.Ind(spider$Girdled, q=1, m=c(1, 10, 20, 50, 100, 200, 400, 600), se=FALSE)
-# @export
 iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE, nboot=200)
 {
-	n <- sum(Spec)		  	#sample size
+
+  n <- sum(Spec)		  	#sample size
 	if(is.null(m)) {
 		if(endpoint <= n) {
 			m <- floor(seq(1, endpoint, length=floor(knots)))
@@ -435,22 +395,16 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 		error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)), 1, sd, na.rm=TRUE)
 		left.C  <- C.hat - error.C
 		right.C <- C.hat + error.C
-		out <- cbind("m"=m, "qD"=Dq.hat, "qD.95%LCL"=left, "qD.95%UCL"=right, "SC"=C.hat, "SC.95%LCL"=left.C, "SC.95%UCL"=right.C)
+		out <- cbind("m"=m, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
 	} else {
 		out <- cbind("m"=m, "qD"=Dq.hat, "SC"=C.hat)
 	}
 	out <- data.frame(out)
-  
-  
-	if(max(m) > n){
-		out.int <- out[m<=n,]
-		out.ext <- out[m>n,]
-		z <- list("summary"=summary.Ind(Spec), "order"=q, "interpolation"=out.int, "extrapolation"=out.ext)
-	} else {
-		z <- list("summary"=summary.Ind(Spec), "order"=q, "interpolation"=out)
-	}
-	class(z) <- c("iNEXT")      
-	return(z)
+  out$method <- ifelse(out$m<n, "interpolated", ifelse(out$m==n, "observed", "extrapolated"))
+  out$order <- q
+	id <- match(c("m", "method", "order", "qD", "qD.95.LCL", "qD.95.UCL", "SC", "SC.95.LCL", "SC.95.UCL"), names(out), nomatch = 0)
+  out <- out[, id]
+	return(out)
 }
 
 
@@ -477,10 +431,12 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 # iNEXT.Sam(ant$h50m, q=0, endpoint=100)
 # # q = 1 with specific sample size m and don't calculate standard error
 # iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
-# @export
 iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE, nboot=200)
 {
-	if(which.max(Spec)!=1) {return(warning("Wrong input format!"))}
+
+  if(which.max(Spec)!=1) 
+    stop("invalid data structure!, first element should be number of sampling units")
+  
 	nT <- Spec[1]
 	if(is.null(t)) {
 		if(endpoint <= nT) {
@@ -509,20 +465,16 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 		error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
 		left.C  <- C.hat - error.C
 		right.C <- C.hat + error.C
-		out <- cbind("t"=t, "qD"=Dq.hat, "qD.95%LCL"=left, "qD.95%UCL"=right, "SC"=C.hat, "SC.95%LCL"=left.C, "SC.95%UCL"=right.C)
+		out <- cbind("t"=t, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
 	} else {
 		out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
 	}
 	out <- data.frame(out)
-	if(max(t) > nT){
-		out.int <- out[t<=nT,]
-		out.ext <- out[t>nT,]
-    z <- list("summary"=summary.Sam(Spec), "order"=q, "interpolation"=out.int, "extrapolation"=out.ext)
-	} else {
-		z <- list("summary"=summary.Sam(Spec), "order"=q, "interpolation"=out)
-	}
-	class(z) <- c("iNEXT")      
-	return(z)
+	out$method <- ifelse(out$t<nT, "interpolated", ifelse(out$t==nT, "observed", "extrapolated"))
+	out$order <- q
+  id <- match(c("t", "method", "order", "qD", "qD.95.LCL", "qD.95.UCL", "SC", "SC.95.LCL", "SC.95.UCL"), names(out), nomatch = 0)
+	out <- out[, id]
+	return(out)
 }
 
 
@@ -550,12 +502,61 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' data(ant)
 #' iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 #' @export
-iNEXT <- function(x, q = 0, datatype=c("abundance", "incidence"), size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50) 
+#' 
+iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50)
 {
-  datatype <- match.arg(datatype)
-  if(datatype == "abundance") out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot)
-  if(datatype == "incidence") out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot)
-  out 
+  TYPE <- c("abundance", "incidence")
+  if(is.na(pmatch(datatype, TYPE)))
+    stop("invalid datatype")
+  if(pmatch(datatype, TYPE) == -1)
+    stop("ambiguous datatype")
+  datatype <- match.arg(datatype, TYPE)
+  
+  Fun <- function(x, q){
+    if(datatype == "abundance")
+      out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot)
+    if(datatype == "incidence")
+      out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot)  
+    out
+  }
+  
+  if(class(q) != "numeric")
+    stop("invlid class of order q, q should be a postive value/vector of numeric object")
+  if(min(q) < 0){
+    warning("ambigous of order q, we only compute postive q")
+    q <- q[q >= 0]
+  }
+  if(class(x)!="list"){
+    out <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
+    out[,-(1:3)] <- round(out[,-(1:3)],3)
+    
+    index <- rbind(as.matrix(ChaoSpecies(x, datatype)), 
+                   as.matrix(ChaoEntropy(x, datatype, transform=TRUE)),
+                   as.matrix(EstSimpson(x, datatype, transform=TRUE)))
+    rownames(index) <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
+    
+  }else{
+    out <- lapply(x, function(x) do.call("rbind", lapply(q, function(q) Fun(x,q))))
+    out <- lapply(out, function(out) {
+      out[,-(1:3)] <- round(out[,-(1:3)],3)
+      out
+    })  
+    arr <- array(0, dim = c(3, 5, length(x)))
+    arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype)))
+    arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
+    arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE)))  
+    dimnames(arr)[[3]] <- names(x)
+    dimnames(arr)[[1]] <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
+    dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
+    index <- ftable(arr, row.vars = c(3,1))
+  }
+  
+  info <- DataInfo(x, datatype)
+
+  
+  z <- list("DataInfo"=info, "BasicIndex"=index,"Accumulation"=out)
+  class(z) <- c("iNEXT")
+  return(z)
 }
 
 
@@ -582,243 +583,193 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
   out 
 }
 
-#
-#
-###############################################
-# sub-plot function
-#
-N2D<- function(out, method="plot", xlab=NULL, ylab=NULL, col, xlim=NULL, ylim=NULL, main=paste("q =", out$order), pch=19,...)
-{
-  if(is.null(xlab)){xlab="Number of individuals"}
-  if(is.null(ylab)){ylab="Diversity"}
-  if(is.null(xlim)){xlim=range(out$interpolation[,1],out$extrapolation[,1])}
-  if(ncol(out$interpolation) < 4)
-  {
-    if(is.null(ylim)){ylim=range(out$interpolation[,2],out$extrapolation[,2])}
-    if(method=="plot")
-    {
-       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
-    }
-  }
-  
-  else
-  {
-    Inte <- as.data.frame(out$interpolation)
-    Extr <- as.data.frame(out$extrapolation)
-    Mat <- rbind(Inte, Extr)
-    if(is.null(ylim)){ylim=range(Mat[,3],Mat[,4])}
-    if(method=="plot")
-    {
-       plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
-    }
-    conf.reg(Mat[,1], Mat$qD.95.LCL, Mat$qD.95.UCL, col=adjustcolor(col, 0.25), border=NA)  
-
-  }
-  if(is.null(out$summary[["T"]]))
-  {
-     if(out$summary[1]<=xlim[2])
-     {
-        points(out$summary[1],out$interpolation$qD[out$interpolation$m==out$summary$n],lwd=5, col=col, pch=pch)
-     }
-  }
-  if(is.null(out$summary[["n"]]))
-  {
-     if(out$summary[1]<=xlim[2])
-     {
-        points(out$summary[1],out$interpolation$qD[out$interpolation$t==out$summary$T],lwd=5, col=col, pch=pch)
-     }
-  }
-  a <- max(out$interpolation[,1])
-  b <- max(out$interpolation[,2])
-  lines(out$interpolation[,1],out$interpolation[,2], lty=1, lwd=2, col=col)
-  lines(c(a,out$extrapolation[,1]),c(b,out$extrapolation[,2]), lty=2, lwd=2, col=col)
-}
-
-N2SC<-function(out, method="plot", xlab=NULL, ylab=NULL, col, xlim=NULL, ylim=NULL, main="", pch=19, ...)
-{
-  if(is.null(xlab)){xlab="Number of individuals"}
-  if(is.null(ylab)){ylab="Sample coverage"}
-  if(is.null(xlim)){xlim=range(out$interpolation[,1],out$extrapolation[,1])}
-  if(ncol(out$interpolation) < 4)
-  {
-    if(is.null(ylim)){ylim=range(out$interpolation[,3],out$extrapolation[,3])}
-    if(method=="plot"){
-      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
-    }
-    a <- max(out$interpolation[,1])
-    b <- max(out$interpolation[,3])
-    lines(out$interpolation[,1],out$interpolation[,3], lty=1, lwd=2, col=col)
-    lines(c(a,out$extrapolation[,1]),c(b,out$extrapolation[,3]), lty=2, lwd=2, col=col)	
-  }
-  
-  else
-  {
-    Inte <- as.data.frame(out$interpolation)
-    Extr <- as.data.frame(out$extrapolation)
-    Mat <- rbind(Inte, Extr)
-    if(is.null(ylim)){ylim=range(Mat[,6],Mat[,7])}
-    if(method=="plot"){
-      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
-    }
-    a <- max(out$interpolation[,1])
-    b <- max(out$interpolation[,5])
-    conf.reg(Mat[,1], Mat$SC.95.LCL, Mat$SC.95.UCL, col=adjustcolor(col, 0.25), border=NA)
-    lines(out$interpolation[,1],out$interpolation[,5], lty=1, lwd=2, col=col)
-    lines(c(a,out$extrapolation[,1]),c(b,out$extrapolation[,5]), lty=2, lwd=2, col=col)
-  }
-  if(out$summary[1]<=xlim[2])
-  {
-     points(out$summary[1],out$summary$C.hat,lwd=5, col=col, pch=pch)
-  }
-  
-}
-
-SC2D<- function(out, method="plot", xlab=NULL, ylab=NULL, col, xlim=NULL,ylim=NULL, main=paste("q =", out$order), pch=19,...)
-{
-  
-  if(is.null(xlab)){xlab="Sample coverage"}
-  if(is.null(ylab)){ylab="Diversity"}
-  if(ncol(out$interpolation) < 4)
-  {
-    if(is.null(xlim)){xlim=range(out$interpolation[,3],out$extrapolation[,3])}
-    if(is.null(ylim)){ylim=range(out$interpolation[,2],out$extrapolation[,2])}
-    if(method=="plot"){
-      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
-    }
-    a <- max(out$interpolation[,3])
-    b <- max(out$interpolation[,2])
-    lines(out$interpolation[,3],out$interpolation[,2], lty=1, lwd=2, col=col)
-    lines(c(a,out$extrapolation[,3]),c(b,out$extrapolation[,2]), lty=2, lwd=2, col=col) 
-  }
-  
-  else
-  {
-    if(is.null(xlim)){ xlim=range(out$interpolation[,5],out$extrapolation[,5]) }
-    Inte <- as.data.frame(out$interpolation)
-    Extr <- as.data.frame(out$extrapolation)
-    Mat <- rbind(Inte, Extr)
-    if(is.null(ylim)){ylim=range(Mat[,3],Mat[,4])}
-    if(method=="plot"){
-      plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=main,...)
-    }
-    a <- max(out$interpolation[,5])
-    b <- max(out$interpolation[,2])
-    conf.reg(Mat[,5], Mat$qD.95.LCL, Mat$qD.95.UCL, col=adjustcolor(col, 0.25), border=NA)
-    lines(out$interpolation[,5],out$interpolation[,2], lty=1, lwd=2, col=col)
-    lines(c(a,out$extrapolation[,5]),c(b,out$extrapolation[,2]), lty=2, lwd=2, col=col) 
-  }
-  if(out$summary$C.hat<=xlim[2])
-  {
-     points(out$summary$C.hat,out$interpolation$qD[out$interpolation[,1]==out$summary[1,1]],lwd=5, col=col, pch=pch)
-  }
-}
 
 #
 #
 ###############################################
-#' Plot Method for an iNEXT Object
+#' ggplot2 extension for an iNEXT Object
 #' 
-#' \code{plot.iNEXT} the \code{\link{plot}} method for \code{\link{iNEXT}} Object
-#' @S3method plot iNEXT
+#' \code{ggiNEXT} the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object
 #' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
-#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"); N2D means to plot number of individuals or number of samples to diversity;
-#'              N2SC means to plot number of individuals or number of samples to sample coverage; SC2D means to plot sample coverage to diversity.                 
-#' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
-#' @param ... further plotting parameters will accept the following arguments:
-#'        \code{main} an overall title for the plot.
-#'        \code{xlab, ylab} a title for the x and yaxis.
-#'        \code{xlim, ylim} numeric vectors of length 2, giving the x and y coordinates ranges.
-#'        \code{pch} either an integer specifying a symbol or a single character to be used as the default in plotting points.
-#'        
-#' @seealso \code{\link{lines.iNEXT}}
+#' @param type three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot number of individuals or number of samples to diversity;
+#'              \code{2} means to plot number of individuals or number of samples to sample coverage; and \code{3} means to plot sample coverage to diversity.                 
+#' @param se display confidence interval around estimated accumulation curve
+#' @param facet.var display subsets of the dataset in different panels with four choices: \code{facet.var = c("none", "order", "site", "both")} where
+#'                  \code{"none"} means do not split any lay out panels in a grid; \code{"order"} means split lay out panels by different orders q; 
+#'                  \code{"site"} means split lay out panels by different sites; and \code{"both} means split lay out panels by order and sites.  
+#' @param color.var display subsets of the dataset in different colors with four choices: \code{color.var = c("none", "order", "site", "both")} where
+#'                  \code{"none"} means do not split any color; \code{"order"} means split colors by different orders q; 
+#'                  \code{"site"} means split colors by different sites; and \code{"both} means split colors by order and sites.  
+#' a specification for the default plotting color, see \code{\link{par}} for detail.
+#' @param ... further plotting parameters will accept in the ggplot2 arguments
 #' @examples
 #' data(spider)
+#' # single abundance-based data
 #' x <- iNEXT(spider$Girdled, q=0, datatype="abundance")
-#' plot(x)
+#' ggiNEXT(x, type=1)
+#' ggiNEXT(x, type=2)
+#' ggiNEXT(x, type=3)
+#' 
+#' # single incidence-based data with multiple order q
 #' data(ant)
-#' y <- iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
-#' plot(y)
-#' @export
-plot.iNEXT <- function(x, style="N2D", col=1, ...) 
-{
-  if(is.null(x$summary[["T"]]))
-  {
-    switch(style,N2D = N2D (x,col=col, method="plot",...),
-           N2SC= N2SC(x,col=col, method="plot",...),
-           SC2D= SC2D(x,col=col, method="plot",...))
-  }
-  else
-  {
-    switch(style,N2D = N2D (x,col=col, method="plot",...),
-           N2SC= N2SC(x,col=col, method="plot",...),
-           SC2D= SC2D(x,col=col, method="plot",...))
-  }
-}
-
-
-#
-#
-###############################################
-#' Lines Method for an iNEXT Object
+#' y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
+#' ggiNEXT(y, se=FALSE)
 #' 
-#' \code{lines.iNEXT} the \code{\link{lines}} method for \code{\link{iNEXT}} Object
-#' @S3method lines iNEXT
-
-#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
-#' @param style three different plotting style = c("N2D", "N2SC", "SC2D"); N2D means to plot number of individuals or number of samples to diversity;
-#'              N2SC means to plot number of individuals or number of samples to sample coverage; SC2D means to plot sample coverage to diversity.                 
-#' @param col a specification for the default plotting color, see \code{\link{par}} for detail.
-#' @param ... further plotting parameters (see \code{\link{par}}) may also be accepted.
-#'        
-#' @seealso \code{\link{plot.iNEXT}}
-#' @examples
-#' data(spider)
-#' x1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
-#' x2 <- iNEXT(spider$Logged, q=0, datatype="abundance")
-#' plot(x1, ylim=c(1, 300))
-#' lines(x2, col=2)
+#' # multiple abundance-based data with multiple order q
+#' z <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
+#' ggiNEXT(z, facet.var="site", color.var="order")
+#' ggiNEXT(z, facet.var="both", color.var="both")
 #' @export
-lines.iNEXT <- function(x, style="N2D", col=1, ...)
-{
-  if(is.null(x$summary[["T"]]))
-  {
-    switch(style,N2D = N2D (x,col=col, method="lines",...),
-           N2SC= N2SC(x,col=col, method="lines",...),
-           SC2D= SC2D(x,col=col, method="lines",...))
+
+ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
+  require(ggplot2)
+  if(class(x) != "iNEXT") 
+    stop("invalid object class")
+  TYPE <-  c(1, 2, 3)
+  SPLIT <- c("none", "order", "site", "both")
+  if(is.na(pmatch(type, TYPE)) | pmatch(type, TYPE) == -1)
+    stop("invalid plot type")
+  if(is.na(pmatch(facet.var, SPLIT)) | pmatch(facet.var, SPLIT) == -1)
+    stop("invalid facet variable")
+  if(is.na(pmatch(color.var, SPLIT)) | pmatch(color.var, SPLIT) == -1)
+    stop("invalid color variable")
+  
+  type <- pmatch(type, 1:3)
+  facet.var <- match.arg(facet.var, SPLIT)
+  color.var <- match.arg(color.var, SPLIT)
+
+    
+  z <- x$Accumulation
+  if(class(z) == "list"){
+    z <- data.frame(do.call("rbind", z) ,site=rep(names(z), sapply(z, nrow)))
+    rownames(z) <- NULL
   }
-  else
-  {
-    switch(style, N2D = N2D (x,col=col, method="lines",...),
-           N2SC= N2SC(x,col=col, method="lines",...),
-           SC2D= SC2D(x,col=col, method="lines",...))
+  
+  if("qD.95.LCL" %in% names(z) == FALSE & se) {
+    warning("invalid se setting, the iNEXT object do not consist confidence interval")
+    se <- FALSE
+  }else if("qD.95.LCL" %in% names(z) & se) {
+    se <- TRUE
+  }else{
+    se <- FALSE
   }
+  
+  
+  if(type==1L) {
+    z$x <- z[,1]
+    z$y <- z$qD
+    if(se){
+      z$y.lwr <- z$qD.95.LCL
+      z$y.upr <- z$qD.95.UCL
+    }
+  }else if(type==2L){
+    z$x <- z[,1]
+    z$y <- z$SC
+    if(se){
+      z$y.lwr <- z$SC.95.LCL
+      z$y.upr <- z$SC.95.UCL
+    }
+  }else if(type==3L){
+    z$x <- z$SC
+    z$y <- z$qD
+    if(se){
+      z$y.lwr <- z$qD.95.LCL
+      z$y.upr <- z$qD.95.UCL
+    }
+  }
+  
+  
+  if(color.var=="none"){
+    if(levels(factor(z$order))>1 & "site"%in%names(z)){
+      warning("invalid color.var setting, the iNEXT object consists multiple sites and orders, change setting as both")
+      color.var <- "both"
+      z$col <- paste(z$site, z$order, sep="-")
+    }else if("site"%in%names(z)){
+      warning("invalid color.var setting, the iNEXT object consists multiple orders, change setting as order")
+      color.var <- "site"
+      z$col <- z$site
+    }else if(levels(factor(z$order))>1){
+      warning("invalid color.var setting, the iNEXT object consists multiple sites, change setting as site")
+      color.var <- "order"
+      z$col <- z$order
+    }else{
+      z$col <- rep(1, nrow(z))
+    }
+  }else if(color.var=="order"){     
+    z$col <- z$order
+  }else if(color.var=="site"){
+    if(!"site"%in%names(z)){
+      warning("invalid color.var setting, the iNEXT object do not consist multiple sites, change setting as order")
+      z$col <- order
+    }
+    z$col <- z$site
+  }else if(color.var=="both"){
+    if(!"site"%in%names(z)){
+      warning("invalid color.var setting, the iNEXT object do not consist multiple sites, change setting as order")
+      z$col <- order
+    }
+    z$col <- paste(z$site, z$order, sep="-")
+  }
+  
+  
+  
+  if(ncol(z)%%2 == 0){
+    g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + geom_point(aes(x=x, y=y, colour=factor(col)), size=5, data=subset(z, method=="observed"))
+  }else{
+    g <- ggplot(z, aes(x=x, y=y, colour=factor(col), shape=site)) + geom_point(aes(x=x, y=y, colour=factor(col), shape=site), size=5, data=subset(z, method=="observed"))
+  }
+  
+  g <- g + geom_line(aes(linetype=factor(method, c("interpolated", "extrapolated"), c("interpolation", "extrapoltion"))), size=1.5) +        
+    labs(x="Number of sampling units", y="Species diversity") +
+    guides(linetype=guide_legend(title="Method"), 
+           colour=guide_legend(title="Order"), 
+           fill=guide_legend(title="Order"), 
+           shape=guide_legend(title="Site")) + 
+    theme(legend.position = "bottom", text=element_text(size=18)) 
+  
+  if(se)
+    g <- g + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr, fill=factor(col), colour=NULL), alpha=0.2)
+  
+  
+  if(facet.var=="order"){
+    if(length(levels(factor(z$order))) == 1){
+      warning("invalid facet.var setting, the iNEXT object do not consist multiple orders.")      
+    }else{
+      g <- g + facet_grid(.~ order)
+      if(color.var=="both"){
+        g <- g + guides(colour=guide_legend(title="Site-Order", ncol=length(levels(factor(z$order))), byrow=TRUE),
+                        fill=guide_legend(title="Site-Order"))
+      }
+    }
+  }
+  
+  if(facet.var=="site"){
+    if(!"site"%in%names(z)) {
+      warning("invalid facet.var setting, the iNEXT object do not consist multiple sites.")
+    }else{
+      g <- g + facet_grid(.~site)
+      if(color.var=="both"){
+        g <- g + guides(colour=guide_legend(title="Site-Order", nrow=length(levels(factor(z$order)))),
+                        fill=guide_legend(title="Site-Order"))
+      }
+    }
+  }
+  
+  if(facet.var=="both"){
+    if(length(levels(factor(z$order))) == 1 | !"site"%in%names(z)){
+      warning("invalid facet.var setting, the iNEXT object do not consist multiple sites or orders.")
+    }else{
+      g <- g + facet_wrap(site~order) 
+      if(color.var=="both"){
+        g <- g +  guides(colour=guide_legend(title="Site-Order", nrow=length(levels(factor(z$site))), byrow=TRUE),
+                         fill=guide_legend(title="Site-Order"))
+      }
+    }
+  }
+  return(g)
+  
 }
 
-
-#
-#
-###############################################
-#' Plot Method for an iNEXT Object
-#' 
-#' \code{print.iNEXT} the \code{\link{print}} method for \code{\link{iNEXT}} Object
-#' @S3method print iNEXT
-#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
-#' @param ... further arguments passed to or from other methods.
-#' @examples
-#' data(spider)
-#' x <- iNEXT(spider$Girdled, q=0, datatype="abundance")
-#' print(x)
-#' @export
-print.iNEXT <- function(x, digits = max(3L, getOption("digits") - 3L), ...) 
-{
-  cat("\n(1)BASIC DATA INFORMATION:\n")
-  print(x$summary)
-  cat("\n(2) DIVERSITY ORDER:\t",paste("q =", x$order,"\n"))
-  cat("\n(3) INTERPOLATION:\n")
-  print(x$interpolation)
-  cat("\n(4) EXTRAPOLATION:\n")
-  print(x$extrapolation)
-}
 
 
 ##
