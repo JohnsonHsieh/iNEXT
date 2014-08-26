@@ -4,7 +4,7 @@ Title: iNterpolation and EXTrapolation for species diversity
 Version: 2.0
 Date: 2014-08-26
 Authors@R: c(person("T. C.", "Hsieh", role = c("aut", "cre", "cph"), email =
-    "diversity96@gmail.com"), person("K. H.", "Ma", role = "ctb", email =
+    "euler96@gmail.com"), person("K. H.", "Ma", role = "ctb", email =
     "smallmar123@gmail.com"), person("Anne", "Chao", role = "ths", email =
     "chao@stat.nthu.edu.tws"))
 Description: iNterpolation and EXTrapolation for species diversity: a unified
@@ -13,6 +13,6 @@ Description: iNterpolation and EXTrapolation for species diversity: a unified
 License: GPL (>= 3)
 URL: http://chao.stat.nthu.edu.tw/blog/software-download/
 Author: T. C. Hsieh, K. H. Ma and Anne Chao
-Maintainer: T. C. Hsieh <diversity96@gmail.com>
+Maintainer: T. C. Hsieh <euler96@gmail.com>
 Depends:
     ggplot2
