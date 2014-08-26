@@ -493,12 +493,13 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' @param knots a number of knots (say K, default is 40) specifying separate sample size between 1 and \code{endpoint}. 
 #' If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} compute rarefaction part only and divided by approximately equall spaced K. 
 #' If \code{endpoint} os larger than reference sample size, then \code{iNEXT()} will compute approximately K/2 equally spaced for rarefaction part and divided extrapolation part as approximately K/2 equally spaced between reference sample size and \code{endpoint}.
-#' @param se calculate bootstrap standard error and show 95% confidence interval; default is TRUE.
+#' @param se calculate bootstrap standard error and show 95\% confidence interval; default is TRUE.
 #' @param nboot the number of bootstrap resampling times, default is 50.
 #' @return a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
 #' @examples
 #' data(spider)
-#' iNEXT(spider$Girdled, q=0, datatype="abundance")
+#' z <- iNEXT(spider, q=0, datatype="abundance")
+#' 
 #' data(ant)
 #' iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 #' @export
@@ -563,19 +564,19 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
 #
 #
 ###########################################
-#' Estimation of the rank of species relative abundance distribution or detection probability
-#' 
-#' \code{EstDis} Estimation of the rank of species relative abundance distribution or detection probability to obtain bootstrap s.e.
-#' 
-#' @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @return a vector of the rank of estimated relative abundance distribution or detection probability
-#' @examples 
-#' data(spider)
-#' EstDis(spider$Girdled, datatype="incidence")
-#' data(ant)
-#' EstDis(ant$h50m, datatype="incidence")
-#' @export
+# Estimation of the rank of species relative abundance distribution or detection probability
+# 
+# \code{EstDis} Estimation of the rank of species relative abundance distribution or detection probability to obtain bootstrap s.e.
+# 
+# @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
+# @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
+# @return a vector of the rank of estimated relative abundance distribution or detection probability
+# @examples 
+# data(spider)
+# EstDis(spider$Girdled, datatype="incidence")
+# data(ant)
+# EstDis(ant$h50m, datatype="incidence")
+# @export
 EstDis <- function(x, datatype=c("abundance", "incidence")){
   datatype <- match.arg(datatype)
   if(datatype == "abundance") out <- EstiBootComm.Ind(Spec=x)                                                      
@@ -590,25 +591,20 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #' ggplot2 extension for an iNEXT Object
 #' 
 #' \code{ggiNEXT} the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object
-#' @param x a \code{\link{iNEXT}} objext computed by \code{\link{iNEXT}}
+#' @param x a \code{iNEXT} object computed by \code{\link{iNEXT}}
 #' @param type three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot number of individuals or number of samples to diversity;
 #'              \code{2} means to plot number of individuals or number of samples to sample coverage; and \code{3} means to plot sample coverage to diversity.                 
 #' @param se display confidence interval around estimated accumulation curve
-#' @param facet.var display subsets of the dataset in different panels with four choices: \code{facet.var = c("none", "order", "site", "both")} where
-#'                  \code{"none"} means do not split any lay out panels in a grid; \code{"order"} means split lay out panels by different orders q; 
-#'                  \code{"site"} means split lay out panels by different sites; and \code{"both} means split lay out panels by order and sites.  
-#' @param color.var display subsets of the dataset in different colors with four choices: \code{color.var = c("none", "order", "site", "both")} where
-#'                  \code{"none"} means do not split any color; \code{"order"} means split colors by different orders q; 
-#'                  \code{"site"} means split colors by different sites; and \code{"both} means split colors by order and sites.  
-#' a specification for the default plotting color, see \code{\link{par}} for detail.
-#' @param ... further plotting parameters will accept in the ggplot2 arguments
+#' @param facet.var display subsets of the dataset in different panels with four choices: \code{facet.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any lay out panels in a grid; \code{"order"} means split lay out panels by different orders q; \code{"site"} means split lay out panels by different sites; and \code{"both"} means split lay out panels by order and sites.              
+#' @param color.var display subsets of the dataset in different colors with four choices: \code{color.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any color; \code{"order"} means split colors by different orders q; \code{"site"} means split colors by different sites; and \code{"both"} means split colors by order and sites.  
+#' @return a ggplot object
 #' @examples
 #' data(spider)
 #' # single abundance-based data
-#' x <- iNEXT(spider$Girdled, q=0, datatype="abundance")
-#' ggiNEXT(x, type=1)
-#' ggiNEXT(x, type=2)
-#' ggiNEXT(x, type=3)
+#' out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
+#' ggiNEXT(x=out1, type=1)
+#' ggiNEXT(x=out1, type=2)
+#' ggiNEXT(x=out1, type=3)
 #' 
 #' # single incidence-based data with multiple order q
 #' data(ant)
@@ -622,7 +618,6 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #' @export
 
 ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
-  require(ggplot2)
   if(class(x) != "iNEXT") 
     stop("invalid object class")
   TYPE <-  c(1, 2, 3)
@@ -678,7 +673,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     }
   }
   
-  
+  y <- method <- site <- y.lwr <- y.upr <- NULL
   if(color.var=="none"){
     if(levels(factor(z$order))>1 & "site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object consists multiple sites and orders, change setting as both")
@@ -710,8 +705,8 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     }
     z$col <- paste(z$site, z$order, sep="-")
   }
-  
-  
+
+
   
   if(ncol(z)%%2 == 0){
     g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + geom_point(aes(x=x, y=y, colour=factor(col)), size=5, data=subset(z, method=="observed"))

@@ -177,16 +177,16 @@ ChaoSpecies=function(x, datatype="abundance", conf=0.95){
 #
 #
 ###########################################
-#' Estimation of species richness
-#' 
-#' \code{BootstrapFun} Estimation of species richness via Chao (1984, 1987)
-#' 
-#' @param x a vector of species frequence
-#' @param FunName the R function to estimate the traget index.
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @param B the number of bootstrap resampling times, default is \code{200}.
-#' @return standard error of the estimator
-#' @author Y.H. Lee
+# Estimation of species richness
+# 
+# \code{BootstrapFun} Estimation of species richness via Chao (1984, 1987)
+# 
+# @param x a vector of species frequence
+# @param FunName the R function to estimate the traget index.
+# @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
+# @param B the number of bootstrap resampling times, default is \code{200}.
+# @return standard error of the estimator
+# @author Y.H. Lee
 BootstrapFun <- function(x, FunName, datatype, B){
   
   if(!is.numeric(x) & !is.matrix(x) & !is.data.frame(x))
@@ -259,6 +259,7 @@ BootstrapFun <- function(x, FunName, datatype, B){
 #' 
 #' @param x a vector of species frequence
 #' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
+#' @param transform a \code{logical} constant to compute traditional index or the effective transformation. Default is \code{logical=FALSE}.
 #' @param conf a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.
 #' @param B the number of bootstrap resampling times, default is \code{200}.
 #' @return a value of species richness estimator
@@ -391,6 +392,7 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 #' 
 #' @param x a vector of species frequence
 #' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
+#' @param transform a \code{logical} constant to compute traditional index or the effective transformation. Default is \code{logical=FALSE}.
 #' @param conf a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.
 #' @param B the number of bootstrap resampling times, default is \code{200}.
 #' @return a value of species richness estimator

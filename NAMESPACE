@@ -1,13 +1,9 @@
 import(ggplot2)
 export(
-"Chat.Ind",
-"Chat.Sam",
-"Dqhat.Ind",
-"Dqhat.Sam",
 "iNEXT",
-"EstDis",
 "DataInfo",
 "ChaoSpecies",
 "ChaoEntropy",
-"EstSimpson"
+"EstSimpson",
+"ggiNEXT"
 )
