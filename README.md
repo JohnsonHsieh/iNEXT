@@ -11,13 +11,23 @@ The user provides a vector of abundances of individual species (abundance data) 
 
 Start R(studio) and copy-and-paste the commands below:
 
-    #install.packages('devtools')
+    install.packages('devtools')
     library(devtools)
     install_github('iNEXT','JohnsonHsieh')
     library(iNEXT)
 
-### License
-The iNEXT package is licensed under the GPLv2. See the files listed below for additional details.
+### Example
+Copy-and-paste the commands below:
 
-- COPYING - radyant package license (GPLv2)
+    library(iNEXT)
+    data(spider)
+    out <- iNEXT(spider, q=c(0, 1, 2), endpoints=500)
+    ggiNEXT(out, type=1, facet.var="site")
+    ggiNEXT(out, type=2)
+    ggiNEXT(out, type=3, facet.var="site")
+
+### License
+The iNEXT package is licensed under the GPLv3. See the files listed below for additional details.
+
+- COPYING - radyant package license (GPLv3)
 - NOTICE - Copyright notices for additional included software

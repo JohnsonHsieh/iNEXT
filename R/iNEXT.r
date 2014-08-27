@@ -732,7 +732,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
 
 
   
-  if(ncol(z)%%2 == 0){
+  if("site"%in%names(z)){
     g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + geom_point(aes(x=x, y=y, colour=factor(col)), size=5, data=subset(z, method=="observed"))
   }else{
     g <- ggplot(z, aes(x=x, y=y, colour=factor(col), shape=site)) + geom_point(aes(x=x, y=y, colour=factor(col), shape=site), size=5, data=subset(z, method=="observed"))
