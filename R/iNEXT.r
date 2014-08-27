@@ -485,7 +485,8 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' 
 #' \code{iNEXT} Estimation of interpolation and extrapolation of Hill number with order q
 #' 
-#' @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
+#' @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency. 
+#' Note that in iNEXT version 2.0, the input arguments allow the class of \code{\link{numeric}}, \code{\link{matrix}}, \code{\link{data.frame}} (species by sites), or \code{\link{list}}.
 #' @param q a numeric value, the order of Hill number .
 #' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
 #' @param size an integer vector of rarefaction/extrapolation sample size (number of individuals or sampling units), default is NULL. If \code{size} is not be specified, it would compute rarefaction/extrapolation by endpoint and knots.
@@ -527,21 +528,38 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     warning("ambigous of order q, we only compute postive q")
     q <- q[q >= 0]
   }
-  if(class(x)!="list"){
-    out <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
+  
+  if(class(x)=="numeric"){
+    out <- do.call("rbind", lapply(q, function(q) Fun(x, q)))
     out[,-(1:3)] <- round(out[,-(1:3)],3)
-    
     index <- rbind(as.matrix(ChaoSpecies(x, datatype)), 
                    as.matrix(ChaoEntropy(x, datatype, transform=TRUE)),
                    as.matrix(EstSimpson(x, datatype, transform=TRUE)))
     rownames(index) <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
     
-  }else{
-    out <- lapply(x, function(x) do.call("rbind", lapply(q, function(q) Fun(x,q))))
-    out <- lapply(out, function(out) {
-      out[,-(1:3)] <- round(out[,-(1:3)],3)
-      out
-    })  
+  }else if(class(x)=="matrix" | class(x)=="data.frame"){
+  
+    out <- apply(as.matrix(x), 2, function(x){
+      tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
+      tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
+      tmp
+      })
+    arr <- array(0, dim = c(3, 5, ncol(x)))
+    arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype)))
+    arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
+    arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE)))  
+    dimnames(arr)[[3]] <- names(x)
+    dimnames(arr)[[1]] <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
+    dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
+    index <- ftable(arr, row.vars = c(3,1))
+    
+  }else if(class(x)=="list"){
+    out <- lapply(x, function(x) {
+      tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
+      tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
+      tmp
+      })
+    
     arr <- array(0, dim = c(3, 5, length(x)))
     arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype)))
     arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
@@ -550,6 +568,8 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     dimnames(arr)[[1]] <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
     dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
     index <- ftable(arr, row.vars = c(3,1))
+  }else{
+    stop("invlid class of x, x should be a object of numeric, matrix, data.frame, or list")
   }
   
   info <- DataInfo(x, datatype)

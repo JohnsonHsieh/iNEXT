@@ -168,7 +168,7 @@ ChaoSpecies=function(x, datatype="abundance", conf=0.95){
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
   } else if(class(x) == "matrix" | class(x) == "data.frame"){
-    out <- t(apply(as.matrix(x), 2, myFun))  
+    out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
 }
@@ -378,7 +378,7 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
   } else if(class(x) == "matrix" | class(x) == "data.frame"){
-    out <- t(apply(as.matrix(x), 2, myFun))  
+    out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
 }
@@ -481,7 +481,7 @@ EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=20
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
   } else if(class(x) == "matrix" | class(x) == "data.frame"){
-    out <- t(apply(as.matrix(x), 2, myFun))  
+    out <-do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
 }
