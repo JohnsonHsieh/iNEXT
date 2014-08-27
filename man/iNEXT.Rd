@@ -7,7 +7,8 @@ iNEXT(x, q = 0, datatype = "abundance", size = NULL, endpoint = NULL,
   knots = 40, se = TRUE, nboot = 50)
 }
 \arguments{
-\item{x}{a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.}
+\item{x}{a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
+Note that in iNEXT version 2.0, the input arguments allow the class of \code{\link{numeric}}, \code{\link{matrix}}, \code{\link{data.frame}} (species by sites), or \code{\link{list}}.}
 
 \item{q}{a numeric value, the order of Hill number .}
 
@@ -38,4 +39,3 @@ z <- iNEXT(spider, q=0, datatype="abundance")
 data(ant)
 iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 }
-
