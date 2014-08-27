@@ -657,7 +657,8 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
   facet.var <- match.arg(facet.var, SPLIT)
   color.var <- match.arg(color.var, SPLIT)
 
-    
+  y <- method <- site <- y.lwr <- y.upr <- NULL
+  
   z <- x$Accumulation
   if(class(z) == "list"){
     z <- data.frame(do.call("rbind", z) ,site=rep(names(z), sapply(z, nrow)))
@@ -696,8 +697,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
       z$y.upr <- z$qD.95.UCL
     }
   }
-  
-  y <- method <- site <- y.lwr <- y.upr <- NULL
+    
   if(color.var=="none"){
     if(levels(factor(z$order))>1 & "site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object consists multiple sites and orders, change setting as both")
