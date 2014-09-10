@@ -377,7 +377,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 		}
 		m <- c(1, m[-1])
 	} else if(is.null(m)==FALSE) {	
-		if(max(m)>n & length(m[m==n])==0)  m <- c(m, n, n+1)
+		if(max(m)>n & length(m[m==n])==0)  m <- c(m, n-1, n, n+1)
 		m <- sort(m)
 	}
 	
@@ -446,7 +446,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 		}
 		t <- c(1, t[-1])
 	} else if(is.null(t)==FALSE) {	
-		if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT, nT+1)
+		if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT-1, nT, nT+1)
 		t <- sort(t)
 	}
 	
@@ -519,6 +519,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   datatype <- match.arg(datatype, TYPE)
   
   Fun <- function(x, q){
+    x <- as.numeric(unlist(x))
     if(datatype == "abundance")
       out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot)
     if(datatype == "incidence")
@@ -533,7 +534,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     q <- q[q >= 0]
   }
   
-  if(class(x)=="numeric"){
+  if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){
     out <- do.call("rbind", lapply(q, function(q) Fun(x, q)))
     out[,-(1:3)] <- round(out[,-(1:3)],3)
     index <- rbind(as.matrix(ChaoSpecies(x, datatype)), 
@@ -541,8 +542,15 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
                    as.matrix(EstSimpson(x, datatype, transform=TRUE)))
     rownames(index) <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
     
+  }else if(ncol(x)==1 | nrow(x)==1){
+    x <- as.numeric(unlist(x))
+    out <- do.call("rbind", lapply(q, function(q) Fun(x, q)))
+    out[,-(1:3)] <- round(out[,-(1:3)],3)
+    index <- rbind(as.matrix(ChaoSpecies(x, datatype)), 
+                   as.matrix(ChaoEntropy(x, datatype, transform=TRUE)),
+                   as.matrix(EstSimpson(x, datatype, transform=TRUE)))
+    rownames(index) <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
   }else if(class(x)=="matrix" | class(x)=="data.frame"){
-  
     out <- apply(as.matrix(x), 2, function(x){
       tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
       tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
