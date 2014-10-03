@@ -457,6 +457,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 		Prob.hat <- EstiBootComm.Sam(Spec)
 		Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
 		Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
+    Abun.Mat <- Abun.Mat[,-which(colSums(Abun.Mat)==nT)]
 		
 		error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
 		left  <- Dq.hat - error
@@ -522,8 +523,14 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     x <- as.numeric(unlist(x))
     if(datatype == "abundance")
       out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot)
-    if(datatype == "incidence")
+    if(datatype == "incidence"){
+      t <- x[1]
+      y <- x[-1]
+      if(t>sum(y)){
+        warning("Insufficient data to provide reliable estimators and associated s.e.") 
+      }
       out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot)  
+    }
     out
   }
   
@@ -542,14 +549,6 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
                    as.matrix(EstSimpson(x, datatype, transform=TRUE)))
     rownames(index) <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
     
-  }else if(ncol(x)==1 | nrow(x)==1){
-    x <- as.numeric(unlist(x))
-    out <- do.call("rbind", lapply(q, function(q) Fun(x, q)))
-    out[,-(1:3)] <- round(out[,-(1:3)],3)
-    index <- rbind(as.matrix(ChaoSpecies(x, datatype)), 
-                   as.matrix(ChaoEntropy(x, datatype, transform=TRUE)),
-                   as.matrix(EstSimpson(x, datatype, transform=TRUE)))
-    rownames(index) <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
   }else if(class(x)=="matrix" | class(x)=="data.frame"){
     out <- apply(as.matrix(x), 2, function(x){
       tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
