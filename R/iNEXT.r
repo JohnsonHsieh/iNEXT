@@ -665,7 +665,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
   color.var <- match.arg(color.var, SPLIT)
 
   y <- method <- site <- y.lwr <- y.upr <- NULL
-  
+  site <<- NULL
   z <- x$Accumulation
   if(class(z) == "list"){
     z <- data.frame(do.call("rbind", z) ,site=rep(names(z), sapply(z, nrow)))
