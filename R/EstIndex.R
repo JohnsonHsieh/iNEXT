@@ -236,7 +236,8 @@ BootstrapFun <- function(x, FunName, datatype, B){
     pi.star <- c(pi, rep(U / t * (1 - Chat) / Q0, Q0))
     #   set.seed(456)
     y1 <- rbind(t, matrix(rbinom(length(pi.star) * B, t, pi.star), ncol = B))
-    y1 <- y1[,-which(colSums(y1)==t)]
+    tmp <- which(colSums(y1)==t)
+    if(length(tmp)>0) y1 <- y1[,-tmp]
     se <- sd(apply(y1, 2, function(y2) FunName(y2, datatype)))
     return(se)
   }

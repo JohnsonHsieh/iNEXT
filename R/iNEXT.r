@@ -457,7 +457,8 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 		Prob.hat <- EstiBootComm.Sam(Spec)
 		Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
 		Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
-    Abun.Mat <- Abun.Mat[,-which(colSums(Abun.Mat)==nT)]
+		tmp <- which(colSums(Abun.Mat)==nT)
+    if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
 		
 		error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
 		left  <- Dq.hat - error
