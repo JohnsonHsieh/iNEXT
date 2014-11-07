@@ -335,7 +335,7 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
       p <- x/sum(x)
       -sum(p*log(p))
     }else if(datatype=="incidence"){
-      t <- x[1]
+      #t <- x[1]
       y <- x[-1]
       y <- y[y>0]
       p <- y/sum(y)
@@ -423,11 +423,11 @@ EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=20
       p <- x/sum(x)
       1-sum(p^2)
     }else if(datatype=="incidence"){
-      # t <- x[1]
+      t <- x[1]
       y <- x[-1]
       y <- y[y>0]
-      p <- y/sum(y)
-      1-sum(p^2)
+      p <- y/t
+      1-sum(p^2)/sum(p)^2
     }
   }
   MVUE <- function(x, datatype){
@@ -440,12 +440,24 @@ EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=20
       t <- x[1]
       y <- x[-1]
       y <- y[y>0]
-      n <- sum(y)
-      est <- 1-sum(choose(y,2)/choose(n,2))
+      Q1 <- sum(y==1)
+      a <- sum(choose(y,2)/choose(t,2))
+      b <- (sum(y %*% t(y)) - sum(diag(y %*% t(y))))/t^2
+      if(Q1!=t){
+        est <- 1-a/(a+b)
+      }else{
+        est <- 1-2/t/(t+1)
+      }
     }
     est
   }
-  TransformSimpson <- function(x, datatype) 1/MVUE(x, datatype)
+  TransformSimpson <- function(x, datatype) {  
+    if(max(x[-1]>1)){
+      1/(1 - MVUE(x, datatype))
+    }else {
+      1/(1 - Observed(x, datatype))
+    }
+  }
   
   z <- qnorm(1 - (1 - conf)/2)
   
@@ -457,7 +469,7 @@ EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=20
         stop("invalid data structure")
     }
     if(transform==TRUE){
-      obs <- 1/Observed(x, datatype)
+      obs <- 1/(1-Observed(x, datatype))
       est <- TransformSimpson(x, datatype)
       se <- BootstrapFun(x, TransformSimpson, datatype, B)
       CI <- c(max(est - z * se, obs), est + z * se)

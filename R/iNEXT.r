@@ -459,20 +459,24 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 		Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
 		tmp <- which(colSums(Abun.Mat)==nT)
     if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
-		
-		error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
-		left  <- Dq.hat - error
-		right <- Dq.hat + error
-		left[left<=0] <- 0
-				
-		error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
-		left.C  <- C.hat - error.C
-		right.C <- C.hat + error.C
-		left.C[left.C<=0] <- 0
-    right.C[right.C>=1] <- 1
-    
-		out <- cbind("t"=t, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
-	} else {
+    if(ncol(Abun.Mat)==0){
+      out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
+      warning("Insufficient data to compute bootstrap s.e.")
+    }else{		
+  		error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
+  		left  <- Dq.hat - error
+  		right <- Dq.hat + error
+  		left[left<=0] <- 0
+  				
+  		error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
+  		left.C  <- C.hat - error.C
+  		right.C <- C.hat + error.C
+  		left.C[left.C<=0] <- 0
+      right.C[right.C>=1] <- 1
+      
+  		out <- cbind("t"=t, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
+    }
+	}else {
 		out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
 	}
 	out <- data.frame(out)
