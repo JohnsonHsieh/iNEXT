@@ -695,6 +695,9 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
       z$y.upr <- z$qD.95.UCL
     }
   }else if(type==2L){
+    if(length(unique(z$order))>1){
+      z <- subset(z, order==unique(z$order)[1])
+    }
     z$x <- z[,1]
     z$y <- z$SC
     if(se){
@@ -757,6 +760,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
            fill=guide_legend(title="Order"), 
            shape=guide_legend(title="Site")) + 
     theme(legend.position = "bottom", text=element_text(size=18)) 
+  if(type==2L) g <- g + labs(x="Number of sampling units", y="Sample coverage")
   
   if(se)
     g <- g + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr, fill=factor(col), colour=NULL), alpha=0.2)
