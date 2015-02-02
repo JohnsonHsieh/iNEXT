@@ -8,7 +8,7 @@
 #'This is an simple guide for iNEXT. First install iNEXT R package from github repository (iNEXT is prepareing to submit to CRAN) by the following commends:
 
 # install.packages('devtools') # Tools to install R packages from github github repositories
-devtools::install_github('iNEXT', 'JohnsonHsieh') # install iNEXT version 2.0 by devtools
+devtools::install_github('JohnsonHsieh/iNEXT') # install iNEXT version 2.0 by devtools
 
 #' Next, import iNEXT package and dataset
 
