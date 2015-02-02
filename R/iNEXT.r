@@ -767,15 +767,16 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     g <- ggplot(z, aes(x=x, y=y, colour=factor(col), shape=site)) + geom_point(aes(x=x, y=y, colour=factor(col), shape=site), size=5, data=subset(z, method=="observed"))
   }
   
-  g <- g + geom_line(aes(linetype=factor(method, c("interpolated", "extrapolated"), c("interpolation", "extrapoltion"))), size=1.5) +        
-    labs(x="Number of sampling units", y="Species diversity") +
+  g <- g + geom_line(aes(linetype=factor(method, c("interpolated", "extrapolated"), c("interpolation", "extrapoltion"))), size=1.5) +
     guides(linetype=guide_legend(title="Method"), 
            colour=guide_legend(title="Order"), 
            fill=guide_legend(title="Order"), 
            shape=guide_legend(title="Site")) + 
     theme(legend.position = "bottom", text=element_text(size=18)) 
+
   if(type==2L) g <- g + labs(x="Number of sampling units", y="Sample coverage")
-  if(type==3L) g <- g + labs(x="Sample coverage", y="Species diversity")
+  else if(type==3L) g <- g + labs(x="Sample coverage", y="Species diversity")
+  else g <- g + labs(x="Number of sampling units", y="Species diversity")
   
   if(se)
     g <- g + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr, fill=factor(col), colour=NULL), alpha=0.2)
