@@ -48,7 +48,7 @@ DataInfo <- function(x, datatype="abundance"){
   }
   
   if(datatype == "abundance"){
-    if(class(x) == "numeric"){
+    if(class(x) == "numeric" | class(x) == "integer"){
       out <- matrix(Fun.abun(x), nrow=1)
     }else if(class(x) == "list"){
       out <- do.call("rbind", lapply(x, Fun.abun))
@@ -58,7 +58,7 @@ DataInfo <- function(x, datatype="abundance"){
     colnames(out) <-  c("n", "S.obs", "C.hat", paste("f",1:10, sep=""))
     as.data.frame(out)
   }else if(datatype == "incidence"){
-    if(class(x) == "numeric"){
+    if(class(x) == "numeric" | class(x) == "integer"){
       out <- matrix(Fun.ince(x), nrow=1)
     }else if(class(x) == "list"){
       out <- do.call("rbind", lapply(x, Fun.ince))
@@ -165,6 +165,8 @@ ChaoSpecies=function(x, datatype="abundance", conf=0.95){
   
   if(class(x) == "numeric"){
     out <- myFun(x)
+  }else if(class(x) == "integer"){
+	out <- myFun(x)
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
   } else if(class(x) == "matrix" | class(x) == "data.frame"){
@@ -376,6 +378,8 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
   
   if(class(x) == "numeric"){
     out <- myFun(x)
+  }else if(class(x) == "integer"){
+	out <- myFun(x)
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
   } else if(class(x) == "matrix" | class(x) == "data.frame"){
@@ -491,6 +495,8 @@ EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=20
   
   if(class(x) == "numeric"){
     out <- myFun(x)
+  }else if(class(x) == "integer"){
+	out <- myFun(x)
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
   } else if(class(x) == "matrix" | class(x) == "data.frame"){
@@ -498,4 +504,3 @@ EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=20
   }
   return(out)
 }
-

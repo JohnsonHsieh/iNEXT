@@ -154,13 +154,18 @@ Dqhat.Ind <- function(x, q, m){
 			f2 <- sum(x == 2)
 			A <- 1 - ifelse(f2 > 0, (n-1)*f1/((n-1)*f1+2*f2), (n-1)*f1/((n-1)*f1+2))
 			#A=2*sum(x==2)/((n-1)*sum(x==1)+2*sum(x==2))
-			B=sum(x==1)/n*(1-A)^(-n+1)*(-log(A)-sum(sapply(1:(n-1),function(k){1/k*(1-A)^k})))
-			H.hat <- UE+B
-			Hn.hat <- -sum(x / n * log(x / n))
-			w <- (m - n) / m
+			B <- ifelse(A<1, sum(x==1)/n*(1-A)^(-n+1)*(-log(A)-sum(sapply(1:(n-1),function(k){1/k*(1-A)^k}))), 0)
+			D.hat <- exp(UE+B)
+			Dn <- exp(-sum(x / n * log(x / n)))
 			
-			exp(w * H.hat + (1 - w) * Hn.hat)
-			
+			#a <- 1:(n-1)
+			#b <- 1:(n-2)
+			#Da <-  exp(-sum(a / (n-1) * log(a / (n-1)) * fk.hat(x, (n-1))))
+			#Db <-  exp(-sum(b / (n-2) * log(b / (n-2)) * fk.hat(x, (n-2))))
+			#Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
+			#b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
+			b <- A
+			ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(m-n)), Dn)
 		  }
 		}
 		sapply(m, Sub)
@@ -253,11 +258,20 @@ Dqhat.Sam <- function(y, q, t){
 			A <- 1 - ifelse(Q2 > 0, (nT-1)*Q1/((nT-1)*Q1+2*Q2), (nT-1)*Q1/((nT-1)*Q1+2))
 			B <- sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k})))
 			H.hat <- UE+B
-			H.hat <- nT/U*H.hat-log(nT/U)
-		  
-			Hn.hat <- -sum(y / U * log(y / U))
-			w <- (t - nT) / t
-			exp(w * H.hat + (1 - w) * Hn.hat)
+			D.hat <- exp(nT/U*H.hat-log(nT/U))
+			
+			#a <- 1:(nT-1)
+			#b <- 1:(nT-2)
+			#Ua <- (nT-1) / nT * U
+			#Ub <- (nT-2) / nT * U
+			#Da <- exp(-sum(a / Ua * log(a / Ua) * Qk.hat(y, nT, nT-1)))
+			#Db <- exp(-sum(b / Ub * log(b / Ub) * Qk.hat(y, nT, nT-2)))
+			Dn <- exp(-sum(y / U * log(y / U)))
+					
+			#Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
+			#b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
+			b <- A
+			ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(t-nT)), Dn)
 		  }
 		}
 		sapply(t, Sub)
@@ -761,6 +775,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
            shape=guide_legend(title="Site")) + 
     theme(legend.position = "bottom", text=element_text(size=18)) 
   if(type==2L) g <- g + labs(x="Number of sampling units", y="Sample coverage")
+  if(type==3L) g <- g + labs(x="Sample coverage", y="Species diversity")
   
   if(se)
     g <- g + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr, fill=factor(col), colour=NULL), alpha=0.2)
