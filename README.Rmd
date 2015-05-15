@@ -91,10 +91,10 @@ ggiNEXT(out, type=3, facet.var="site")
 ggiNEXT(out, type=3, facet.var="order")
 # plot(out, type=3)
 ```
-
 ```{r ex3, echo=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
 ggiNEXT(out, type=3, facet.var="order")
+
 ```
 
 Run a sample-based example
