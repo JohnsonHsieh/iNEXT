@@ -43,7 +43,7 @@ EstiBootComm.Ind <- function(Spec)
   A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
   a <- f1/n*A
   b <- sum(Spec / n * (1 - Spec / n) ^ n)
-  w <- a / b    		#adjusted factor for rare species in the sample
+  w <- a / b      	#adjusted factor for rare species in the sample
   Prob.hat <- Spec / n * (1 - w * (1 - Spec / n) ^ n)					#estimation of relative abundance of observed species in the sample
   Prob.hat.Unse <- rep(a/ceiling(f0.hat), ceiling(f0.hat))  	#estimation of relative abundance of unseen species in the sample
   return(sort(c(Prob.hat, Prob.hat.Unse), decreasing=TRUE))		  							#Output: a vector of estimated relative abundance
@@ -94,99 +94,99 @@ EstiBootComm.Sam <- function(Spec)
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 # @export
 Dqhat.Ind <- function(x, q, m){
-	x <- x[x > 0]
-	n <- sum(x)
-	
-	fk.hat <- function(x, m){
-		x <- x[x > 0]
-		n <- sum(x)
-		if(m <= n){
-			Sub <- function(k)	sum(exp(lchoose(x, k) + lchoose(n - x, m -k) - lchoose(n, m)))
-			sapply(1:m, Sub)
-		}
-		
-		else {
-			f1 <- sum(x == 1)
-			f2 <- sum(x == 2)
-			A <- ifelse(f2 > 0, (n-1)*f1/((n-1)*f1+2*f2), (n-1)*f1/((n-1)*f1+2))
-			C.hat <- 1 - f1 / n * A
-			p.hat <- x / n * C.hat			
-			Sub <- function(k)	sum((choose(m, k) * p.hat^k * (1 - p.hat)^(m - k)) / (1 - (1 - p.hat)^n))
-			sapply(1:m, Sub)
-		}
-	}
-	
-	D0.hat <- function(x, m){
-		x <- x[x > 0]
-		n <- sum(x)
-		Sub <- function(m){
-			if(m <= n){
-				Fun <- function(x){
-					if(x <= (n - m)) exp(lgamma(n - x + 1) + lgamma(n - m + 1) - lgamma(n - x - m + 1) - lgamma(n + 1))
-					else 0
-				}
-				sum(1 - sapply(x, Fun))
-			}
-			else {
-				Sobs <- sum(x > 0)
-				f1 <- sum(x == 1)
-				f2 <- sum(x == 2)
-				f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)	#estimation of unseen species via Chao1
-				A <- n*f0.hat/(n*f0.hat+f1)
-				ifelse(f1 ==0, Sobs ,Sobs + f0.hat * (1 - A ^ (m - n)))	
-			}
-		}
-		sapply(m, Sub)
-	}
-	
-	D1.hat <- function(x, m){
-		x <- x[x > 0]
-		n <- sum(x)
-		Sub <- function(m){
-		  if(m < n){
-			k <- 1:m
-			exp(-sum(k / m * log(k / m) * fk.hat(x, m)))
-		  }
-		  else{
-			#UE=sum(sapply(1:(n-1),function(k){sum(1/k*x/n*exp(lchoose(n-x,k)-lchoose(n-1,k)))}))
-			UE <- sum(x/n*(digamma(n)-digamma(x)))
-			f1 <- sum(x == 1)
-			f2 <- sum(x == 2)
-			A <- 1 - ifelse(f2 > 0, (n-1)*f1/((n-1)*f1+2*f2), (n-1)*f1/((n-1)*f1+2))
-			#A=2*sum(x==2)/((n-1)*sum(x==1)+2*sum(x==2))
-			B <- ifelse(A<1, sum(x==1)/n*(1-A)^(-n+1)*(-log(A)-sum(sapply(1:(n-1),function(k){1/k*(1-A)^k}))), 0)
-			D.hat <- exp(UE+B)
-			Dn <- exp(-sum(x / n * log(x / n)))
-			
-			#a <- 1:(n-1)
-			#b <- 1:(n-2)
-			#Da <-  exp(-sum(a / (n-1) * log(a / (n-1)) * fk.hat(x, (n-1))))
-			#Db <-  exp(-sum(b / (n-2) * log(b / (n-2)) * fk.hat(x, (n-2))))
-			#Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
-			#b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
-			b <- A
-			ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(m-n)), Dn)
-		  }
-		}
-		sapply(m, Sub)
-	}
-	
-	D2.hat <- function(x, m){
-		Sub <- function(m) 1 / (1 / m + (1 - 1 / m) * sum(x * (x - 1) / n / (n - 1)))
-		sapply(m, Sub)
-	}
-	
-	Dq.hat <- function(x, m){
-		Sub <- function(m){
-			k <- 1:m
-			sum( (k / m)^q * fk.hat(x, m))^(1 / (1 - q))
-		}
-		sapply(m, Sub)
-	}
-	if(q == 0) D0.hat(x, m)
-	else if(q == 1) D1.hat(x, m)
-	else if(q == 2) D2.hat(x, m)
-	else Dq.hat(x, m)
+  x <- x[x > 0]
+  n <- sum(x)
+  
+  fk.hat <- function(x, m){
+    x <- x[x > 0]
+    n <- sum(x)
+    if(m <= n){
+      Sub <- function(k)	sum(exp(lchoose(x, k) + lchoose(n - x, m -k) - lchoose(n, m)))
+      sapply(1:m, Sub)
+    }
+    
+    else {
+      f1 <- sum(x == 1)
+      f2 <- sum(x == 2)
+      A <- ifelse(f2 > 0, (n-1)*f1/((n-1)*f1+2*f2), (n-1)*f1/((n-1)*f1+2))
+      C.hat <- 1 - f1 / n * A
+      p.hat <- x / n * C.hat			
+      Sub <- function(k)	sum((choose(m, k) * p.hat^k * (1 - p.hat)^(m - k)) / (1 - (1 - p.hat)^n))
+      sapply(1:m, Sub)
+    }
+  }
+  
+  D0.hat <- function(x, m){
+    x <- x[x > 0]
+    n <- sum(x)
+    Sub <- function(m){
+      if(m <= n){
+        Fun <- function(x){
+          if(x <= (n - m)) exp(lgamma(n - x + 1) + lgamma(n - m + 1) - lgamma(n - x - m + 1) - lgamma(n + 1))
+          else 0
+        }
+        sum(1 - sapply(x, Fun))
+      }
+      else {
+        Sobs <- sum(x > 0)
+        f1 <- sum(x == 1)
+        f2 <- sum(x == 2)
+        f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)	#estimation of unseen species via Chao1
+        A <- n*f0.hat/(n*f0.hat+f1)
+        ifelse(f1 ==0, Sobs ,Sobs + f0.hat * (1 - A ^ (m - n)))	
+      }
+    }
+    sapply(m, Sub)
+  }
+  
+  D1.hat <- function(x, m){
+    x <- x[x > 0]
+    n <- sum(x)
+    Sub <- function(m){
+      if(m < n){
+        k <- 1:m
+        exp(-sum(k / m * log(k / m) * fk.hat(x, m)))
+      }
+      else{
+        #UE=sum(sapply(1:(n-1),function(k){sum(1/k*x/n*exp(lchoose(n-x,k)-lchoose(n-1,k)))}))
+        UE <- sum(x/n*(digamma(n)-digamma(x)))
+        f1 <- sum(x == 1)
+        f2 <- sum(x == 2)
+        A <- 1 - ifelse(f2 > 0, (n-1)*f1/((n-1)*f1+2*f2), (n-1)*f1/((n-1)*f1+2))
+        #A=2*sum(x==2)/((n-1)*sum(x==1)+2*sum(x==2))
+        B <- ifelse(A<1, sum(x==1)/n*(1-A)^(-n+1)*(-log(A)-sum(sapply(1:(n-1),function(k){1/k*(1-A)^k}))), 0)
+        D.hat <- exp(UE+B)
+        Dn <- exp(-sum(x / n * log(x / n)))
+        
+        #a <- 1:(n-1)
+        #b <- 1:(n-2)
+        #Da <-  exp(-sum(a / (n-1) * log(a / (n-1)) * fk.hat(x, (n-1))))
+        #Db <-  exp(-sum(b / (n-2) * log(b / (n-2)) * fk.hat(x, (n-2))))
+        #Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
+        #b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
+        b <- A
+        ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(m-n)), Dn)
+      }
+    }
+    sapply(m, Sub)
+  }
+  
+  D2.hat <- function(x, m){
+    Sub <- function(m) 1 / (1 / m + (1 - 1 / m) * sum(x * (x - 1) / n / (n - 1)))
+    sapply(m, Sub)
+  }
+  
+  Dq.hat <- function(x, m){
+    Sub <- function(m){
+      k <- 1:m
+      sum( (k / m)^q * fk.hat(x, m))^(1 / (1 - q))
+    }
+    sapply(m, Sub)
+  }
+  if(q == 0) D0.hat(x, m)
+  else if(q == 1) D1.hat(x, m)
+  else if(q == 2) D2.hat(x, m)
+  else Dq.hat(x, m)
 }
 
 
@@ -203,99 +203,99 @@ Dqhat.Ind <- function(x, q, m){
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 # @export
 Dqhat.Sam <- function(y, q, t){
-
-	nT <- y[1]
-	y <- y[-1]
-	y <- y[y > 0]
-	U <- sum(y)
-	
-	Qk.hat <- function(y, nT, t){
-		if(t <= nT){
-			Sub <- function(k)	sum(exp(lchoose(y, k) + lchoose(nT - y, t - k) - lchoose(nT, t)))
-			sapply(1:t, Sub)
-		}
-		
-		else {
-			p.hat <- EstiBootComm.Sam(c(nT, y))
-			Sub <- function(k)	sum((choose(t, k) * p.hat^k * (1 - p.hat)^(t - k)) / (1 - (1 - p.hat)^T))
-			sapply(1:t, Sub)
-		}
-	}
-	
-	D0.hat <- function(y, nT, t){
-		Sub <- function(t){
-			if(t <= nT){
-				Fun <- function(y){
-					if(y <= (nT - t)) exp(lgamma(nT - y + 1) + lgamma(nT - t + 1) - lgamma(nT - y - t + 1) - lgamma(nT + 1))
-					else 0
-				}
-				sum(1 - sapply(y, Fun))
-			}
-			else {
-				Sobs <- sum(y > 0)
-				Q1 <- sum(y==1)
-				Q2 <- sum(y==2)
-				Q0.hat <- ifelse(Q2 == 0,  (nT-1)/nT* Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)	#estimation of unseen species via Chao2
-				A <- nT*Q0.hat/(nT*Q0.hat+Q1)
-				ifelse(Q1 ==0, Sobs ,Sobs + Q0.hat * (1 - A ^ (t - nT)))	
-			}
-		}
-		sapply(t, Sub)
-	}
-	
-	D1.hat <- function(y, nT, t){
-		U <- sum(y)
-		Sub <- function(t){
-		  if(t < nT){
-			k <- 1:t	
-			Ut.hat <- t / nT * U
-			exp(-sum(k / Ut.hat * log(k / Ut.hat) * Qk.hat(y, nT, t)))
-		  }
-		  else {
-			UE <- sum(y / nT * (digamma(nT) - digamma(y)))
-			Q1 <- sum(y == 1)
-			Q2 <- sum(y == 2)
-			A <- 1 - ifelse(Q2 > 0, (nT-1)*Q1/((nT-1)*Q1+2*Q2), (nT-1)*Q1/((nT-1)*Q1+2))
-			B <- sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k})))
-			H.hat <- UE+B
-			D.hat <- exp(nT/U*H.hat-log(nT/U))
-			
-			#a <- 1:(nT-1)
-			#b <- 1:(nT-2)
-			#Ua <- (nT-1) / nT * U
-			#Ub <- (nT-2) / nT * U
-			#Da <- exp(-sum(a / Ua * log(a / Ua) * Qk.hat(y, nT, nT-1)))
-			#Db <- exp(-sum(b / Ub * log(b / Ub) * Qk.hat(y, nT, nT-2)))
-			Dn <- exp(-sum(y / U * log(y / U)))
-					
-			#Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
-			#b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
-			b <- A
-			ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(t-nT)), Dn)
-		  }
-		}
-		sapply(t, Sub)
-	}
-	
-	D2.hat <- function(y, nT, t){
-		U <- sum(y)
-		Sub <- function(t) 1 / (1 / t * nT / U + (1 - 1 / t) * sum(y * (y - 1) / U^2 / (1 - 1 / nT)))
-		sapply(t, Sub)
-	}
-	
-	Dq.hat <- function(y, nT, t){
-		U <- sum(y)
-		Sub <- function(t){
-			k <- 1:t
-			Ut.hat <- U * t / nT
-			sum( (k / Ut.hat)^q * Qk.hat(y, nT, t))^(1 / (1 - q))
-		}
-		sapply(t, Sub)
-	}
-	if(q == 0) D0.hat(y, nT, t)
-	else if(q == 1) D1.hat(y, nT, t)
-	else if(q == 2) D2.hat(y, nT, t)
-	else Dq.hat(y, nT, t)
+  
+  nT <- y[1]
+  y <- y[-1]
+  y <- y[y > 0]
+  U <- sum(y)
+  
+  Qk.hat <- function(y, nT, t){
+    if(t <= nT){
+      Sub <- function(k)	sum(exp(lchoose(y, k) + lchoose(nT - y, t - k) - lchoose(nT, t)))
+      sapply(1:t, Sub)
+    }
+    
+    else {
+      p.hat <- EstiBootComm.Sam(c(nT, y))
+      Sub <- function(k)	sum((choose(t, k) * p.hat^k * (1 - p.hat)^(t - k)) / (1 - (1 - p.hat)^T))
+      sapply(1:t, Sub)
+    }
+  }
+  
+  D0.hat <- function(y, nT, t){
+    Sub <- function(t){
+      if(t <= nT){
+        Fun <- function(y){
+          if(y <= (nT - t)) exp(lgamma(nT - y + 1) + lgamma(nT - t + 1) - lgamma(nT - y - t + 1) - lgamma(nT + 1))
+          else 0
+        }
+        sum(1 - sapply(y, Fun))
+      }
+      else {
+        Sobs <- sum(y > 0)
+        Q1 <- sum(y==1)
+        Q2 <- sum(y==2)
+        Q0.hat <- ifelse(Q2 == 0,  (nT-1)/nT* Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)	#estimation of unseen species via Chao2
+        A <- nT*Q0.hat/(nT*Q0.hat+Q1)
+        ifelse(Q1 ==0, Sobs ,Sobs + Q0.hat * (1 - A ^ (t - nT)))	
+      }
+    }
+    sapply(t, Sub)
+  }
+  
+  D1.hat <- function(y, nT, t){
+    U <- sum(y)
+    Sub <- function(t){
+      if(t < nT){
+        k <- 1:t	
+        Ut.hat <- t / nT * U
+        exp(-sum(k / Ut.hat * log(k / Ut.hat) * Qk.hat(y, nT, t)))
+      }
+      else {
+        UE <- sum(y / nT * (digamma(nT) - digamma(y)))
+        Q1 <- sum(y == 1)
+        Q2 <- sum(y == 2)
+        A <- 1 - ifelse(Q2 > 0, (nT-1)*Q1/((nT-1)*Q1+2*Q2), (nT-1)*Q1/((nT-1)*Q1+2))
+        B <- sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k})))
+        H.hat <- UE+B
+        D.hat <- exp(nT/U*H.hat-log(nT/U))
+        
+        #a <- 1:(nT-1)
+        #b <- 1:(nT-2)
+        #Ua <- (nT-1) / nT * U
+        #Ub <- (nT-2) / nT * U
+        #Da <- exp(-sum(a / Ua * log(a / Ua) * Qk.hat(y, nT, nT-1)))
+        #Db <- exp(-sum(b / Ub * log(b / Ub) * Qk.hat(y, nT, nT-2)))
+        Dn <- exp(-sum(y / U * log(y / U)))
+        
+        #Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
+        #b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
+        b <- A
+        ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(t-nT)), Dn)
+      }
+    }
+    sapply(t, Sub)
+  }
+  
+  D2.hat <- function(y, nT, t){
+    U <- sum(y)
+    Sub <- function(t) 1 / (1 / t * nT / U + (1 - 1 / t) * sum(y * (y - 1) / U^2 / (1 - 1 / nT)))
+    sapply(t, Sub)
+  }
+  
+  Dq.hat <- function(y, nT, t){
+    U <- sum(y)
+    Sub <- function(t){
+      k <- 1:t
+      Ut.hat <- U * t / nT
+      sum( (k / Ut.hat)^q * Qk.hat(y, nT, t))^(1 / (1 - q))
+    }
+    sapply(t, Sub)
+  }
+  if(q == 0) D0.hat(y, nT, t)
+  else if(q == 1) D1.hat(y, nT, t)
+  else if(q == 2) D2.hat(y, nT, t)
+  else Dq.hat(y, nT, t)
 }
 
 
@@ -311,19 +311,19 @@ Dqhat.Sam <- function(y, q, t){
 # @return a vector of estimated sample coverage function
 # @export
 Chat.Ind <- function(x, m){
-	x <- x[x>0]
-	n <- sum(x)
-	f1 <- sum(x == 1)
-	f2 <- sum(x == 2)
-	f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
-	A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
-	Sub <- function(m){
-		if(m < n) out <- 1-sum(x / n * exp(lchoose(n - x, m)-lchoose(n - 1, m)))
-		if(m == n) out <- 1-f1/n*A
-		if(m > n) out <- 1-f1/n*A^(m-n+1)
-		out
-	}
-	sapply(m, Sub)		
+  x <- x[x>0]
+  n <- sum(x)
+  f1 <- sum(x == 1)
+  f2 <- sum(x == 2)
+  f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
+  A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
+  Sub <- function(m){
+    if(m < n) out <- 1-sum(x / n * exp(lchoose(n - x, m)-lchoose(n - 1, m)))
+    if(m == n) out <- 1-f1/n*A
+    if(m > n) out <- 1-f1/n*A^(m-n+1)
+    out
+  }
+  sapply(m, Sub)		
 }
 
 
@@ -339,21 +339,21 @@ Chat.Ind <- function(x, m){
 # @return a vector of estimated sample coverage function
 # @export
 Chat.Sam <- function(x, t){
-	nT <- x[1]
-	y <- x[-1]
-	y <- y[y>0]
-	U <- sum(y)
-	Q1 <- sum(y == 1)
-	Q2 <- sum(y == 2)
-	Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)  #estimation of unseen species via Chao2
-	A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
-	Sub <- function(t){
-		if(t < nT) out <- 1 - sum(y / U * exp(lchoose(nT - y, t) - lchoose(nT - 1, t)))
-		if(t == nT) out <- 1 - Q1 / U * A
-		if(t > nT) out <- 1 - Q1 / U * A^(t - nT + 1)
-		out
-	}
-	sapply(t, Sub)		
+  nT <- x[1]
+  y <- x[-1]
+  y <- y[y>0]
+  U <- sum(y)
+  Q1 <- sum(y == 1)
+  Q2 <- sum(y == 2)
+  Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)  #estimation of unseen species via Chao2
+  A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
+  Sub <- function(t){
+    if(t < nT) out <- 1 - sum(y / U * exp(lchoose(nT - y, t) - lchoose(nT - 1, t)))
+    if(t == nT) out <- 1 - Q1 / U * A
+    if(t > nT) out <- 1 - Q1 / U * A^(t - nT + 1)
+    out
+  }
+  sapply(t, Sub)		
 }
 
 
@@ -381,44 +381,44 @@ Chat.Sam <- function(x, t){
 # iNEXT.Ind(spider$Girdled, q=1, m=c(1, 10, 20, 50, 100, 200, 400, 600), se=FALSE)
 iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE, nboot=200)
 {
-
+  
   n <- sum(Spec)		  	#sample size
-	if(is.null(m)) {
-		if(endpoint <= n) {
-			m <- floor(seq(1, endpoint, length=floor(knots)))
-		} else {
-			m <- c(floor(seq(1, sum(Spec)-1, length.out=floor(knots/2)-1)), sum(Spec), floor(seq(sum(Spec)+1, to=endpoint, length.out=floor(knots/2))))
-		}
-		m <- c(1, m[-1])
-	} else if(is.null(m)==FALSE) {	
-		if(max(m)>n & length(m[m==n])==0)  m <- c(m, n-1, n, n+1)
-		m <- sort(m)
-	}
-	
-	Dq.hat <- Dqhat.Ind(Spec, q, m)
-	C.hat <- Chat.Ind(Spec, m)
-	
-	if(se==TRUE & nboot > 0 & length(Spec) > 1) {
-		Prob.hat <- EstiBootComm.Ind(Spec)
-		Abun.Mat <- rmultinom(nboot, n, Prob.hat)
-	
-		error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(x) Dqhat.Ind(x, q, m)), 1, sd, na.rm=TRUE)
-		left  <- Dq.hat - error
-		right <- Dq.hat + error
-	
-		error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)), 1, sd, na.rm=TRUE)
-		left.C  <- C.hat - error.C
-		right.C <- C.hat + error.C
-		out <- cbind("m"=m, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
-	} else {
-		out <- cbind("m"=m, "qD"=Dq.hat, "SC"=C.hat)
-	}
-	out <- data.frame(out)
+  if(is.null(m)) {
+    if(endpoint <= n) {
+      m <- floor(seq(1, endpoint, length=floor(knots)))
+    } else {
+      m <- c(floor(seq(1, sum(Spec)-1, length.out=floor(knots/2)-1)), sum(Spec), floor(seq(sum(Spec)+1, to=endpoint, length.out=floor(knots/2))))
+    }
+    m <- c(1, m[-1])
+  } else if(is.null(m)==FALSE) {	
+    if(max(m)>n & length(m[m==n])==0)  m <- c(m, n-1, n, n+1)
+    m <- sort(m)
+  }
+  
+  Dq.hat <- Dqhat.Ind(Spec, q, m)
+  C.hat <- Chat.Ind(Spec, m)
+  
+  if(se==TRUE & nboot > 0 & length(Spec) > 1) {
+    Prob.hat <- EstiBootComm.Ind(Spec)
+    Abun.Mat <- rmultinom(nboot, n, Prob.hat)
+    
+    error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(x) Dqhat.Ind(x, q, m)), 1, sd, na.rm=TRUE)
+    left  <- Dq.hat - error
+    right <- Dq.hat + error
+    
+    error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)), 1, sd, na.rm=TRUE)
+    left.C  <- C.hat - error.C
+    right.C <- C.hat + error.C
+    out <- cbind("m"=m, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
+  } else {
+    out <- cbind("m"=m, "qD"=Dq.hat, "SC"=C.hat)
+  }
+  out <- data.frame(out)
   out$method <- ifelse(out$m<n, "interpolated", ifelse(out$m==n, "observed", "extrapolated"))
   out$order <- q
-	id <- match(c("m", "method", "order", "qD", "qD.95.LCL", "qD.95.UCL", "SC", "SC.95.LCL", "SC.95.UCL"), names(out), nomatch = 0)
+  id <- match(c("m", "method", "order", "qD", "qD.95.LCL", "qD.95.UCL", "SC", "SC.95.LCL", "SC.95.UCL"), names(out), nomatch = 0)
   out <- out[, id]
-	return(out)
+  return(out)
 }
 
 
@@ -447,58 +447,58 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 # iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
 iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE, nboot=200)
 {
-
+  
   if(which.max(Spec)!=1) 
     stop("invalid data structure!, first element should be number of sampling units")
   
-	nT <- Spec[1]
-	if(is.null(t)) {
-		if(endpoint <= nT) {
-			t <- floor(seq(1, endpoint, length.out=floor(knots)))
-		} else {
-			t <- c(floor(seq(1, nT-1, length.out=floor(knots/2)-1)), nT, floor(seq(nT+1, to=endpoint, length.out=floor(knots/2))))
-		}
-		t <- c(1, t[-1])
-	} else if(is.null(t)==FALSE) {	
-		if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT-1, nT, nT+1)
-		t <- sort(t)
-	}
-	
-	Dq.hat <- Dqhat.Sam(Spec, q, t)
-	C.hat <- Chat.Sam(Spec, t)
-	
-	if(se==TRUE & nboot > 0 & length(Spec) > 2){
-		Prob.hat <- EstiBootComm.Sam(Spec)
-		Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
-		Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
-		tmp <- which(colSums(Abun.Mat)==nT)
+  nT <- Spec[1]
+  if(is.null(t)) {
+    if(endpoint <= nT) {
+      t <- floor(seq(1, endpoint, length.out=floor(knots)))
+    } else {
+      t <- c(floor(seq(1, nT-1, length.out=floor(knots/2)-1)), nT, floor(seq(nT+1, to=endpoint, length.out=floor(knots/2))))
+    }
+    t <- c(1, t[-1])
+  } else if(is.null(t)==FALSE) {	
+    if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT-1, nT, nT+1)
+    t <- sort(t)
+  }
+  
+  Dq.hat <- Dqhat.Sam(Spec, q, t)
+  C.hat <- Chat.Sam(Spec, t)
+  
+  if(se==TRUE & nboot > 0 & length(Spec) > 2){
+    Prob.hat <- EstiBootComm.Sam(Spec)
+    Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
+    Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
+    tmp <- which(colSums(Abun.Mat)==nT)
     if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
     if(ncol(Abun.Mat)==0){
       out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
       warning("Insufficient data to compute bootstrap s.e.")
     }else{		
-  		error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
-  		left  <- Dq.hat - error
-  		right <- Dq.hat + error
-  		left[left<=0] <- 0
-  				
-  		error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
-  		left.C  <- C.hat - error.C
-  		right.C <- C.hat + error.C
-  		left.C[left.C<=0] <- 0
+      error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
+      left  <- Dq.hat - error
+      right <- Dq.hat + error
+      left[left<=0] <- 0
+      
+      error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
+      left.C  <- C.hat - error.C
+      right.C <- C.hat + error.C
+      left.C[left.C<=0] <- 0
       right.C[right.C>=1] <- 1
       
-  		out <- cbind("t"=t, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
+      out <- cbind("t"=t, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
     }
-	}else {
-		out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
-	}
-	out <- data.frame(out)
-	out$method <- ifelse(out$t<nT, "interpolated", ifelse(out$t==nT, "observed", "extrapolated"))
-	out$order <- q
+  }else {
+    out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
+  }
+  out <- data.frame(out)
+  out$method <- ifelse(out$t<nT, "interpolated", ifelse(out$t==nT, "observed", "extrapolated"))
+  out$order <- q
   id <- match(c("t", "method", "order", "qD", "qD.95.LCL", "qD.95.UCL", "SC", "SC.95.LCL", "SC.95.UCL"), names(out), nomatch = 0)
-	out <- out[, id]
-	return(out)
+  out <- out[, id]
+  return(out)
 }
 
 
@@ -573,7 +573,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
       tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
       tmp
-      })
+    })
     arr <- array(0, dim = c(3, 5, ncol(x)))
     arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype)))
     arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
@@ -588,7 +588,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
       tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
       tmp
-      })
+    })
     
     arr <- array(0, dim = c(3, 5, length(x)))
     arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype)))
@@ -603,7 +603,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   }
   
   info <- DataInfo(x, datatype)
-
+  
   
   z <- list("DataInfo"=info, "BasicIndex"=index,"Accumulation"=out)
   class(z) <- c("iNEXT")
@@ -728,7 +728,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
       z$y.upr <- z$qD.95.UCL
     }
   }
-    
+  
   if(color.var=="none"){
     if(levels(factor(z$order))>1 & "site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object consists multiple sites and orders, change setting as both")
@@ -760,8 +760,8 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     }
     z$col <- paste(z$site, z$order, sep="-")
   }
-
-
+  
+  
   
   if("site"%in%names(z)){
     g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + geom_point(aes(x=x, y=y, colour=factor(col)), size=5, data=subset(z, method=="observed"))
@@ -775,7 +775,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
            fill=guide_legend(title="Order"), 
            shape=guide_legend(title="Site")) + 
     theme(legend.position = "bottom", text=element_text(size=18)) 
-
+  
   if(type==2L) g <- g + labs(x="Number of sampling units", y="Sample coverage")
   else if(type==3L) g <- g + labs(x="Sample coverage", y="Species diversity")
   else g <- g + labs(x="Number of sampling units", y="Species diversity")
@@ -837,7 +837,7 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     stop("invalid color variable")
   
   type <- pmatch(type, 1:3)
-
+  
   y <- method <- site <- y.lwr <- y.upr <- NULL
   site <<- NULL
   z <- x$Accumulation
@@ -900,7 +900,7 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   }else{
     col <- rep(col,length(SITE))[1:length(SITE)]
   }
-
+  
   
   for(j in 1:length(ORDER)){
     tmp.j <- filter(z, order==ORDER[j]) %>% 
@@ -949,28 +949,28 @@ spider <- list(Girdled=Girdled, Logged=Logged)
 
 ## 50m
 y50 <- c(599,rep(1,49),rep(2,23),rep(3,18),rep(4,14),rep(5,9),rep(6,10),rep(7,4),
-		rep(8,8),rep(9,6),rep(10,2),rep(11,1),12,12,13,13,rep(14,5),15,15,
-		rep(16,4),17,17,17,18,18,19,19,20,20,20,21,22,23,23,25,27,27,29,30,30,
-		31,33,39,40,43,46,46,47,48,51,52,52,56,56,58,58,61,61,65,69,72,77,79,82,
-		83,84,86,91,95,97,98,98,106,113,124,126,127,128,129,129,182,183,186,195,
-		222,236,263,330)
-	
+         rep(8,8),rep(9,6),rep(10,2),rep(11,1),12,12,13,13,rep(14,5),15,15,
+         rep(16,4),17,17,17,18,18,19,19,20,20,20,21,22,23,23,25,27,27,29,30,30,
+         31,33,39,40,43,46,46,47,48,51,52,52,56,56,58,58,61,61,65,69,72,77,79,82,
+         83,84,86,91,95,97,98,98,106,113,124,126,127,128,129,129,182,183,186,195,
+         222,236,263,330)
+
 ##500m
 y500 <- c(230,rep(1,71),rep(2,34),rep(3,12),rep(4,14),rep(5,9),rep(6,11),rep(7,8),
-		rep(8,4),rep(9,7),rep(10,5),rep(11,2),12,12,12,13,13,13,13,14,14,15,
-		16,16,17,17,17,17,18,19,20,21,21,23,24,25,25,25,26,27,30,31,31,32,32,
-		33,34,36,37,38,38,38,38,39,39,41,42,43,44,45,46,47,49,52,52,53,54,56,
-		60,60,65,73,78,123,131,133)
+          rep(8,4),rep(9,7),rep(10,5),rep(11,2),12,12,12,13,13,13,13,14,14,15,
+          16,16,17,17,17,17,18,19,20,21,21,23,24,25,25,25,26,27,30,31,31,32,32,
+          33,34,36,37,38,38,38,38,39,39,41,42,43,44,45,46,47,49,52,52,53,54,56,
+          60,60,65,73,78,123,131,133)
 
 ##1070m
 y1070 <- c(150,rep(1,28),rep(2,16),rep(3,13),rep(4,3),rep(5,1),rep(6,3),rep(7,6),
-		rep(8,1),rep(9,1),rep(10,1),rep(11,4),12,12,12,13,13,13,13,14,15,
-		16,16,16,16,18,19,19,21,22,23,24,25,25,25,26,30,31,31,31,32,34,36,
-		38,39,43,43,45,45,46,54,60,68,74,80,96,99)
+           rep(8,1),rep(9,1),rep(10,1),rep(11,4),12,12,12,13,13,13,13,14,15,
+           16,16,16,16,18,19,19,21,22,23,24,25,25,25,26,30,31,31,31,32,34,36,
+           38,39,43,43,45,45,46,54,60,68,74,80,96,99)
 ##1500m
 y1500 <- c(200,rep(1,13),rep(2,4),rep(3,2),rep(4,2),rep(5,4),rep(6,2),rep(9,4),
-		rep(11,2),rep(17,2),18,19,23,23,24,25,25,25,29,30,32,33,43,50,53,
-		73,74,76,79,113,144)
+           rep(11,2),rep(17,2),18,19,23,23,24,25,25,25,29,30,32,33,43,50,53,
+           73,74,76,79,113,144)
 
 ##2000m
 y2000=c(200,1,2,2,3,4,8,8,13,15,19,23,34,59,80)
