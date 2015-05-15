@@ -1,6 +1,6 @@
 iNEXT (R package)
 =====
-<h4 style="text-align: right;">Most recent update time: January 8, 2014    
+<h4 style="text-align: right;">Most recent update time: May 15, 2014    
 
 by Hsieh, T. C., K. H. Ma, and A. Chao    
 

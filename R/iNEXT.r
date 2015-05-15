@@ -823,112 +823,109 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
   
 }
 
-
-plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col=NULL,...){
-  if(class(x) != "iNEXT") 
-    stop("invalid object class")
-  TYPE <-  c(1, 2, 3)
-  SPLIT <- c("none", "order", "site", "both")
-  if(is.na(pmatch(type, TYPE)) | pmatch(type, TYPE) == -1)
-    stop("invalid plot type")
-  if(is.na(pmatch(facet.var, SPLIT)) | pmatch(facet.var, SPLIT) == -1)
-    stop("invalid facet variable")
-  if(is.na(pmatch(color.var, SPLIT)) | pmatch(color.var, SPLIT) == -1)
-    stop("invalid color variable")
-  
-  type <- pmatch(type, 1:3)
-  
-  y <- method <- site <- y.lwr <- y.upr <- NULL
-  site <<- NULL
-  z <- x$Accumulation
-  if(class(z) == "list"){
-    z <- data.frame(do.call("rbind", z) ,site=rep(names(z), sapply(z, nrow)))
-    rownames(z) <- NULL
-  }
-  
-  if("qD.95.LCL" %in% names(z) == FALSE & se) {
-    warning("invalid se setting, the iNEXT object do not consist confidence interval")
-    se <- FALSE
-  }else if("qD.95.LCL" %in% names(z) & se) {
-    se <- TRUE
-  }else{
-    se <- FALSE
-  }
-  
-  if(type==1L) {
-    z$x <- z[,1]
-    z$y <- z$qD
-    if(!is.null(xlab)) xlab <- "Number of sampling units"
-    if(!is.null(ylab)) ylab <- "Species diversity"
-    if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
-    }
-  }else if(type==2L){
-    if(length(unique(z$order))>1){
-      z <- subset(z, order==unique(z$order)[1])
-    }
-    z$x <- z[,1]
-    z$y <- z$SC
-    if(!is.null(xlab)) xlab <- "Number of sampling units"
-    if(!is.null(ylab)) ylab <- "Sample coverage"
-    if(se){
-      z$y.lwr <- z$SC.95.LCL
-      z$y.upr <- z$SC.95.UCL
-    }
-  }else if(type==3L){
-    z$x <- z$SC
-    z$y <- z$qD
-    if(!is.null(xlab)) xlab <- "Sample coverage"
-    if(!is.null(ylab)) ylab <- "Species diversity"
-    if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
-    }
-  }
-  
-  gg_color_hue <- function(n) {
-    hues = seq(15, 375, length=n+1)
-    hcl(h=hues, l=65, c=100)[1:n]
-  }
-  
-  SITE <- levels(z$site)
-  ORDER <- unique(z$order)
-  
-  if(is.null(col)){
-    col <- gg_color_hue(length(SITE))
-  }else{
-    col <- rep(col,length(SITE))[1:length(SITE)]
-  }
-  
-  
-  for(j in 1:length(ORDER)){
-    tmp.j <- filter(z, order==ORDER[j]) %>% 
-      select(site, order, method, x, y, y.lwr, y.upr)
-    plot(y.upr~x, data=tmp.j, type="n", xlab="", ylab="", ...)
-    for(i in 1:length(SITE)){
-      tmp <- filter(tmp.j, site==SITE[i])
-      if(se==TRUE){
-        conf.reg(x=tmp$x, LCL=tmp$y.lwr, UCL=tmp$y.upr, border=NA, col=adjustcolor(col[i], 0.25))
-      }
-      lines(y~x, data=filter(tmp, method=="interpolated"), lty=1, lwd=2, col=col[i])
-      lines(y~x, data=filter(tmp, method=="extrapolated"), lty=2, lwd=2, col=col[i])
-      points(y~x, data=filter(tmp, method=="observed"), pch=19, lwd=2, col=col[i])
-      
-    }
-    if(show.legend==TRUE){
-      if(type==3L){
-        legend("topleft", legend=paste(level), col=col, lty=1, lwd=2, pch=19, bty="n")
-      }else{
-        legend("bottomright", legend=paste(level), col=col, lty=1, lwd=2, pch=19, bty="n")
-      }
-    }
-    title(xlab=xlab, ylab=ylab)
-    if(show.main==TRUE) title(main=paste("Order q =", ORDER[j]))
-    par(ask=TRUE)
-  }
-  par(ask=FALSE)
-}
+# Bug...
+# plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col=NULL,...){
+# 
+#   if(class(x) != "iNEXT") 
+#     stop("invalid object class")
+#   TYPE <-  c(1, 2, 3)
+#   SPLIT <- c("none", "order", "site", "both")
+#   if(is.na(pmatch(type, TYPE)) | pmatch(type, TYPE) == -1)
+#     stop("invalid plot type")
+#   
+#   type <- pmatch(type, 1:3)
+#   
+#   y <- method <- site <- y.lwr <- y.upr <- NULL
+#   site <<- NULL
+#   z <- x$Accumulation
+#   if(class(z) == "list"){
+#     z <- data.frame(do.call("rbind", z) ,site=rep(names(z), sapply(z, nrow)))
+#     rownames(z) <- NULL
+#   }
+#   
+#   if("qD.95.LCL" %in% names(z) == FALSE & se) {
+#     warning("invalid se setting, the iNEXT object do not consist confidence interval")
+#     se <- FALSE
+#   }else if("qD.95.LCL" %in% names(z) & se) {
+#     se <- TRUE
+#   }else{
+#     se <- FALSE
+#   }
+#   
+#   if(type==1L) {
+#     z$x <- z[,1]
+#     z$y <- z$qD
+#     if(!is.null(xlab)) xlab <- "Number of sampling units"
+#     if(!is.null(ylab)) ylab <- "Species diversity"
+#     if(se){
+#       z$y.lwr <- z$qD.95.LCL
+#       z$y.upr <- z$qD.95.UCL
+#     }
+#   }else if(type==2L){
+#     if(length(unique(z$order))>1){
+#       z <- subset(z, order==unique(z$order)[1])
+#     }
+#     z$x <- z[,1]
+#     z$y <- z$SC
+#     if(!is.null(xlab)) xlab <- "Number of sampling units"
+#     if(!is.null(ylab)) ylab <- "Sample coverage"
+#     if(se){
+#       z$y.lwr <- z$SC.95.LCL
+#       z$y.upr <- z$SC.95.UCL
+#     }
+#   }else if(type==3L){
+#     z$x <- z$SC
+#     z$y <- z$qD
+#     if(!is.null(xlab)) xlab <- "Sample coverage"
+#     if(!is.null(ylab)) ylab <- "Species diversity"
+#     if(se){
+#       z$y.lwr <- z$qD.95.LCL
+#       z$y.upr <- z$qD.95.UCL
+#     }
+#   }
+#   
+#   gg_color_hue <- function(n) {
+#     hues = seq(15, 375, length=n+1)
+#     hcl(h=hues, l=65, c=100)[1:n]
+#   }
+#   
+#   SITE <- levels(z$site)
+#   ORDER <- unique(z$order)
+#   
+#   if(is.null(col)){
+#     col <- gg_color_hue(length(SITE))
+#   }else{
+#     col <- rep(col,length(SITE))[1:length(SITE)]
+#   }
+#   
+#   
+#   for(j in 1:length(ORDER)){
+#     tmp.j <- filter(z, order==ORDER[j]) %>% 
+#       select(site, order, method, x, y, y.lwr, y.upr)
+#     plot(y.upr~x, data=tmp.j, type="n", xlab="", ylab="", ...)
+#     for(i in 1:length(SITE)){
+#       tmp <- filter(tmp.j, site==SITE[i])
+#       if(se==TRUE){
+#         conf.reg(x=tmp$x, LCL=tmp$y.lwr, UCL=tmp$y.upr, border=NA, col=adjustcolor(col[i], 0.25))
+#       }
+#       lines(y~x, data=filter(tmp, method=="interpolated"), lty=1, lwd=2, col=col[i])
+#       lines(y~x, data=filter(tmp, method=="extrapolated"), lty=2, lwd=2, col=col[i])
+#       points(y~x, data=filter(tmp, method=="observed"), pch=19, lwd=2, col=col[i])
+#       
+#     }
+#     if(show.legend==TRUE){
+#       if(type==3L){
+#         legend("topleft", legend=paste(level), col=col, lty=1, lwd=2, pch=19, bty="n")
+#       }else{
+#         legend("bottomright", legend=paste(level), col=col, lty=1, lwd=2, pch=19, bty="n")
+#       }
+#     }
+#     title(xlab=xlab, ylab=ylab)
+#     if(show.main==TRUE) title(main=paste("Order q =", ORDER[j]))
+#     par(ask=TRUE)
+#   }
+#   par(ask=FALSE)
+# }
 
 ##
 ##

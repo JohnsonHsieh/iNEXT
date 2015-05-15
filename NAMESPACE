@@ -1,4 +1,5 @@
 import(ggplot2)
+
 export(
 "iNEXT",
 "DataInfo",

@@ -53,7 +53,7 @@ Phat.unde <- function(x){
 }
 
 EstComDis <- function(x){
-  phat <- sort(c(Phat.unde(x), Phat.dete(x)), d=TRUE)
+  phat <- sort(c(Phat.unde(x), Phat.dete(x)), decreasing = TRUE)
   phat <- phat[phat>0]
   phat
 }

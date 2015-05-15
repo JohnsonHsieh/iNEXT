@@ -1,14 +1,10 @@
 iNEXT (R package)
 =================
 
-<h4 style="text-align: right;">
-Most recent update time: January 8, 2014
+<h4>Most recent update time: May 15, 2014    </h4>
+<h4>by Hsieh, T. C., K. H. Ma, and A. Chao    </h4>
+<h4>Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043 </h4>
 
-by Hsieh, T. C., K. H. Ma, and A. Chao
-
-Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan
-30043
-</h4>
 The program iNEXT (iNterpolation and EXTrapolation) is an updated R
 package from the original version supplied in Appendix of Chao et al.
 (2014). In this updated version, we have added more user-friendly
