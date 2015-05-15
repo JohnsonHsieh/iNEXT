@@ -100,7 +100,7 @@ Copy-and-paste the commands below:
 ![](./README_files/figure-markdown_strict/ex2-1.png)
 
     ggiNEXT(out, type=3, facet.var="site")
-    ggiNEXT(out, type=3, facet.var="order")
+    ggiNEXT(out, type=3, facet.var="order", color.var="site")
     # plot(out, type=3)
 
 ![](./README_files/figure-markdown_strict/ex3-1.png)
