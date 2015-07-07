@@ -2,11 +2,9 @@ import(stats)
 import(ggplot2)
 import(graphics)
 
-export(
-"iNEXT",
-"DataInfo",
-"ChaoSpecies",
-"ChaoEntropy",
-"EstSimpson",
-"ggiNEXT"
-)
+export(iNEXT)
+export(DataInfo)
+export(ChaoSpecies)
+export(ChaoEntropy)
+export(EstSimpson)
+export(ggiNEXT)

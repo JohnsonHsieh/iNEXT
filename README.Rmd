@@ -84,20 +84,18 @@ library(ggplot2)
 data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
 ggiNEXT(out, type=1, facet.var="site")
-ggiNEXT(out, type=1, facet.var="order")
-# plot(out, type=1) 
+ggiNEXT(out, type=1, facet.var="order", color.var="site")
 ```
 ```{r ex1, echo=FALSE}
 data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
 ggiNEXT(out, type=1, facet.var="site")
-ggiNEXT(out, type=1, facet.var="order")
+ggiNEXT(out, type=1, facet.var="order", color.var="site")
 ```
 
 
 ```{r eval=FALSE}
 ggiNEXT(out, type=2, facet.var="none", color.var="site")
-# plot(out, type=2)
 ```
 ```{r ex2, echo=FALSE}
 ggiNEXT(out, type=2, facet.var="none", color.var="site")
@@ -105,12 +103,11 @@ ggiNEXT(out, type=2, facet.var="none", color.var="site")
 
 ```{r eval=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
-ggiNEXT(out, type=3, facet.var="order")
-# plot(out, type=3)
+ggiNEXT(out, type=3, facet.var="order", color.var="site")
 ```
 ```{r ex3, echo=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
-ggiNEXT(out, type=3, facet.var="order")
+ggiNEXT(out, type=3, facet.var="order", color.var="site")
 
 ```
 

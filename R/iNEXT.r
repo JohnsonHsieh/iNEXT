@@ -670,7 +670,7 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #'}
 #' @export
 
-ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
+ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", gray=FALSE){
   if(class(x) != "iNEXT") 
     stop("invalid object class")
   TYPE <-  c(1, 2, 3)
@@ -736,52 +736,59 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     if(levels(factor(z$order))>1 & "site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object consists multiple sites and orders, change setting as both")
       color.var <- "both"
-      z$col <- paste(z$site, z$order, sep="-")
+      z$col <- z$shape <- paste(z$site, z$order, sep="-")
+      
     }else if("site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object consists multiple orders, change setting as order")
       color.var <- "site"
-      z$col <- z$site
+      z$col <- z$shape <- z$site
     }else if(levels(factor(z$order))>1){
       warning("invalid color.var setting, the iNEXT object consists multiple sites, change setting as site")
       color.var <- "order"
-      z$col <- z$order
+      z$col <- z$shape <- z$order
     }else{
-      z$col <- rep(1, nrow(z))
+      z$col <- z$shape <- rep(1, nrow(z))
     }
   }else if(color.var=="order"){     
-    z$col <- z$order
+    z$col <- z$shape <- z$order
   }else if(color.var=="site"){
     if(!"site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object do not consist multiple sites, change setting as order")
-      z$col <- order
+      z$col <- z$shape <- order
     }
-    z$col <- z$site
+    z$col <- z$shape <- z$site
   }else if(color.var=="both"){
     if(!"site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object do not consist multiple sites, change setting as order")
-      z$col <- order
+      z$col <- z$shape <- order
     }
-    z$col <- paste(z$site, z$order, sep="-")
+    z$col <- z$shape <- paste(z$site, z$order, sep="-")
   }
   
   
-  
-  if("site"%in%names(z)){
-    g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + geom_point(aes(x=x, y=y, colour=factor(col)), size=5, data=subset(z, method=="observed"))
-  }else{
-    g <- ggplot(z, aes(x=x, y=y, colour=factor(col), shape=site)) + geom_point(aes(x=x, y=y, colour=factor(col), shape=site), size=5, data=subset(z, method=="observed"))
-  }
+  g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + 
+    geom_point(aes(shape=shape), size=5, data=subset(z, method=="observed"))
   
   g <- g + geom_line(aes(linetype=factor(method, c("interpolated", "extrapolated"), c("interpolation", "extrapolation"))), size=1.5) +
     guides(linetype=guide_legend(title="Method"), 
-           colour=guide_legend(title="Order"), 
-           fill=guide_legend(title="Order"), 
-           shape=guide_legend(title="Site")) + 
-    theme(legend.position = "bottom", text=element_text(size=18)) 
+           colour=guide_legend(title="Guides"), 
+           fill=guide_legend(title="Guides"), 
+           shape=guide_legend(title="Guides")) + 
+    theme(legend.position = "bottom", 
+          legend.title=element_blank(),
+          text=element_text(size=18)) 
   
-  if(type==2L) g <- g + labs(x="Number of sampling units", y="Sample coverage")
-  else if(type==3L) g <- g + labs(x="Sample coverage", y="Species diversity")
-  else g <- g + labs(x="Number of sampling units", y="Species diversity")
+  if(type==2L) {
+    g <- g + labs(x="Number of sampling units", y="Sample coverage")
+    if(names(x$DataInfo)[1]=="n") g <- g + labs(x="Number of individuals", y="Sample coverage")
+  }
+  else if(type==3L) {
+    g <- g + labs(x="Sample coverage", y="Species diversity")
+  }
+  else {
+    g <- g + labs(x="Number of sampling units", y="Species diversity")
+    if(names(x$DataInfo)[1]=="n") g <- g + labs(x="Number of individuals", y="Species diversity")
+  }
   
   if(se)
     g <- g + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr, fill=factor(col), colour=NULL), alpha=0.2)
@@ -793,8 +800,8 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     }else{
       g <- g + facet_grid(.~ order)
       if(color.var=="both"){
-        g <- g + guides(colour=guide_legend(title="Site-Order", ncol=length(levels(factor(z$order))), byrow=TRUE),
-                        fill=guide_legend(title="Site-Order"))
+        g <- g + guides(colour=guide_legend(title="Guides", ncol=length(levels(factor(z$order))), byrow=TRUE),
+                        fill=guide_legend(title="Guides"))
       }
     }
   }
@@ -805,8 +812,8 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     }else{
       g <- g + facet_grid(.~site)
       if(color.var=="both"){
-        g <- g + guides(colour=guide_legend(title="Site-Order", nrow=length(levels(factor(z$order)))),
-                        fill=guide_legend(title="Site-Order"))
+        g <- g + guides(colour=guide_legend(title="Guides", nrow=length(levels(factor(z$order)))),
+                        fill=guide_legend(title="Guides"))
       }
     }
   }
@@ -817,10 +824,25 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="order"){
     }else{
       g <- g + facet_wrap(site~order) 
       if(color.var=="both"){
-        g <- g +  guides(colour=guide_legend(title="Site-Order", nrow=length(levels(factor(z$site))), byrow=TRUE),
-                         fill=guide_legend(title="Site-Order"))
+        g <- g +  guides(colour=guide_legend(title="Guides", nrow=length(levels(factor(z$site))), byrow=TRUE),
+                         fill=guide_legend(title="Guides"))
       }
     }
+  }
+  if(gray){
+    g <- g + theme_bw(base_size = 18) +
+      scale_fill_grey(start = 0, end = .4) +
+      scale_colour_grey(start = .2, end = .2) +
+      theme(plot.background = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank()) +
+      labs(x = "Number of individuals") +
+      guides(linetype=guide_legend(title="Method"), 
+             colour=guide_legend(title="Guides"), 
+             fill=guide_legend(title="Guides"), 
+             shape=guide_legend(title="Guides")) +
+      theme(legend.position="bottom",
+            legend.title=element_blank())
   }
   return(g)
   

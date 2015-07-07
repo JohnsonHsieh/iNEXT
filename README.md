@@ -65,23 +65,20 @@ Copy-and-paste the commands below:
 data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
 ggiNEXT(out, type=1, facet.var="site")
-ggiNEXT(out, type=1, facet.var="order")
-# plot(out, type=1) 
+ggiNEXT(out, type=1, facet.var="order", color.var="site")
 ```
 
 ![](README-ex1-1.png) ![](README-ex1-2.png)
 
 ``` r
 ggiNEXT(out, type=2, facet.var="none", color.var="site")
-# plot(out, type=2)
 ```
 
 ![](README-ex2-1.png)
 
 ``` r
 ggiNEXT(out, type=3, facet.var="site")
-ggiNEXT(out, type=3, facet.var="order")
-# plot(out, type=3)
+ggiNEXT(out, type=3, facet.var="order", color.var="site")
 ```
 
 ![](README-ex3-1.png) ![](README-ex3-2.png)
