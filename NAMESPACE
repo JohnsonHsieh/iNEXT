@@ -1,4 +1,6 @@
+import(stats)
 import(ggplot2)
+import(graphics)
 
 export(
 "iNEXT",

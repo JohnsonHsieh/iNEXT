@@ -12,8 +12,8 @@ iNterpolation and EXTrapolation for species diversity: a unified approach for bo
 Package: \tab iNEXT\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
-Date: \tab 2013-10-08\cr
-License: \tab GPL (>= 2)\cr
+Date: \tab 2015-06-30\cr
+License: \tab GPL (>= 3)\cr
 }
 
 }
@@ -21,7 +21,7 @@ License: \tab GPL (>= 2)\cr
 T. C. Hsieh [aut, cre, cph]\cr
 K. H. Ma [ctb]\cr
 Anne Chao [ths]\cr
-Maintainer: T. C. Hsieh <diversity96@gmail.com>
+Maintainer: T. C. Hsieh <euler96@gmail.com>
 }
 \references{
 Chao, A., N. J. Gotelli, T. C. Hsieh, E. L. Sander, K. H. Ma, R. K. Colwell, and A. M. Ellison. (2013). Rarefaction and extrapolation with Hill numbers: a unified framework for sampling and estimation in biodiversity studies, Ecological Monographs \cr

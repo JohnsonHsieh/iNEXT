@@ -1,21 +1,20 @@
 Package: iNEXT
 Type: Package
-Title: iNterpolation and EXTrapolation for species diversity
-Version: 2.0.1
-Date: 2015-02-02
+Title: Interpolation and Extrapolation for Species Diversity
+Version: 2.0.3
+Date: 2015-06-30
 Authors@R: c(person("T. C.", "Hsieh", role = c("aut", "cre", "cph"), email =
     "euler96@gmail.com"), person("K. H.", "Ma", role = "ctb", email =
     "smallmar123@gmail.com"), person("Anne", "Chao", role = "ths", email =
     "chao@stat.nthu.edu.tws"))
-Description: iNterpolation and EXTrapolation for species diversity: a unified
-    approach for both individual-based (abundance) data and sample-based
-    (incidence) data
+Description: Interpolation and extrapolation for species diversity: a unified approach for both individual-based (abundance) data and sample-based (incidence) data.
 License: GPL (>= 3)
 URL: http://chao.stat.nthu.edu.tw/blog/software-download/
-Author: T. C. Hsieh, K. H. Ma and Anne Chao
 Maintainer: T. C. Hsieh <euler96@gmail.com>
 Depends:
     R (>= 2.14)
 Imports:
+    stats,
+    graphics,
     ggplot2
 BugReports: https://github.com/JohnsonHsieh/iNEXT/issues

@@ -1,6 +1,22 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
 iNEXT (R package)
 =====
-<h4 style="text-align: right;">Most recent update time: May 15, 2014    
+<h4 style="text-align: right;">Most recent update time: January 8, 2014    
 
 by Hsieh, T. C., K. H. Ma, and A. Chao    
 
@@ -61,6 +77,7 @@ Copy-and-paste the commands below:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(comment="", message=FALSE, warning=FALSE)
 library(iNEXT)
+library(ggplot2)
 ```
 
 ```{r eval=FALSE}
@@ -74,7 +91,7 @@ ggiNEXT(out, type=1, facet.var="order")
 data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
 ggiNEXT(out, type=1, facet.var="site")
-ggiNEXT(out, type=1, facet.var="order", color.var="site")
+ggiNEXT(out, type=1, facet.var="order")
 ```
 
 
@@ -88,12 +105,12 @@ ggiNEXT(out, type=2, facet.var="none", color.var="site")
 
 ```{r eval=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
-ggiNEXT(out, type=3, facet.var="order", color.var="site")
+ggiNEXT(out, type=3, facet.var="order")
 # plot(out, type=3)
 ```
 ```{r ex3, echo=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
-ggiNEXT(out, type=3, facet.var="order", color.var="site")
+ggiNEXT(out, type=3, facet.var="order")
 
 ```
 

@@ -32,14 +32,17 @@ ggiNEXT(x=out1, type=1)
 ggiNEXT(x=out1, type=2)
 ggiNEXT(x=out1, type=3)
 
+\dontrun{
 # single incidence-based data with multiple order q
 data(ant)
-y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
+size <- round(seq(10, 500, length.out=20))
+y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=size, se=FALSE)
 ggiNEXT(y, se=FALSE)
 
 # multiple abundance-based data with multiple order q
 z <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
 ggiNEXT(z, facet.var="site", color.var="order")
 ggiNEXT(z, facet.var="both", color.var="both")
+}
 }
 
