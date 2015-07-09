@@ -16,5 +16,7 @@ Depends:
 Imports:
     stats,
     graphics,
-    ggplot2
+    ggplot2,
+    dplyr
 BugReports: https://github.com/JohnsonHsieh/iNEXT/issues
+LazyLoad: yes

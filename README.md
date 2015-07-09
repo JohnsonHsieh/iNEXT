@@ -49,6 +49,10 @@ ggiNEXT(object.iNEXT, type=3) # ggplot2 method
 Start R(Studio) and copy-and-paste the commands below:
 
 ``` r
+## install iNEXT package from CRAN
+install.packages("iNEXT")
+
+## install the latest version from github
 install.packages('devtools')
 library(devtools)
 install_github('JohnsonHsieh/iNEXT')
@@ -66,6 +70,14 @@ data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
 ggiNEXT(out, type=1, facet.var="site")
 ggiNEXT(out, type=1, facet.var="order", color.var="site")
+
+## Not run:
+# display black-white theme
+ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
+
+# S3 method for class 'iNEXT'
+plot(out, type=1)
+## End(Not run)
 ```
 
 ![](README-ex1-1.png) ![](README-ex1-2.png)
