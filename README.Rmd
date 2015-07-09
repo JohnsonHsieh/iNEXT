@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 iNEXT (R package)
 =====
-<h4 style="text-align: right;">Most recent update time: January 8, 2014    
+<h4 style="text-align: right;">Most recent update time: July 9, 2014    
 
 by Hsieh, T. C., K. H. Ma, and A. Chao    
 
@@ -103,7 +103,6 @@ data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
 ggiNEXT(out, type=1, facet.var="site")
 ggiNEXT(out, type=1, facet.var="order")
-
 ```
 
 
@@ -130,6 +129,17 @@ data(ant)
 iNEXT(ant$h50m, q=c(0,1,2), datatype="incidence") 
 ```
 
+### Hacking ggiNEXT
+```{r ex5}
+# display black-white theme
+ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
+# free the scale of axis
+ggiNEXT(out, type=1, facet.var="order") + 
+  facet_wrap(~order, scales="free")
+# change the shape of reference sample size
+ggiNEXT(out, type=1, facet.var="site") + 
+  scale_shape_manual(values=c(19,19,19))
+```
 
 
 ### How to cite

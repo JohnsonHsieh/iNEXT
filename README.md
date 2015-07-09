@@ -3,7 +3,7 @@ iNEXT (R package)
 =================
 
 <h4 style="text-align: right;">
-Most recent update time: January 8, 2014
+Most recent update time: July 9, 2014
 
 by Hsieh, T. C., K. H. Ma, and A. Chao
 
@@ -101,6 +101,31 @@ Run a sample-based example
 data(ant)
 iNEXT(ant$h50m, q=c(0,1,2), datatype="incidence") 
 ```
+
+### Hacking ggiNEXT
+
+``` r
+# display black-white theme
+ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
+```
+
+![](README-ex5-1.png)
+
+``` r
+# free the scale of axis
+ggiNEXT(out, type=1, facet.var="order") + 
+  facet_wrap(~order, scales="free")
+```
+
+![](README-ex5-2.png)
+
+``` r
+# change the shape of reference sample size
+ggiNEXT(out, type=1, facet.var="site") + 
+  scale_shape_manual(values=c(19,19,19))
+```
+
+![](README-ex5-3.png)
 
 ### How to cite
 

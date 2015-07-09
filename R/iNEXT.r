@@ -802,7 +802,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
     if(length(levels(factor(z$order))) == 1){
       warning("invalid facet.var setting, the iNEXT object do not consist multiple orders.")      
     }else{
-      g <- g + facet_grid(.~ order)
+      g <- g + facet_wrap(~order)
       if(color.var=="both"){
         g <- g + guides(colour=guide_legend(title="Guides", ncol=length(levels(factor(z$order))), byrow=TRUE),
                         fill=guide_legend(title="Guides"))
@@ -814,7 +814,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
     if(!"site"%in%names(z)) {
       warning("invalid facet.var setting, the iNEXT object do not consist multiple sites.")
     }else{
-      g <- g + facet_grid(.~site)
+      g <- g + facet_wrap(~site)
       if(color.var=="both"){
         g <- g + guides(colour=guide_legend(title="Guides", nrow=length(levels(factor(z$order)))),
                         fill=guide_legend(title="Guides"))
