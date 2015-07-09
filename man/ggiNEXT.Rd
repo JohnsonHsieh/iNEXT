@@ -4,7 +4,8 @@
 \alias{ggiNEXT}
 \title{ggplot2 extension for an iNEXT Object}
 \usage{
-ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "order")
+ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "site",
+  grey = FALSE)
 }
 \arguments{
 \item{x}{a \code{iNEXT} object computed by \code{\link{iNEXT}}}
@@ -17,6 +18,8 @@ ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "order")
 \item{facet.var}{display subsets of the dataset in different panels with four choices: \code{facet.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any lay out panels in a grid; \code{"order"} means split lay out panels by different orders q; \code{"site"} means split lay out panels by different sites; and \code{"both"} means split lay out panels by order and sites.}
 
 \item{color.var}{display subsets of the dataset in different colors with four choices: \code{color.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any color; \code{"order"} means split colors by different orders q; \code{"site"} means split colors by different sites; and \code{"both"} means split colors by order and sites.}
+
+\item{grey}{display grey and white ggplot2 theme. Default is FALSE.}
 }
 \value{
 a ggplot object

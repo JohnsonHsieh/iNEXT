@@ -647,6 +647,7 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #' @param se display confidence interval around estimated accumulation curve
 #' @param facet.var display subsets of the dataset in different panels with four choices: \code{facet.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any lay out panels in a grid; \code{"order"} means split lay out panels by different orders q; \code{"site"} means split lay out panels by different sites; and \code{"both"} means split lay out panels by order and sites.              
 #' @param color.var display subsets of the dataset in different colors with four choices: \code{color.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any color; \code{"order"} means split colors by different orders q; \code{"site"} means split colors by different sites; and \code{"both"} means split colors by order and sites.  
+#' @param grey display grey and white ggplot2 theme. Default is FALSE.
 #' @return a ggplot object
 #' @examples
 #' data(spider)
@@ -670,7 +671,7 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #'}
 #' @export
 
-ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", gray=FALSE){
+ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey=FALSE){
   if(class(x) != "iNEXT") 
     stop("invalid object class")
   TYPE <-  c(1, 2, 3)
@@ -829,13 +830,10 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", gray
       }
     }
   }
-  if(gray){
-    g <- g + theme_bw(base_size = 18) +
+  if(grey){
+    g <- g + theme_classic(base_size = 18) +
       scale_fill_grey(start = 0, end = .4) +
       scale_colour_grey(start = .2, end = .2) +
-      theme(plot.background = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank()) +
       labs(x = "Number of individuals") +
       guides(linetype=guide_legend(title="Method"), 
              colour=guide_legend(title="Guides"), 
