@@ -3,7 +3,7 @@ iNEXT (R package)
 =================
 
 <h4 style="text-align: right;">
-Most recent update time: July 9, 2014
+Most recent update time: July 9, 2015
 
 by Hsieh, T. C., K. H. Ma, and A. Chao
 
