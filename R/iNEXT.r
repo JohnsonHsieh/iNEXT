@@ -318,7 +318,11 @@ Chat.Ind <- function(x, m){
   f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
   A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
   Sub <- function(m){
-    if(m < n) out <- 1-sum(x / n * exp(lchoose(n - x, m)-lchoose(n - 1, m)))
+    #if(m < n) out <- 1-sum(x / n * exp(lchoose(n - x, m)-lchoose(n - 1, m)))
+    if(m < n) {
+      xx <- x[(n-x)>=m]
+      out <- 1-sum(xx / n * exp(lgamma(n-xx+1)-lgamma(n-xx-m+1)-lgamma(n)+lgamma(n-m)))
+    }
     if(m == n) out <- 1-f1/n*A
     if(m > n) out <- 1-f1/n*A^(m-n+1)
     out
@@ -348,7 +352,11 @@ Chat.Sam <- function(x, t){
   Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)  #estimation of unseen species via Chao2
   A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
   Sub <- function(t){
-    if(t < nT) out <- 1 - sum(y / U * exp(lchoose(nT - y, t) - lchoose(nT - 1, t)))
+    if(t < nT) {
+      yy <- y[(nT-y)>=t]
+      out <- 1 - sum(yy / U * exp(lgamma(nT-yy+1)-lgamma(nT-yy-t+1)-lgamma(nT)+lgamma(nT-t)))     
+    }
+    #if(t < nT) out <- 1 - sum(y / U * exp(lchoose(nT - y, t) - lchoose(nT - 1, t)))
     if(t == nT) out <- 1 - Q1 / U * A
     if(t > nT) out <- 1 - Q1 / U * A^(t - nT + 1)
     out
@@ -605,7 +613,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   info <- DataInfo(x, datatype)
   
   
-  z <- list("DataInfo"=info, "BasicIndex"=index,"Accumulation"=out)
+  z <- list("DataInfo"=info, "iNextEst"=out, "AsyEst"=index)
   class(z) <- c("iNEXT")
   return(z)
 }
@@ -691,7 +699,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
   
   y <- method <- site <- shape <- y.lwr <- y.upr <- NULL
   site <<- NULL
-  z <- x$Accumulation
+  z <- x$iNextEst
   if(class(z) == "list"){
     z <- data.frame(do.call("rbind", z), site=rep(names(z), sapply(z, nrow)))
     rownames(z) <- NULL
@@ -802,7 +810,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
     if(length(levels(factor(z$order))) == 1){
       warning("invalid facet.var setting, the iNEXT object do not consist multiple orders.")      
     }else{
-      g <- g + facet_wrap(~order)
+      g <- g + facet_wrap(~order, nrow=1)
       if(color.var=="both"){
         g <- g + guides(colour=guide_legend(title="Guides", ncol=length(levels(factor(z$order))), byrow=TRUE),
                         fill=guide_legend(title="Guides"))
@@ -814,7 +822,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
     if(!"site"%in%names(z)) {
       warning("invalid facet.var setting, the iNEXT object do not consist multiple sites.")
     }else{
-      g <- g + facet_wrap(~site)
+      g <- g + facet_wrap(~site, nrow=1)
       if(color.var=="both"){
         g <- g + guides(colour=guide_legend(title="Guides", nrow=length(levels(factor(z$order)))),
                         fill=guide_legend(title="Guides"))
