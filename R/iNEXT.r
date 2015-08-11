@@ -603,7 +603,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
     arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE)))  
     dimnames(arr)[[3]] <- names(x)
-    dimnames(arr)[[1]] <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
+    dimnames(arr)[[1]] <- c("Species richness", "Shannon diversity", "Simpson diversity")
     dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
     index <- ftable(arr, row.vars = c(3,1))
   }else{
