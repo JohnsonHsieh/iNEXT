@@ -515,23 +515,26 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 ###############################################
 #' iNterpolation and EXTrapolation of Hill number
 #' 
-#' \code{iNEXT} Estimation of interpolation and extrapolation of Hill number with order q
+#' \code{iNEXT}: Interpolation and extrapolation of Hill number with order q
 #' 
-#' @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency. 
+#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the input format of first entry must be total number of sampling units, followed by species incidence frequencies. 
 #' Note that in iNEXT version 2.0, the input arguments allow the class of \code{\link{numeric}}, \code{\link{matrix}}, \code{\link{data.frame}} (species by sites), or \code{\link{list}}.
-#' @param q a numeric value, the order of Hill number .
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @param size an integer vector of rarefaction/extrapolation sample size (number of individuals or sampling units), default is NULL. If \code{size} is not be specified, it would compute rarefaction/extrapolation by endpoint and knots.
-#' @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double reference sample size.
-#' @param knots a number of knots (say K, default is 40) specifying separate sample size between 1 and \code{endpoint}. 
-#' If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} compute rarefaction part only and divided by approximately equall spaced K. 
-#' If \code{endpoint} os larger than reference sample size, then \code{iNEXT()} will compute approximately K/2 equally spaced for rarefaction part and divided extrapolation part as approximately K/2 equally spaced between reference sample size and \code{endpoint}.
-#' @param se calculate bootstrap standard error and show 95\% confidence interval; default is TRUE.
-#' @param nboot the number of bootstrap resampling times, default is 50.
-#' @return a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
+#' @param q a numeric value, the diversity order of Hill number .
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
+#' sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param size an integer vector of sample size (number of individuals or sampling units to compute rarefaction/extrapolation), 
+#' default is NULL. If \code{size} is not specified, then rarefaction/extrapolation by the endpoint and knots will be computed.
+#' @param endpoint an integer of sample size that is the endpoint for rarefaction/extrapolation computation. 
+#' Default is double reference sample size.
+#' @param knots number of equally-spaced knots (say K, default is 40) in the range of sample size between 1 and \code{endpoint}. 
+#' If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} computes rarefaction part only with approximately K equally spaced sizes. 
+#' If \code{endpoint} is larger than reference sample size, then \code{iNEXT()} computes approximately K/2 equally spaced sizes for rarefaction part and approximately K/2 equally spaced sizes between reference sample size and the \code{endpoint}.
+#' @param se calculates the bootstrap standard error and 95\% confidence interval; default is TRUE.
+#' @param nboot the number of replications, default is 50.
+#' @return a list of three objects: \code{DataInfo}, \code{iNextEst} and \code{AsyEst}  
 #' @examples
 #' data(spider)
-#' z <- iNEXT(spider, q=0, datatype="abundance")
+#' iNEXT(spider, q=0, datatype="abundance")
 #' 
 #' data(ant)
 #' iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
@@ -574,7 +577,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     index <- rbind(as.matrix(ChaoSpecies(x, datatype)), 
                    as.matrix(ChaoEntropy(x, datatype, transform=TRUE)),
                    as.matrix(EstSimpson(x, datatype, transform=TRUE)))
-    rownames(index) <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
+    rownames(index) <- c("Species Richness", "Shannon diversity", "Simpson diversity")
     
   }else if(class(x)=="matrix" | class(x)=="data.frame"){
     out <- apply(as.matrix(x), 2, function(x){
@@ -587,7 +590,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
     arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE)))  
     dimnames(arr)[[3]] <- names(x)
-    dimnames(arr)[[1]] <- c("Species Richness", "Exponential Entropy", "Inverse Simpson")
+    dimnames(arr)[[1]] <- c("Species richness", "Shannon diversity", "Simpson diversity")
     dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
     index <- ftable(arr, row.vars = c(3,1))
     
@@ -607,7 +610,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
     index <- ftable(arr, row.vars = c(3,1))
   }else{
-    stop("invlid class of x, x should be a object of numeric, matrix, data.frame, or list")
+    stop("invalid class of x, x should be a object of numeric, matrix, data.frame, or list")
   }
   
   info <- DataInfo(x, datatype)
@@ -626,7 +629,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
 # 
 # \code{EstDis} Estimation of the rank of species relative abundance distribution or detection probability to obtain bootstrap s.e.
 # 
-# @param x a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
+# @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
 # @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
 # @return a vector of the rank of estimated relative abundance distribution or detection probability
 # @examples 
@@ -648,31 +651,36 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 ###############################################
 #' ggplot2 extension for an iNEXT Object
 #' 
-#' \code{ggiNEXT} the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object
-#' @param x a \code{iNEXT} object computed by \code{\link{iNEXT}}
-#' @param type three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot number of individuals or number of samples to diversity;
-#'              \code{2} means to plot number of individuals or number of samples to sample coverage; and \code{3} means to plot sample coverage to diversity.                 
-#' @param se display confidence interval around estimated accumulation curve
-#' @param facet.var display subsets of the dataset in different panels with four choices: \code{facet.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any lay out panels in a grid; \code{"order"} means split lay out panels by different orders q; \code{"site"} means split lay out panels by different sites; and \code{"both"} means split lay out panels by order and sites.              
-#' @param color.var display subsets of the dataset in different colors with four choices: \code{color.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any color; \code{"order"} means split colors by different orders q; \code{"site"} means split colors by different sites; and \code{"both"} means split colors by order and sites.  
+#' \code{ggiNEXT}: the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
+#' @param x an \code{iNEXT} object computed by \code{\link{iNEXT}}.
+#' @param type three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot the sample-size-based rarefaction/extrapolation curve; \code{2} means to plot the sample completeness curve; \code{3} means to plot the coverage-based rarefaction/extrapolation curve.                 
+#' @param se display confidence interval around estimated accumulation curve.
+#' @param facet.var display plot(s) in different panels with four choices: \code{facet.var = c("none", }\cr
+#' \code{"order", }\code{"site", }\code{"both")} where \code{"none"} means plots are not split into panels; 
+#' \code{"order"} means to split plots into different panels by diversity order q; \code{"site"} means to split plots into 
+#' different panels by site; and \code{"both"} means to split plots by both order and site.              
+#' @param color.var display plot(s) in different colors with four choices: \code{color.var = c("none", }\cr
+#' \code{"order", }\code{"site", }\code{"both")} where \code{"none"} means to use the same color for all plots; 
+#' \code{"order"} means to use different colors by diversity order q; \code{"site"} means to use different colors by site; 
+#' and \code{"both"} means to use different colors by both diversity order and site.  
 #' @param grey display grey and white ggplot2 theme. Default is FALSE.
 #' @return a ggplot object
 #' @examples
 #' data(spider)
-#' # single abundance-based data
+#' # single-community abundance-based data
 #' out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
 #' ggiNEXT(x=out1, type=1)
 #' ggiNEXT(x=out1, type=2)
 #' ggiNEXT(x=out1, type=3)
 #' 
 #'\dontrun{
-#' # single incidence-based data with multiple order q
+#' # single-community incidence-based data with three orders q
 #' data(ant)
 #' size <- round(seq(10, 500, length.out=20))
 #' y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=size, se=FALSE)
-#' ggiNEXT(y, se=FALSE)
+#' ggiNEXT(y, se=FALSE, color.var="order")
 #' 
-#' # multiple abundance-based data with multiple order q
+#' # multiple-community abundance-based data with three orders q
 #' z <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
 #' ggiNEXT(z, facet.var="site", color.var="order")
 #' ggiNEXT(z, facet.var="both", color.var="both")
@@ -807,7 +815,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
   
   
   if(facet.var=="order"){
-    if(length(levels(factor(z$order))) == 1){
+    if(length(levels(factor(z$order))) == 1 & type!=2){
       warning("invalid facet.var setting, the iNEXT object do not consist multiple orders.")      
     }else{
       g <- g + facet_wrap(~order, nrow=1)
@@ -841,6 +849,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
       }
     }
   }
+  
   if(grey){
     g <- g + theme_bw(base_size = 18) +
       scale_fill_grey(start = 0, end = .4) +

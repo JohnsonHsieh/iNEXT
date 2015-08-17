@@ -8,34 +8,37 @@ iNEXT(x, q = 0, datatype = "abundance", size = NULL, endpoint = NULL,
   knots = 40, se = TRUE, nboot = 50)
 }
 \arguments{
-\item{x}{a vector of species abundance or incidence frequency. If \code{datatype = "incidence"}, then the input format of first entry should be total number of sampling units, and followed by species incidence frequency.
+\item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.
 Note that in iNEXT version 2.0, the input arguments allow the class of \code{\link{numeric}}, \code{\link{matrix}}, \code{\link{data.frame}} (species by sites), or \code{\link{list}}.}
 
-\item{q}{a numeric value, the order of Hill number .}
+\item{q}{a numeric value, the diversity order of Hill number .}
 
-\item{datatype}{the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or
+sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{size}{an integer vector of rarefaction/extrapolation sample size (number of individuals or sampling units), default is NULL. If \code{size} is not be specified, it would compute rarefaction/extrapolation by endpoint and knots.}
+\item{size}{an integer vector of sample size (number of individuals or sampling units to compute rarefaction/extrapolation),
+default is NULL. If \code{size} is not specified, then rarefaction/extrapolation by the endpoint and knots will be computed.}
 
-\item{endpoint}{a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double reference sample size.}
+\item{endpoint}{an integer of sample size that is the endpoint for rarefaction/extrapolation computation.
+Default is double reference sample size.}
 
-\item{knots}{a number of knots (say K, default is 40) specifying separate sample size between 1 and \code{endpoint}.
-If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} compute rarefaction part only and divided by approximately equall spaced K.
-If \code{endpoint} os larger than reference sample size, then \code{iNEXT()} will compute approximately K/2 equally spaced for rarefaction part and divided extrapolation part as approximately K/2 equally spaced between reference sample size and \code{endpoint}.}
+\item{knots}{number of equally-spaced knots (say K, default is 40) in the range of sample size between 1 and \code{endpoint}.
+If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} computes rarefaction part only with approximately K equally spaced sizes.
+If \code{endpoint} is larger than reference sample size, then \code{iNEXT()} computes approximately K/2 equally spaced sizes for rarefaction part and approximately K/2 equally spaced sizes between reference sample size and the \code{endpoint}.}
 
-\item{se}{calculate bootstrap standard error and show 95\% confidence interval; default is TRUE.}
+\item{se}{calculates the bootstrap standard error and 95\% confidence interval; default is TRUE.}
 
-\item{nboot}{the number of bootstrap resampling times, default is 50.}
+\item{nboot}{the number of replications, default is 50.}
 }
 \value{
-a list of interpolation and extrapolation Hill number with specific order q (qD) and sample coverage (SC)
+a list of three objects: \code{DataInfo}, \code{iNextEst} and \code{AsyEst}
 }
 \description{
-\code{iNEXT} Estimation of interpolation and extrapolation of Hill number with order q
+\code{iNEXT}: Interpolation and extrapolation of Hill number with order q
 }
 \examples{
 data(spider)
-z <- iNEXT(spider, q=0, datatype="abundance")
+iNEXT(spider, q=0, datatype="abundance")
 
 data(ant)
 iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)

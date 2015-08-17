@@ -8,16 +8,21 @@ ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "site",
   grey = FALSE)
 }
 \arguments{
-\item{x}{a \code{iNEXT} object computed by \code{\link{iNEXT}}}
+\item{x}{an \code{iNEXT} object computed by \code{\link{iNEXT}}.}
 
-\item{type}{three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot number of individuals or number of samples to diversity;
-\code{2} means to plot number of individuals or number of samples to sample coverage; and \code{3} means to plot sample coverage to diversity.}
+\item{type}{three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot the sample-size-based rarefaction/extrapolation curve; \code{2} means to plot the sample completeness curve; \code{3} means to plot the coverage-based rarefaction/extrapolation curve.}
 
-\item{se}{display confidence interval around estimated accumulation curve}
+\item{se}{display confidence interval around estimated accumulation curve.}
 
-\item{facet.var}{display subsets of the dataset in different panels with four choices: \code{facet.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any lay out panels in a grid; \code{"order"} means split lay out panels by different orders q; \code{"site"} means split lay out panels by different sites; and \code{"both"} means split lay out panels by order and sites.}
+\item{facet.var}{display plot(s) in different panels with four choices: \code{facet.var = c("none", }\cr
+\code{"order", }\code{"site", }\code{"both")} where \code{"none"} means plots are not split into panels;
+\code{"order"} means to split plots into different panels by diversity order q; \code{"site"} means to split plots into
+different panels by site; and \code{"both"} means to split plots by both order and site.}
 
-\item{color.var}{display subsets of the dataset in different colors with four choices: \code{color.var = c("none", "order", "site", "both")} where \code{"none"} means do not split any color; \code{"order"} means split colors by different orders q; \code{"site"} means split colors by different sites; and \code{"both"} means split colors by order and sites.}
+\item{color.var}{display plot(s) in different colors with four choices: \code{color.var = c("none", }\cr
+\code{"order", }\code{"site", }\code{"both")} where \code{"none"} means to use the same color for all plots;
+\code{"order"} means to use different colors by diversity order q; \code{"site"} means to use different colors by site;
+and \code{"both"} means to use different colors by both diversity order and site.}
 
 \item{grey}{display grey and white ggplot2 theme. Default is FALSE.}
 }
@@ -25,24 +30,24 @@ ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "site",
 a ggplot object
 }
 \description{
-\code{ggiNEXT} the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object
+\code{ggiNEXT}: the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
 }
 \examples{
 data(spider)
-# single abundance-based data
+# single-community abundance-based data
 out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
 ggiNEXT(x=out1, type=1)
 ggiNEXT(x=out1, type=2)
 ggiNEXT(x=out1, type=3)
 
 \dontrun{
-# single incidence-based data with multiple order q
+# single-community incidence-based data with three orders q
 data(ant)
 size <- round(seq(10, 500, length.out=20))
 y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=size, se=FALSE)
-ggiNEXT(y, se=FALSE)
+ggiNEXT(y, se=FALSE, color.var="order")
 
-# multiple abundance-based data with multiple order q
+# multiple-community abundance-based data with three orders q
 z <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
 ggiNEXT(z, facet.var="site", color.var="order")
 ggiNEXT(z, facet.var="both", color.var="both")

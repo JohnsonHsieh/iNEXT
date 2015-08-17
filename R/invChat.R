@@ -11,10 +11,11 @@ invChat.Ind <- function(x, C, upper=sum(x)){
   method <- ifelse(mm<n, "rarefied", ifelse(mm==n, "observed", "extrapolation"))
   mm <- ceiling(mm)
   out <- data.frame(m=mm, method=method, 
-                    SamCov=round(Chat.Ind(x,mm),3), 
-                    SpeRic=round(Dqhat.Ind(x,0,mm),3),
-                    ShaDiv=round(Dqhat.Ind(x,1,mm),3),
-                    SimDiv=round(Dqhat.Ind(x,2,mm),3))
+                    "SC"=round(Chat.Ind(x,mm),3), 
+                    "q = 0"=round(Dqhat.Ind(x,0,mm),3),
+                    "q = 1"=round(Dqhat.Ind(x,1,mm),3),
+                    "q = 2"=round(Dqhat.Ind(x,2,mm),3))
+  colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
   out  
 }
 
@@ -32,10 +33,11 @@ invChat.Sam <- function(x, C, upper=max(x)){
   method <- ifelse(mm<n, "rarefied", ifelse(mm==n, "observed", "extrapolation"))
   mm <- ceiling(mm)
   out <- data.frame(t=mm, method=method, 
-                    SamCov=round(Chat.Sam(x,mm),3),
-                    SpeRic=round(Dqhat.Sam(x,0,mm),3),
-                    ShaDiv=round(Dqhat.Sam(x,1,mm),3),
-                    SimDiv=round(Dqhat.Sam(x,2,mm),3))
+                    "SC"=round(Chat.Sam(x,mm),3),
+                    "q = 0"=round(Dqhat.Sam(x,0,mm),3),
+                    "q = 1"=round(Dqhat.Sam(x,1,mm),3),
+                    "q = 2"=round(Dqhat.Sam(x,2,mm),3))
+  colnames(out) <- c("t", "method", "SC", "q = 0", "q = 1", "q = 2")
   out
   
 }
@@ -122,11 +124,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
         size <- sum(x)
       }
       method <- ifelse(size<sum(x), "rarefied", ifelse(size==sum(x), "observed", "extrapolation"))
-      data.frame(m=size, method=method, 
+      out <- data.frame(m=size, method=method, 
                  SamCov=round(Chat.Ind(x,size),3),
                  SpeRic=round(Dqhat.Ind(x,0,size),3),
                  ShaDiv=round(Dqhat.Ind(x,1,size),3),
                  SimDiv=round(Dqhat.Ind(x,2,size),3))
+	  colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
+	  out
     }
     else if(class(x)=="list"){
       if(is.null(size)){
@@ -135,11 +139,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
       
       do.call(rbind, lapply(x, function(x){
         method <- ifelse(size<sum(x), "rarefied", ifelse(size==sum(x), "observed", "extrapolation"))
-        data.frame(m=size, method=method, 
+        out <- data.frame(m=size, method=method, 
                    SamCov=round(Chat.Ind(x,size),3),
                    SpeRic=round(Dqhat.Ind(x,0,size),3),
                    ShaDiv=round(Dqhat.Ind(x,1,size),3),
                    SimDiv=round(Dqhat.Ind(x,2,size),3))
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
+		out
       }))
     }else if(class(x)=="data.fram" | class(x)=="matrix"){
       if(is.null(size)){
@@ -147,11 +153,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
       }
       do.call(rbind, apply(x, 2, function(x){
         method <- ifelse(size<sum(x), "rarefied", ifelse(size==sum(x), "observed", "extrapolation"))
-        data.frame(m=size, method=method, 
+        out <- data.frame(m=size, method=method, 
                    SamCov=round(Chat.Ind(x,size),3),
                    SpeRic=round(Dqhat.Ind(x,0,size),3),
                    ShaDiv=round(Dqhat.Ind(x,1,size),3),
                    SimDiv=round(Dqhat.Ind(x,2,size),3))
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
+		out
       }))
     }
   }else if(datatype=="incidence"){
@@ -161,11 +169,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
         size <- max(x)
       }
       method <- ifelse(size<max(x), "rarefied", ifelse(size==max(x), "observed", "extrapolation"))
-      data.frame(t=size, method=method, 
+      out <- data.frame(t=size, method=method, 
                  SamCov=round(Chat.Sam(x,size),3),
                  SpeRic=round(Dqhat.Sam(x,0,size),3),
                  ShaDiv=round(Dqhat.Sam(x,1,size),3),
                  SimDiv=round(Dqhat.Sam(x,2,size),3))
+	  colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
+	  out
     }
     else if(class(x)=="list"){
       if(is.null(size)){
@@ -173,11 +183,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
       }
       do.call(rbind, lapply(x, function(x){
         method <- ifelse(size<max(x), "rarefied", ifelse(size==max(x), "observed", "extrapolation"))
-        data.frame(t=size, method=method, 
+        out <- data.frame(t=size, method=method, 
                    SamCov=round(Chat.Sam(x,size),3),
                    SpeRic=round(Dqhat.Sam(x,0,size),3),
                    ShaDiv=round(Dqhat.Sam(x,1,size),3),
                    SimDiv=round(Dqhat.Sam(x,2,size),3))
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
+		out
       }))
     }else if(class(x)=="data.fram" | class(x)=="matrix"){
       if(is.null(size)){
@@ -185,11 +197,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
       }
       do.call(rbind, apply(x, 2, function(x){
         method <- ifelse(size<max(x), "rarefied", ifelse(size==max(x), "observed", "extrapolation"))
-        data.frame(t=size, method=method, 
+        out <- data.frame(t=size, method=method, 
                    SamCov=round(Chat.Sam(x,size),3),
                    SpeRic=round(Dqhat.Sam(x,0,size),3),
                    ShaDiv=round(Dqhat.Sam(x,1,size),3),
                    SimDiv=round(Dqhat.Sam(x,2,size),3))
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
+		out
       }))
     }
     
@@ -207,25 +221,28 @@ invSize <- function(x, datatype="abundance", size=NULL){
 # 
 
 ###############################################
-#' Compute species diversity with fixed sample coverage
+#' Compute species diversity with specific level
 #' 
-#' \code{Auxiliary} compute species diversity with fixed sample size or sample coverage.
-#' @param x a \code{data.frame} or \code{list} for species abundance or incidence frequencies.
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @param base the compared base, That is sample-size-based (\code{base="size"}) or coverage-based (\code{base="coverage"}).
-#' @param ref the compared reference sample size, sampling units or sample coverage. 
-#' If \code{base="size"} and \code{red=NULL}, this function compute the minimum level of sample size or samplping units for all sites. 
-#' If \code{base="coverage"} and \code{ref=NULL}, this function compute the minimum level of sample coverage. 
-#' @return a \code{data.frame} of species diversity table with fixed minimum reference sample size or minimum sample coverage for all sites.
+#' \code{Auxiliary}: computes species diversity with a user-specified sample size or sample coverage.
+#' @param x a \code{data.frame} or \code{list} for species abundances or incidence frequencies. 
+#' If \code{datatype = "incidence"},  then the input format of first entry must be total number of sampling units, followed 
+#' by species incidence frequencies in each column or list items.
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
+#' sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param base comparison base: sample-size-based (\code{base="size"}) or coverage-based (\code{base="coverage"}).
+#' @param level a user-specified sample size or sample coverage. 
+#' If \code{base="size"} and \code{level=NULL}, this function computes the diversity estimates for the minimum sample size among all sites. 
+#' If \code{base="coverage"} and \code{level=NULL}, this function computes the diversity estimates for the minimum sample coverage among all sites. 
+#' @return a \code{data.frame} of species diversity table for user-specified sample size or sample coverage.
 #' @examples
 #' data(spider)
-#' Auxiliary(spider, "abundance", base="size")
-#' Auxiliary(spider, "abundance", base="coverage")
+#' Auxiliary(spider, "abundance", base="size", level=NULL)
+#' Auxiliary(spider, "abundance", base="coverage", level=NULL)
 #' 
 #' data(ant)
-#' Auxiliary(ant, "incidence", base="coverage", ref=0.985)
+#' Auxiliary(ant, "incidence", base="coverage", level=0.985)
 #' @export
-Auxiliary <- function(x, datatype="abundance", base="size", ref=NULL){
+Auxiliary <- function(x, datatype="abundance", base="size", level=NULL){
   TYPE <- c("abundance", "incidence")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid datatype")
@@ -241,9 +258,9 @@ Auxiliary <- function(x, datatype="abundance", base="size", ref=NULL){
   base <- match.arg(base, BASE)
   
   if(base=="size"){
-    invSize(x, datatype, size=ref)
+    invSize(x, datatype, size=level)
   }else if(base=="coverage"){
-    invChat(x, datatype, C=ref)
+    invChat(x, datatype, C=level)
   }
 }
 

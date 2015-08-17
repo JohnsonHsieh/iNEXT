@@ -2,34 +2,35 @@
 % Please edit documentation in R/EstIndex.R
 \name{ChaoEntropy}
 \alias{ChaoEntropy}
-\title{Estimation of Shannon entropy}
+\title{Estimation of Shannon entropy/diversity}
 \usage{
 ChaoEntropy(x, datatype = "abundance", transform = FALSE, conf = 0.95,
   B = 200)
 }
 \arguments{
-\item{x}{a vector of species frequence}
+\item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"},
+then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.}
 
-\item{datatype}{the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{transform}{a \code{logical} constant to compute traditional index or the effective transformation. Default is \code{logical=FALSE}.}
+\item{transform}{a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}). Default is \code{transform=FALSE}.}
 
-\item{conf}{a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.}
+\item{conf}{a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.}
 
-\item{B}{the number of bootstrap resampling times, default is \code{200}.}
+\item{B}{the number of bootstrap replications, default is \code{200}.}
 }
 \value{
-a value of species richness estimator
+An vector of observed Shannon entropy/diversity, estimate, s.e. and the associated confidence interval.
 }
 \description{
-\code{ChaoEntropy} Estimation of Shannon entropy via Chao et al. (2013)
+\code{ChaoEntropy}: Estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
 }
 \examples{
 data(spider)
-ChaoSpecies(spider$Girdled, datatype="abundance")
+ChaoEntropy(spider$Girdled, datatype="abundance")
 }
-\author{
-Y.H. Lee
+\references{
+Chao, A., Wang, Y.T. & Jost, L. (2013) Entropy and the species accumulation curve: a novel entropy estimator via discovery rates of new species. Methods in Ecology and Evolution, 4, 1091-1100.
 }
 \seealso{
 \code{\link{ChaoSpecies}}

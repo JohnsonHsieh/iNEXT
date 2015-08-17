@@ -3,10 +3,12 @@
 ###########################################
 #' Exhibit basic data information
 #' 
-#' \code{DataInfo} Exhibit basic data information
+#' \code{DataInfo}: Exhibits basic data information
 #' 
-#' @param x a vector/matrix/list of species frequence
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
+#' @param x a vector/matrix/list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
+#' sampling-unit-based incidence data (\code{datatype = "incidence"}).
 #' @return a data.frame of basic data information
 #' @author T.C. Hsieh
 #' @examples 
@@ -78,17 +80,23 @@ DataInfo <- function(x, datatype="abundance"){
 ###########################################
 #' Estimation of species richness
 #' 
-#' \code{ChaoSpecies} Estimation of species richness via Chao (1984, 1987)
+#' \code{ChaoSpecies}: Estimation of species richness based on the methods proposed in Chao (1984, 1987)
 #' 
-#' @param x a vector of species frequence
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @param conf a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.
-#' @return a vector of species richness estimator and its confidence interval
+#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies. 
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
+#' sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param conf a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.
+#' @return A vector of observed species richness, species richness estimator, s.e. and the associated confidence interval.
 #' @author K.H. Ma
 #' @seealso \code{\link{ChaoEntropy}}
 #' @examples 
 #' data(spider)
 #' ChaoSpecies(spider$Girdled, datatype="abundance")
+#' @references 
+#' Chao, A. (1984) Nonparametric estimation of the number of classes in a population. Scandinavian Journal of Statistics, 11, 265-270.\cr\cr
+#' Chao, A. (1987) Estimating the population size for capture-recapture data with unequal catchability. Biometrics, 43, 783-791.
+#' 
 #' @export
 
 ChaoSpecies=function(x, datatype="abundance", conf=0.95){  
@@ -183,7 +191,7 @@ ChaoSpecies=function(x, datatype="abundance", conf=0.95){
 # 
 # \code{BootstrapFun} Estimation of species richness via Chao (1984, 1987)
 # 
-# @param x a vector of species frequence
+# @param x a vector of species frequencies.
 # @param FunName the R function to estimate the traget index.
 # @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
 # @param B the number of bootstrap resampling times, default is \code{200}.
@@ -256,21 +264,24 @@ BootstrapFun <- function(x, FunName, datatype, B){
 #
 #
 ###########################################
-#' Estimation of Shannon entropy
+#' Estimation of Shannon entropy/diversity
 #' 
-#' \code{ChaoEntropy} Estimation of Shannon entropy via Chao et al. (2013)
+#' \code{ChaoEntropy}: Estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
 #' 
-#' @param x a vector of species frequence
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @param transform a \code{logical} constant to compute traditional index or the effective transformation. Default is \code{logical=FALSE}.
-#' @param conf a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.
-#' @param B the number of bootstrap resampling times, default is \code{200}.
-#' @return a value of species richness estimator
-#' @author Y.H. Lee
+#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies. 
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param transform a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}). Default is \code{transform=FALSE}.
+#' @param conf a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.
+#' @param B the number of bootstrap replications, default is \code{200}.
+#' @return An vector of observed Shannon entropy/diversity, estimate, s.e. and the associated confidence interval.
 #' @seealso \code{\link{ChaoSpecies}}
 #' @examples 
 #' data(spider)
-#' ChaoSpecies(spider$Girdled, datatype="abundance")
+#' ChaoEntropy(spider$Girdled, datatype="abundance")
+#' @references 
+#' Chao, A., Wang, Y.T. & Jost, L. (2013) Entropy and the species accumulation curve: a novel entropy estimator via discovery rates of new species. Methods in Ecology and Evolution, 4, 1091-1100.
+#'
 #' @export
 
 
@@ -391,21 +402,26 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 #
 #
 ###########################################
-#' Estimation of Simpson index
+#' Estimation of Gini-Simpson index or Simpson diversity
 #' 
-#' \code{EstSimpson} Estimation of Simpson index via Good. (1953) and Chao et al. (2014)
+#' \code{EstSimpson}: Estimation of Gini-Simpson index or the transformed Simpson diversity based on the methods proposed in Good (1953) and Chao et al. (2014)
 #' 
-#' @param x a vector of species frequence
-#' @param datatype the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).
-#' @param transform a \code{logical} constant to compute traditional index or the effective transformation. Default is \code{logical=FALSE}.
-#' @param conf a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.
-#' @param B the number of bootstrap resampling times, default is \code{200}.
-#' @return a value of species richness estimator
+#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param transform a \code{logical} constant to compute traditional Gini-Simpson index (\code{transform=FALSE}) or the transformed Simpson diversity (\code{transform=TRUE}). Default is \code{transform=FALSE}.
+#' @param conf a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.
+#' @param B the number of bootstrap replications, default is \code{200}.
+#' @return a vector of observed Gini-Simpson index/diversity, index estimator, s.e. and the associated confidence interval.
 #' @author T.C. Hsieh
 #' @seealso \code{\link{ChaoSpecies}, \link{ChaoEntropy}}
 #' @examples 
 #' data(spider)
 #' EstSimpson(spider$Girdled, datatype="abundance")
+#' @references
+#' Chao, A., Gotelli, N.J., Hsieh, T.C., Sander, E.L., Ma, K.H., Colwell, R.K. & Ellison, A.M. (2014) Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. Ecological Monographs, 84, 45-67.\cr\cr 
+#' Good, I.J. (1953) The population frequencies of species and the estimation of population parameters. Biometrika, 40, 237-264.
+#' 
 #' @export
 
 EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=200) {

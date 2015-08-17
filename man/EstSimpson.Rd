@@ -2,27 +2,28 @@
 % Please edit documentation in R/EstIndex.R
 \name{EstSimpson}
 \alias{EstSimpson}
-\title{Estimation of Simpson index}
+\title{Estimation of Gini-Simpson index or Simpson diversity}
 \usage{
 EstSimpson(x, datatype = "abundance", transform = FALSE, conf = 0.95,
   B = 200)
 }
 \arguments{
-\item{x}{a vector of species frequence}
+\item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"},
+then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.}
 
-\item{datatype}{the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{transform}{a \code{logical} constant to compute traditional index or the effective transformation. Default is \code{logical=FALSE}.}
+\item{transform}{a \code{logical} constant to compute traditional Gini-Simpson index (\code{transform=FALSE}) or the transformed Simpson diversity (\code{transform=TRUE}). Default is \code{transform=FALSE}.}
 
-\item{conf}{a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.}
+\item{conf}{a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.}
 
-\item{B}{the number of bootstrap resampling times, default is \code{200}.}
+\item{B}{the number of bootstrap replications, default is \code{200}.}
 }
 \value{
-a value of species richness estimator
+a vector of observed Gini-Simpson index/diversity, index estimator, s.e. and the associated confidence interval.
 }
 \description{
-\code{EstSimpson} Estimation of Simpson index via Good. (1953) and Chao et al. (2014)
+\code{EstSimpson}: Estimation of Gini-Simpson index or the transformed Simpson diversity based on the methods proposed in Good (1953) and Chao et al. (2014)
 }
 \examples{
 data(spider)
@@ -30,6 +31,10 @@ EstSimpson(spider$Girdled, datatype="abundance")
 }
 \author{
 T.C. Hsieh
+}
+\references{
+Chao, A., Gotelli, N.J., Hsieh, T.C., Sander, E.L., Ma, K.H., Colwell, R.K. & Ellison, A.M. (2014) Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. Ecological Monographs, 84, 45-67.\cr\cr
+Good, I.J. (1953) The population frequencies of species and the estimation of population parameters. Biometrika, 40, 237-264.
 }
 \seealso{
 \code{\link{ChaoSpecies}, \link{ChaoEntropy}}

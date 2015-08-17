@@ -2,33 +2,36 @@
 % Please edit documentation in R/invChat.R
 \name{Auxiliary}
 \alias{Auxiliary}
-\title{Compute species diversity with fixed sample coverage}
+\title{Compute species diversity with specific level}
 \usage{
-Auxiliary(x, datatype = "abundance", base = "size", ref = NULL)
+Auxiliary(x, datatype = "abundance", base = "size", level = NULL)
 }
 \arguments{
-\item{x}{a \code{data.frame} or \code{list} for species abundance or incidence frequencies.}
+\item{x}{a \code{data.frame} or \code{list} for species abundances or incidence frequencies.
+If \code{datatype = "incidence"},  then the input format of first entry must be total number of sampling units, followed
+by species incidence frequencies in each column or list items.}
 
-\item{datatype}{the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or
+sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{base}{the compared base, That is sample-size-based (\code{base="size"}) or coverage-based (\code{base="coverage"}).}
+\item{base}{comparison base: sample-size-based (\code{base="size"}) or coverage-based (\code{base="coverage"}).}
 
-\item{ref}{the compared reference sample size, sampling units or sample coverage.
-If \code{base="size"} and \code{red=NULL}, this function compute the minimum level of sample size or samplping units for all sites.
-If \code{base="coverage"} and \code{ref=NULL}, this function compute the minimum level of sample coverage.}
+\item{level}{a user-specified sample size or sample coverage.
+If \code{base="size"} and \code{level=NULL}, this function computes the diversity estimates for the minimum sample size among all sites.
+If \code{base="coverage"} and \code{level=NULL}, this function computes the diversity estimates for the minimum sample coverage among all sites.}
 }
 \value{
-a \code{data.frame} of species diversity table with fixed minimum reference sample size or minimum sample coverage for all sites.
+a \code{data.frame} of species diversity table for user-specified sample size or sample coverage.
 }
 \description{
-\code{Auxiliary} compute species diversity with fixed sample size or sample coverage.
+\code{Auxiliary}: computes species diversity with a user-specified sample size or sample coverage.
 }
 \examples{
 data(spider)
-Auxiliary(spider, "abundance", base="size")
-Auxiliary(spider, "abundance", base="coverage")
+Auxiliary(spider, "abundance", base="size", level=NULL)
+Auxiliary(spider, "abundance", base="coverage", level=NULL)
 
 data(ant)
-Auxiliary(ant, "incidence", base="coverage", ref=0.985)
+Auxiliary(ant, "incidence", base="coverage", level=0.985)
 }
 

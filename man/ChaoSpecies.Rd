@@ -7,17 +7,19 @@
 ChaoSpecies(x, datatype = "abundance", conf = 0.95)
 }
 \arguments{
-\item{x}{a vector of species frequence}
+\item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"},
+then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.}
 
-\item{datatype}{the data type of input data. That is individual-based abundance data (\code{datatype = "abundance"}) or sample-based incidence data (\code{datatype = "incidence"}).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or
+sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{conf}{a positive number \eqn{\le} 1. "\code{conf}" specifies the confidence level for confidence interval. The default is \code{0.95}.}
+\item{conf}{a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.}
 }
 \value{
-a vector of species richness estimator and its confidence interval
+A vector of observed species richness, species richness estimator, s.e. and the associated confidence interval.
 }
 \description{
-\code{ChaoSpecies} Estimation of species richness via Chao (1984, 1987)
+\code{ChaoSpecies}: Estimation of species richness based on the methods proposed in Chao (1984, 1987)
 }
 \examples{
 data(spider)
@@ -25,6 +27,10 @@ ChaoSpecies(spider$Girdled, datatype="abundance")
 }
 \author{
 K.H. Ma
+}
+\references{
+Chao, A. (1984) Nonparametric estimation of the number of classes in a population. Scandinavian Journal of Statistics, 11, 265-270.\cr\cr
+Chao, A. (1987) Estimating the population size for capture-recapture data with unequal catchability. Biometrics, 43, 783-791.
 }
 \seealso{
 \code{\link{ChaoEntropy}}
