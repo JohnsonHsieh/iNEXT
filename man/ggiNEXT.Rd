@@ -10,44 +10,47 @@ ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "site",
 \arguments{
 \item{x}{an \code{iNEXT} object computed by \code{\link{iNEXT}}.}
 
-\item{type}{three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot the sample-size-based rarefaction/extrapolation curve; \code{2} means to plot the sample completeness curve; \code{3} means to plot the coverage-based rarefaction/extrapolation curve.}
+\item{type}{three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1});
+sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).}
 
-\item{se}{display confidence interval around estimated accumulation curve.}
+\item{se}{a logical variable to display confidence interval around the estimated sampling curve.}
 
-\item{facet.var}{display plot(s) in different panels with four choices: \code{facet.var = c("none", }\cr
-\code{"order", }\code{"site", }\code{"both")} where \code{"none"} means plots are not split into panels;
-\code{"order"} means to split plots into different panels by diversity order q; \code{"site"} means to split plots into
-different panels by site; and \code{"both"} means to split plots by both order and site.}
+\item{facet.var}{create a separate plot for each value of a specified variable:
+no separation \cr (\code{facet.var="none"});
+a separate plot for each diversity order (\code{facet.var="order"});
+a separate plot for each site (\code{facet.var="site"});
+a separate plot for each combination of order x site (\code{facet.var="both"}).}
 
-\item{color.var}{display plot(s) in different colors with four choices: \code{color.var = c("none", }\cr
-\code{"order", }\code{"site", }\code{"both")} where \code{"none"} means to use the same color for all plots;
-\code{"order"} means to use different colors by diversity order q; \code{"site"} means to use different colors by site;
-and \code{"both"} means to use different colors by both diversity order and site.}
+\item{color.var}{create curves in different colors for values of a specified variable:
+all curves are in the same color (\code{color.var="none"});
+use different colors for diversity orders (\code{color.var="order"});
+use different colors for sites (\code{color.var="site"});
+use different colors for combinations of order x site (\code{color.var="both"}).}
 
-\item{grey}{display grey and white ggplot2 theme. Default is FALSE.}
+\item{grey}{a logical variable to display grey and white ggplot2 theme.}
 }
 \value{
-a ggplot object
+a ggplot2 object
 }
 \description{
 \code{ggiNEXT}: the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
 }
 \examples{
 data(spider)
-# single-community abundance-based data
+# single-assemblage abundance data
 out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
 ggiNEXT(x=out1, type=1)
 ggiNEXT(x=out1, type=2)
 ggiNEXT(x=out1, type=3)
 
 \dontrun{
-# single-community incidence-based data with three orders q
+# single-assemblage incidence data with three orders q
 data(ant)
 size <- round(seq(10, 500, length.out=20))
 y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=size, se=FALSE)
 ggiNEXT(y, se=FALSE, color.var="order")
 
-# multiple-community abundance-based data with three orders q
+# multiple-assemblage abundance data with three orders q
 z <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
 ggiNEXT(z, facet.var="site", color.var="order")
 ggiNEXT(z, facet.var="both", color.var="both")

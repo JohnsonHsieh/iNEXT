@@ -4,7 +4,7 @@ Title: Interpolation and Extrapolation for Species Diversity
 Version: 2.0.5
 Date: 2015-08-11
 Author: T. C. Hsieh, K. H. Ma and Anne Chao
-Description: A unified approach to rarefaction and extrapolation of Hill numbers for individual-based (abundance) data or sampling-unit-based (incidence) data.
+Description: The package provides simple functions to compute and plot two types (sample-size- and coverage-based) rarefaction and extrapolation of species diversity (Hill numbers) for individual-based (abundance) data or sampling-unit-based (incidence) data.
 License: GPL (>= 3)
 URL: http://chao.stat.nthu.edu.tw/blog/software-download/
 Maintainer: T. C. Hsieh <euler96@gmail.com>

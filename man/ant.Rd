@@ -5,11 +5,11 @@
 Ant species incidence frequencies data
 }
 \description{
-Species incidence frequencies for ant samples from five elevations in northeastern Costa Rica (Longino & Colwell 2011)
+Ant species incidence frequencies for samples from five elevations in northeastern Costa Rica (Longino and Colwell 2011). The number of sampling units (1m x 1m forest floor plot) for the 5 sites are respectively 599, 230, 150, 200 and 200. The number of observed species for the 5 sites are respectively 227, 241, 122, 56 and 14.
 }
 \usage{data(ant)}
 \format{
-  For incidence data, the first entry must be the total number of sampling units, followed by the species incidence frequencies. The format is: \cr
+  The input format for each site is a list of integers. For incidence data, the first entry must be the total number of sampling units, followed by the species incidence frequencies as shown below: \cr
 List of 5 \cr
  $ h50m  : num [1:228] 599 1 1 1 1 1 1 1 1 1 ... \cr
  $ h500m : num [1:242] 230 1 1 1 1 1 1 1 1 1 ... \cr

@@ -9,21 +9,21 @@ ChaoEntropy(x, datatype = "abundance", transform = FALSE, conf = 0.95,
 }
 \arguments{
 \item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"},
-then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.}
+then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{transform}{a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}). Default is \code{transform=FALSE}.}
+\item{transform}{a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}).}
 
-\item{conf}{a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.}
+\item{conf}{a positive number \eqn{\le} 1 specifying the level of confidence interval.}
 
-\item{B}{the number of bootstrap replications, default is \code{200}.}
+\item{B}{an integer specifying the number of bootstrap replications.}
 }
 \value{
-An vector of observed Shannon entropy/diversity, estimate, s.e. and the associated confidence interval.
+A vector of observed Shannon entropy/diversity, estimate of entropy/diversity, s.e. and the associated confidence interval.
 }
 \description{
-\code{ChaoEntropy}: Estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
+\code{ChaoEntropy}: estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
 }
 \examples{
 data(spider)
@@ -33,6 +33,6 @@ ChaoEntropy(spider$Girdled, datatype="abundance")
 Chao, A., Wang, Y.T. & Jost, L. (2013) Entropy and the species accumulation curve: a novel entropy estimator via discovery rates of new species. Methods in Ecology and Evolution, 4, 1091-1100.
 }
 \seealso{
-\code{\link{ChaoSpecies}}
+\code{\link{ChaoSpecies}, \link{EstSimpson}}
 }
 

@@ -8,30 +8,32 @@ iNEXT(x, q = 0, datatype = "abundance", size = NULL, endpoint = NULL,
   knots = 40, se = TRUE, nboot = 50)
 }
 \arguments{
-\item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.
-Note that in iNEXT version 2.0, the input arguments allow the class of \code{\link{numeric}}, \code{\link{matrix}}, \code{\link{data.frame}} (species by sites), or \code{\link{list}}.}
+\item{x}{a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list.}
 
-\item{q}{a numeric value, the diversity order of Hill number .}
+\item{q}{a numeric value specifying the diversity order of Hill number .}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or
 sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{size}{an integer vector of sample size (number of individuals or sampling units to compute rarefaction/extrapolation),
-default is NULL. If \code{size} is not specified, then rarefaction/extrapolation by the endpoint and knots will be computed.}
+\item{size}{an integer vector of sample sizes (number of individuals or sampling units) for which diversity estimates will be computed.
+If NULL, then diversity estimates will be computed for those sample sizes determined by the specified/default \code{endpoint} and \code{knots} .}
 
-\item{endpoint}{an integer of sample size that is the endpoint for rarefaction/extrapolation computation.
-Default is double reference sample size.}
+\item{endpoint}{an integer specifying the sample size that is the \code{endpoint} for rarefaction/extrapolation.
+If NULL, then \code{endpoint} \code{=} double reference sample size.}
 
-\item{knots}{number of equally-spaced knots (say K, default is 40) in the range of sample size between 1 and \code{endpoint}.
-If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} computes rarefaction part only with approximately K equally spaced sizes.
-If \code{endpoint} is larger than reference sample size, then \code{iNEXT()} computes approximately K/2 equally spaced sizes for rarefaction part and approximately K/2 equally spaced sizes between reference sample size and the \code{endpoint}.}
+\item{knots}{an integer specifying the number of equally-spaced \code{knots} (say K, default is 40) between size 1 and the \code{endpoint};
+each knot represents a particular sample size for which diversity estimate will be calculated.
+If the \code{endpoint} is smaller than the reference sample size, then \code{iNEXT()} computes only the rarefaction esimates for approximately K evenly spaced \code{knots}.
+If the \code{endpoint} is larger than the reference sample size, then \code{iNEXT()} computes rarefaction estimates for approximately K/2 evenly spaced \code{knots} between sample size 1 and the reference sample size, and computes extrapolation estimates for approximately K/2 evenly spaced \code{knots} between the reference sample size and the \code{endpoint}.}
 
-\item{se}{calculates the bootstrap standard error and 95\% confidence interval; default is TRUE.}
+\item{se}{a logical variable to calculate the bootstrap standard error and 95\% confidence interval.}
 
-\item{nboot}{the number of replications, default is 50.}
+\item{nboot}{an integer specifying the number of replications.}
 }
 \value{
-a list of three objects: \code{DataInfo}, \code{iNextEst} and \code{AsyEst}
+a list of three objects: \code{$DataInfo} for summarizing data information;
+\code{$iNextEst} for showing diversity estimates for rarefied and extrapolated samples along with related statistics;
+and \code{$AsyEst} for showing asymptotic diversity estimates along with related statistics.
 }
 \description{
 \code{iNEXT}: Interpolation and extrapolation of Hill number with order q

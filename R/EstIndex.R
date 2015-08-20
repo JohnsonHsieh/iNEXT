@@ -3,14 +3,13 @@
 ###########################################
 #' Exhibit basic data information
 #' 
-#' \code{DataInfo}: Exhibits basic data information
+#' \code{DataInfo}: exhibits basic data information
 #' 
-#' @param x a vector/matrix/list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
-#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.
+#' @param x a vector/matrix/list of species abundances or incidence frequencies.\cr If \code{datatype = "incidence"}, 
+#' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
 #' sampling-unit-based incidence data (\code{datatype = "incidence"}).
-#' @return a data.frame of basic data information
-#' @author T.C. Hsieh
+#' @return a data.frame of basic data information including sample size, observed species richness, sample coverage estimate, and the first ten abundance/incidence frequency counts.
 #' @examples 
 #' data(spider)
 #' DataInfo(spider, datatype="abundance")
@@ -57,7 +56,7 @@ DataInfo <- function(x, datatype="abundance"){
     } else if(class(x) == "matrix" | class(x) == "data.frame"){
       out <- t(apply(as.matrix(x), 2, Fun.abun))  
     }
-    colnames(out) <-  c("n", "S.obs", "C.hat", paste("f",1:10, sep=""))
+    colnames(out) <-  c("n", "S.obs", "SC", paste("f",1:10, sep=""))
     as.data.frame(out)
   }else if(datatype == "incidence"){
     if(class(x) == "numeric" | class(x) == "integer"){
@@ -67,7 +66,7 @@ DataInfo <- function(x, datatype="abundance"){
     } else if(class(x) == "matrix" | class(x) == "data.frame"){
       out <- t(apply(as.matrix(x), 2, Fun.ince))  
     }
-    colnames(out) <-  c("T", "U", "S.obs", "C.hat", paste("Q",1:10, sep=""))
+    colnames(out) <-  c("T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
     as.data.frame(out)
   }
 }
@@ -80,16 +79,15 @@ DataInfo <- function(x, datatype="abundance"){
 ###########################################
 #' Estimation of species richness
 #' 
-#' \code{ChaoSpecies}: Estimation of species richness based on the methods proposed in Chao (1984, 1987)
+#' \code{ChaoSpecies}: estimation of species richness based on the methods proposed in Chao (1984, 1987)
 #' 
 #' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
-#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies. 
+#' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies. 
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
 #' sampling-unit-based incidence data (\code{datatype = "incidence"}).
-#' @param conf a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.
-#' @return A vector of observed species richness, species richness estimator, s.e. and the associated confidence interval.
-#' @author K.H. Ma
-#' @seealso \code{\link{ChaoEntropy}}
+#' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
+#' @return A vector of observed species richness, species richness estimate, s.e. and the associated confidence interval.
+#' @seealso \code{\link{ChaoEntropy}, \link{EstSimpson}}
 #' @examples 
 #' data(spider)
 #' ChaoSpecies(spider$Girdled, datatype="abundance")
@@ -266,16 +264,16 @@ BootstrapFun <- function(x, FunName, datatype, B){
 ###########################################
 #' Estimation of Shannon entropy/diversity
 #' 
-#' \code{ChaoEntropy}: Estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
+#' \code{ChaoEntropy}: estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
 #' 
 #' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
-#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies. 
+#' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies. 
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).
-#' @param transform a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}). Default is \code{transform=FALSE}.
-#' @param conf a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.
-#' @param B the number of bootstrap replications, default is \code{200}.
-#' @return An vector of observed Shannon entropy/diversity, estimate, s.e. and the associated confidence interval.
-#' @seealso \code{\link{ChaoSpecies}}
+#' @param transform a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}). 
+#' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
+#' @param B an integer specifying the number of bootstrap replications.
+#' @return A vector of observed Shannon entropy/diversity, estimate of entropy/diversity, s.e. and the associated confidence interval.
+#' @seealso \code{\link{ChaoSpecies}, \link{EstSimpson}} 
 #' @examples 
 #' data(spider)
 #' ChaoEntropy(spider$Girdled, datatype="abundance")
@@ -404,16 +402,15 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 ###########################################
 #' Estimation of Gini-Simpson index or Simpson diversity
 #' 
-#' \code{EstSimpson}: Estimation of Gini-Simpson index or the transformed Simpson diversity based on the methods proposed in Good (1953) and Chao et al. (2014)
+#' \code{EstSimpson}: estimation of Gini-Simpson index or the transformed Simpson diversity based on the methods proposed in Good (1953) and Chao et al. (2014)
 #' 
 #' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
-#' then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.
+#' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).
-#' @param transform a \code{logical} constant to compute traditional Gini-Simpson index (\code{transform=FALSE}) or the transformed Simpson diversity (\code{transform=TRUE}). Default is \code{transform=FALSE}.
-#' @param conf a positive number \eqn{\le} 1, the level of confidence interval. The default is \code{0.95}.
-#' @param B the number of bootstrap replications, default is \code{200}.
-#' @return a vector of observed Gini-Simpson index/diversity, index estimator, s.e. and the associated confidence interval.
-#' @author T.C. Hsieh
+#' @param transform a \code{logical} constant to compute traditional Gini-Simpson index (\code{transform=FALSE}) or the transformed Simpson diversity (\code{transform=TRUE}). 
+#' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
+#' @param B an integer specifying the number of bootstrap replications.
+#' @return a vector of observed Gini-Simpson index/diversity, index/diversity estimator, s.e. and the associated confidence interval.
 #' @seealso \code{\link{ChaoSpecies}, \link{ChaoEntropy}}
 #' @examples 
 #' data(spider)

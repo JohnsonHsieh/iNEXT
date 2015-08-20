@@ -7,24 +7,25 @@
 Auxiliary(x, datatype = "abundance", base = "size", level = NULL)
 }
 \arguments{
-\item{x}{a \code{data.frame} or \code{list} for species abundances or incidence frequencies.
-If \code{datatype = "incidence"},  then the input format of first entry must be total number of sampling units, followed
-by species incidence frequencies in each column or list items.}
+\item{x}{a \code{data.frame} or \code{list} of species abundances or incidence frequencies.\cr
+If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units, followed
+by species incidence frequencies in each column or list.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or
 sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 
-\item{base}{comparison base: sample-size-based (\code{base="size"}) or coverage-based (\code{base="coverage"}).}
+\item{base}{comparison base: sample-size-based (\code{base="size"}) or coverage-based \cr (\code{base="coverage"}).}
 
-\item{level}{a user-specified sample size or sample coverage.
-If \code{base="size"} and \code{level=NULL}, this function computes the diversity estimates for the minimum sample size among all sites.
-If \code{base="coverage"} and \code{level=NULL}, this function computes the diversity estimates for the minimum sample coverage among all sites.}
+\item{level}{an integer specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage.
+If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites.
+If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites.}
 }
 \value{
-a \code{data.frame} of species diversity table for user-specified sample size or sample coverage.
+a \code{data.frame} of species diversity table including the reference sample size, sample coverage,
+method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, and 2 for the user-specified sample size or sample coverage.
 }
 \description{
-\code{Auxiliary}: computes species diversity with a user-specified sample size or sample coverage.
+\code{Auxiliary}: computes species diversity (Hill numbers with q = 0, 1 and 2) with a particular user-specified level of sample size or sample coverage.
 }
 \examples{
 data(spider)

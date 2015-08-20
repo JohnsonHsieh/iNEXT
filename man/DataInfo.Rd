@@ -7,23 +7,20 @@
 DataInfo(x, datatype = "abundance")
 }
 \arguments{
-\item{x}{a vector/matrix/list of species abundances or incidence frequencies. If \code{datatype = "incidence"},
-then the input format of first entry must be total number of sampling units, followed by species incidence frequencies.}
+\item{x}{a vector/matrix/list of species abundances or incidence frequencies.\cr If \code{datatype = "incidence"},
+then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or
 sampling-unit-based incidence data (\code{datatype = "incidence"}).}
 }
 \value{
-a data.frame of basic data information
+a data.frame of basic data information including sample size, observed species richness, sample coverage estimate, and the first ten abundance/incidence frequency counts.
 }
 \description{
-\code{DataInfo}: Exhibits basic data information
+\code{DataInfo}: exhibits basic data information
 }
 \examples{
 data(spider)
 DataInfo(spider, datatype="abundance")
-}
-\author{
-T.C. Hsieh
 }
 

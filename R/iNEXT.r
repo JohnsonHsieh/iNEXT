@@ -517,21 +517,23 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' 
 #' \code{iNEXT}: Interpolation and extrapolation of Hill number with order q
 #' 
-#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the input format of first entry must be total number of sampling units, followed by species incidence frequencies. 
-#' Note that in iNEXT version 2.0, the input arguments allow the class of \code{\link{numeric}}, \code{\link{matrix}}, \code{\link{data.frame}} (species by sites), or \code{\link{list}}.
-#' @param q a numeric value, the diversity order of Hill number .
+#' @param x a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list. 
+#' @param q a numeric value specifying the diversity order of Hill number .
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
 #' sampling-unit-based incidence data (\code{datatype = "incidence"}).
-#' @param size an integer vector of sample size (number of individuals or sampling units to compute rarefaction/extrapolation), 
-#' default is NULL. If \code{size} is not specified, then rarefaction/extrapolation by the endpoint and knots will be computed.
-#' @param endpoint an integer of sample size that is the endpoint for rarefaction/extrapolation computation. 
-#' Default is double reference sample size.
-#' @param knots number of equally-spaced knots (say K, default is 40) in the range of sample size between 1 and \code{endpoint}. 
-#' If \code{endpoint} is smaller than reference sample size, then \code{iNEXT()} computes rarefaction part only with approximately K equally spaced sizes. 
-#' If \code{endpoint} is larger than reference sample size, then \code{iNEXT()} computes approximately K/2 equally spaced sizes for rarefaction part and approximately K/2 equally spaced sizes between reference sample size and the \code{endpoint}.
-#' @param se calculates the bootstrap standard error and 95\% confidence interval; default is TRUE.
-#' @param nboot the number of replications, default is 50.
-#' @return a list of three objects: \code{DataInfo}, \code{iNextEst} and \code{AsyEst}  
+#' @param size an integer vector of sample sizes (number of individuals or sampling units) for which diversity estimates will be computed. 
+#' If NULL, then diversity estimates will be computed for those sample sizes determined by the specified/default \code{endpoint} and \code{knots} .
+#' @param endpoint an integer specifying the sample size that is the \code{endpoint} for rarefaction/extrapolation. 
+#' If NULL, then \code{endpoint} \code{=} double reference sample size.
+#' @param knots an integer specifying the number of equally-spaced \code{knots} (say K, default is 40) between size 1 and the \code{endpoint};
+#' each knot represents a particular sample size for which diversity estimate will be calculated.  
+#' If the \code{endpoint} is smaller than the reference sample size, then \code{iNEXT()} computes only the rarefaction esimates for approximately K evenly spaced \code{knots}. 
+#' If the \code{endpoint} is larger than the reference sample size, then \code{iNEXT()} computes rarefaction estimates for approximately K/2 evenly spaced \code{knots} between sample size 1 and the reference sample size, and computes extrapolation estimates for approximately K/2 evenly spaced \code{knots} between the reference sample size and the \code{endpoint}.
+#' @param se a logical variable to calculate the bootstrap standard error and 95\% confidence interval.
+#' @param nboot an integer specifying the number of replications.
+#' @return a list of three objects: \code{$DataInfo} for summarizing data information; 
+#' \code{$iNextEst} for showing diversity estimates for rarefied and extrapolated samples along with related statistics;
+#' and \code{$AsyEst} for showing asymptotic diversity estimates along with related statistics.  
 #' @examples
 #' data(spider)
 #' iNEXT(spider, q=0, datatype="abundance")
@@ -653,34 +655,37 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #' 
 #' \code{ggiNEXT}: the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
 #' @param x an \code{iNEXT} object computed by \code{\link{iNEXT}}.
-#' @param type three different plotting \code{type = c(1, 2, 3)}; \code{1} means to plot the sample-size-based rarefaction/extrapolation curve; \code{2} means to plot the sample completeness curve; \code{3} means to plot the coverage-based rarefaction/extrapolation curve.                 
-#' @param se display confidence interval around estimated accumulation curve.
-#' @param facet.var display plot(s) in different panels with four choices: \code{facet.var = c("none", }\cr
-#' \code{"order", }\code{"site", }\code{"both")} where \code{"none"} means plots are not split into panels; 
-#' \code{"order"} means to split plots into different panels by diversity order q; \code{"site"} means to split plots into 
-#' different panels by site; and \code{"both"} means to split plots by both order and site.              
-#' @param color.var display plot(s) in different colors with four choices: \code{color.var = c("none", }\cr
-#' \code{"order", }\code{"site", }\code{"both")} where \code{"none"} means to use the same color for all plots; 
-#' \code{"order"} means to use different colors by diversity order q; \code{"site"} means to use different colors by site; 
-#' and \code{"both"} means to use different colors by both diversity order and site.  
-#' @param grey display grey and white ggplot2 theme. Default is FALSE.
-#' @return a ggplot object
+#' @param type three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
+#' sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).                 
+#' @param se a logical variable to display confidence interval around the estimated sampling curve.
+#' @param facet.var create a separate plot for each value of a specified variable: 
+#'  no separation \cr (\code{facet.var="none"}); 
+#'  a separate plot for each diversity order (\code{facet.var="order"}); 
+#'  a separate plot for each site (\code{facet.var="site"}); 
+#'  a separate plot for each combination of order x site (\code{facet.var="both"}).              
+#' @param color.var create curves in different colors for values of a specified variable:
+#'  all curves are in the same color (\code{color.var="none"}); 
+#'  use different colors for diversity orders (\code{color.var="order"}); 
+#'  use different colors for sites (\code{color.var="site"}); 
+#'  use different colors for combinations of order x site (\code{color.var="both"}).  
+#' @param grey a logical variable to display grey and white ggplot2 theme. 
+#' @return a ggplot2 object
 #' @examples
 #' data(spider)
-#' # single-community abundance-based data
+#' # single-assemblage abundance data
 #' out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
 #' ggiNEXT(x=out1, type=1)
 #' ggiNEXT(x=out1, type=2)
 #' ggiNEXT(x=out1, type=3)
 #' 
 #'\dontrun{
-#' # single-community incidence-based data with three orders q
+#' # single-assemblage incidence data with three orders q
 #' data(ant)
 #' size <- round(seq(10, 500, length.out=20))
 #' y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=size, se=FALSE)
 #' ggiNEXT(y, se=FALSE, color.var="order")
 #' 
-#' # multiple-community abundance-based data with three orders q
+#' # multiple-assemblage abundance data with three orders q
 #' z <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
 #' ggiNEXT(z, facet.var="site", color.var="order")
 #' ggiNEXT(z, facet.var="both", color.var="both")
@@ -823,6 +828,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
         g <- g + guides(colour=guide_legend(title="Guides", ncol=length(levels(factor(z$order))), byrow=TRUE),
                         fill=guide_legend(title="Guides"))
       }
+	  facet_wrap_labeller(g, labels = paste("q =", levels(factor(z$order))))
     }
   }
   
@@ -979,6 +985,67 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     par(ask=TRUE)
   }
   par(ask=FALSE)
+}
+
+
+
+
+facet_wrap_labeller <- function(gg.plot,labels=NULL) {
+  #works with R 3.0.1 and ggplot2 0.9.3.1
+  require(gridExtra)
+  
+  g <- ggplotGrob(gg.plot)
+  gg <- g$grobs      
+  strips <- grep("strip_t", names(gg))
+  
+  for(ii in seq_along(labels))  {
+    modgrob <- getGrob(gg[[strips[ii]]], "strip.text", 
+                       grep=TRUE, global=TRUE)
+    gg[[strips[ii]]]$children[[modgrob$name]] <- editGrob(modgrob,label=labels[ii])
+  }
+  
+  g$grobs <- gg
+  class(g) <- c("facetAdjust", "gtable", "ggplot")
+  g
+}
+
+facetAdjust <- function(x, pos = c("up", "down"))
+{
+  pos <- match.arg(pos)
+  p <- ggplot_build(x)
+  gtable <- ggplot_gtable(p); dev.off()
+  dims <- apply(p$panel$layout[2:3], 2, max)
+  nrow <- dims[1]
+  ncol <- dims[2]
+  panels <- sum(grepl("panel", names(gtable$grobs)))
+  space <- ncol * nrow
+  n <- space - panels
+  if(panels != space){
+    idx <- (space - ncol - n + 1):(space - ncol)
+    gtable$grobs[paste0("axis_b",idx)] <- list(gtable$grobs[[paste0("axis_b",panels)]])
+    if(pos == "down"){
+      rows <- grep(paste0("axis_b\\-[", idx[1], "-", idx[n], "]"), 
+                   gtable$layout$name)
+      lastAxis <- grep(paste0("axis_b\\-", panels), gtable$layout$name)
+      gtable$layout[rows, c("t","b")] <- gtable$layout[lastAxis, c("t")]
+    }
+  }
+  class(gtable) <- c("facetAdjust", "gtable", "ggplot"); gtable
+}
+
+print.facetAdjust <- function(x, newpage = is.null(vp), vp = NULL) {
+  if(newpage)
+    grid.newpage()
+  if(is.null(vp)){
+    grid.draw(x)
+  } else {
+    if (is.character(vp)) 
+      seekViewport(vp)
+    else pushViewport(vp)
+    grid.draw(x)
+    upViewport()
+  }
+  invisible(x)
 }
 
 ##
