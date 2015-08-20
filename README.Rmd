@@ -18,12 +18,12 @@ iNEXT (R package)
 =====
 <h4 style="text-align: right;">Most recent update time: August 20, 2015
 
-A Quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by
+A Quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by </h4>
 
-Hsieh, T. C., K. H. Ma, and Anne Chao
+<h5>Hsieh, T. C., K. H. Ma, and Anne Chao
 
 Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043   
-</h4>
+</h5>
 
 
 iNEXT (iNterpolation and EXTrapolation) is an R package modified from the original version supplied in the Supplement of Chao et al. (2014). In this updated version, we have added more user-friendly features and refined the graphic displays. Please notice the updated time and replace your old version by the most recent one. In this document, we provide a quick introduction to show how to run iNEXT. Detailed information about iNEXT functions is provided in iNEXT Manual which is also available in [CRAN](cran.r-project.org/web/packages/iNEXT/index.html). Examples/details are also included in an application paper by Hsieh et al. (2015).
