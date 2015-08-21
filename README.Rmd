@@ -26,7 +26,7 @@ Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043
 </h5>
 
 
-iNEXT (iNterpolation and EXTrapolation) is an R package modified from the original version supplied in the Supplement of Chao et al. (2014). In this updated version, we have added more user-friendly features and refined the graphic displays. Please notice the updated time and replace your old version by the most recent one. In this document, we provide a quick introduction to show how to run iNEXT. Detailed information about iNEXT functions is provided in iNEXT Manual which is also available in [CRAN](cran.r-project.org/web/packages/iNEXT/index.html). Examples/details are also included in an application paper by Hsieh et al. (2015).
+iNEXT (iNterpolation and EXTrapolation) is an R package modified from the original version supplied in the Supplement of Chao et al. (2014). In this updated version, we have added more user-friendly features and refined the graphic displays. Please notice the updated time and replace your old version by the most recent one. In this document, we provide a quick introduction to show how to run iNEXT. Detailed information about iNEXT functions is provided in [iNEXT Manual](http://chao.stat.nthu.edu.tw/blog/wp-content/uploads/2014/01/iNEXT-manual.pdf) which is also available in [CRAN](cran.r-project.org/web/packages/iNEXT/index.html). Examples/details are also included in an application paper by Hsieh et al. (2015).
 
 To run iNEXT, the user supplies a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies (called reference sample). If datatype = “incidence", then the first entry of the input data must be total number of sampling units in each column or list. iNEXT focuses on three measures of Hill numbers of order q: species richness (q = 0), Shannon diversity (q = 1, exponential of Shannon entropy) and Simpson diversity (q = 2, inverse of Simpson concentration). For each diversity measure, iNEXT computes the following two types of rarefaction (interpolation) and extrapolation (prediction) and the associated 95% confidence intervals:
 
@@ -80,7 +80,7 @@ Remark: In order to install `devtools` package, you should update R to the last 
 
 Two data sets (spider for abundance data and ant for incidence data) are included in iNEXT package. See Chao et al. (2014) for analysis details and data interpretations. Here we just demonstrate the implementation of iNEXT to obtain plots. We first use the spider data for demonstration. The spider data consist of abundance data from two canopy manipulation treatments (Girdled and Logged) of hemlock trees (Ellison et al. 2010). To obtain plots, copy-and-paste the following commands into R Console:
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(comment="", message=FALSE, warning=FALSE)
 library(iNEXT)
 library(ggplot2)
@@ -101,6 +101,7 @@ plot(out, type=1)
 ## End(Not run)
 ```
 The argument `facet.var="site"` in ggiNEXT function creates a separate plot for each site   as shown below:
+
 ```{r ex1, echo=FALSE}
 data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
@@ -108,11 +109,13 @@ ggiNEXT(out, type=1, facet.var="site")
 ```
 
 The argument `facet.var="order"`  and `color.var = “site"` creates a separate plot for each diversity order site, and within each plot, different colors are used for two sites. 
+
 ```{r ex1b}
 ggiNEXT(out, type=1, facet.var="order", color.var="site")
 ```
 
 The following commands returns the sample completeness curve in which different colors are used for the two sites:
+
 ```{r eval=FALSE}
 ggiNEXT(out, type=2, facet.var="none", color.var="site")
 ```
@@ -130,11 +133,7 @@ ggiNEXT(out, type=3, facet.var="order", color.var="site")
 
 ```
 
-We also run iNEXT for the ant data (incidence data) collected by Logino and Colwell (2011).
-```{r ex4, eval=FALSE}
-data(ant)
-iNEXT(ant$h50m, q=c(0,1,2), datatype="incidence") 
-```
+
 
 ### Hacking ggiNEXT
 ```{r ex5}
@@ -153,7 +152,7 @@ ggiNEXT(out, type=1, facet.var="site") +
 
 If you use iNEXT to obtain results for publication, you should cite at least one of the relevant papers (Chao and Jost 2012; Colwell et al. 2012; Chao et al. 2014) along with the following reference for iNEXT:
 
-> Hsieh, T. C., K. H. Ma, and A. Chao. 2015. iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Submitted manuscript.
+> Hsieh, T. C., K. H. Ma, and A. Chao. 2015. iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Submitted manuscript (http://chao.stat.nthu.edu.tw/blog/software-download).
 
 
 ### License
