@@ -828,7 +828,6 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
         g <- g + guides(colour=guide_legend(title="Guides", ncol=length(levels(factor(z$order))), byrow=TRUE),
                         fill=guide_legend(title="Guides"))
       }
-	  facet_wrap_labeller(g, labels = paste("q =", levels(factor(z$order))))
     }
   }
   
@@ -989,108 +988,108 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
 
 
 
-
-facet_wrap_labeller <- function(gg.plot,labels=NULL) {
-  #works with R 3.0.1 and ggplot2 0.9.3.1
-  require(gridExtra)
-  
-  g <- ggplotGrob(gg.plot)
-  gg <- g$grobs      
-  strips <- grep("strip_t", names(gg))
-  
-  for(ii in seq_along(labels))  {
-    modgrob <- getGrob(gg[[strips[ii]]], "strip.text", 
-                       grep=TRUE, global=TRUE)
-    gg[[strips[ii]]]$children[[modgrob$name]] <- editGrob(modgrob,label=labels[ii])
-  }
-  
-  g$grobs <- gg
-  class(g) <- c("facetAdjust", "gtable", "ggplot")
-  g
-}
-
-facetAdjust <- function(x, pos = c("up", "down"))
-{
-  pos <- match.arg(pos)
-  p <- ggplot_build(x)
-  gtable <- ggplot_gtable(p); dev.off()
-  dims <- apply(p$panel$layout[2:3], 2, max)
-  nrow <- dims[1]
-  ncol <- dims[2]
-  panels <- sum(grepl("panel", names(gtable$grobs)))
-  space <- ncol * nrow
-  n <- space - panels
-  if(panels != space){
-    idx <- (space - ncol - n + 1):(space - ncol)
-    gtable$grobs[paste0("axis_b",idx)] <- list(gtable$grobs[[paste0("axis_b",panels)]])
-    if(pos == "down"){
-      rows <- grep(paste0("axis_b\\-[", idx[1], "-", idx[n], "]"), 
-                   gtable$layout$name)
-      lastAxis <- grep(paste0("axis_b\\-", panels), gtable$layout$name)
-      gtable$layout[rows, c("t","b")] <- gtable$layout[lastAxis, c("t")]
-    }
-  }
-  class(gtable) <- c("facetAdjust", "gtable", "ggplot"); gtable
-}
-
-print.facetAdjust <- function(x, newpage = is.null(vp), vp = NULL) {
-  if(newpage)
-    grid.newpage()
-  if(is.null(vp)){
-    grid.draw(x)
-  } else {
-    if (is.character(vp)) 
-      seekViewport(vp)
-    else pushViewport(vp)
-    grid.draw(x)
-    upViewport()
-  }
-  invisible(x)
-}
-
-##
-##
-###########################################
-## Example individual-based data, spiders abundance data collected by Sackett et al. (2011)
-##
-##
-Girdled <- c(46, 22, 17, 15, 15, 9, 8, 6, 6, 4, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-Logged <- c(88, 22, 16, 15, 13, 10, 8, 8, 7, 7, 7, 5, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-spider <- list(Girdled=Girdled, Logged=Logged)
-
-##
-##
-###########################################
-## Example sample-based data, tropical ant species data collected by Longino and Colwell (2011)
-## Note that first cell is number of total samples, and others are species incidence-based frequency.
-##
-
-## 50m
-y50 <- c(599,rep(1,49),rep(2,23),rep(3,18),rep(4,14),rep(5,9),rep(6,10),rep(7,4),
-         rep(8,8),rep(9,6),rep(10,2),rep(11,1),12,12,13,13,rep(14,5),15,15,
-         rep(16,4),17,17,17,18,18,19,19,20,20,20,21,22,23,23,25,27,27,29,30,30,
-         31,33,39,40,43,46,46,47,48,51,52,52,56,56,58,58,61,61,65,69,72,77,79,82,
-         83,84,86,91,95,97,98,98,106,113,124,126,127,128,129,129,182,183,186,195,
-         222,236,263,330)
-
-##500m
-y500 <- c(230,rep(1,71),rep(2,34),rep(3,12),rep(4,14),rep(5,9),rep(6,11),rep(7,8),
-          rep(8,4),rep(9,7),rep(10,5),rep(11,2),12,12,12,13,13,13,13,14,14,15,
-          16,16,17,17,17,17,18,19,20,21,21,23,24,25,25,25,26,27,30,31,31,32,32,
-          33,34,36,37,38,38,38,38,39,39,41,42,43,44,45,46,47,49,52,52,53,54,56,
-          60,60,65,73,78,123,131,133)
-
-##1070m
-y1070 <- c(150,rep(1,28),rep(2,16),rep(3,13),rep(4,3),rep(5,1),rep(6,3),rep(7,6),
-           rep(8,1),rep(9,1),rep(10,1),rep(11,4),12,12,12,13,13,13,13,14,15,
-           16,16,16,16,18,19,19,21,22,23,24,25,25,25,26,30,31,31,31,32,34,36,
-           38,39,43,43,45,45,46,54,60,68,74,80,96,99)
-##1500m
-y1500 <- c(200,rep(1,13),rep(2,4),rep(3,2),rep(4,2),rep(5,4),rep(6,2),rep(9,4),
-           rep(11,2),rep(17,2),18,19,23,23,24,25,25,25,29,30,32,33,43,50,53,
-           73,74,76,79,113,144)
-
-##2000m
-y2000=c(200,1,2,2,3,4,8,8,13,15,19,23,34,59,80)
-
-ant <- list(h50m=y50, h500m=y500, h1070m=y1070, h1500m=y1500, h2000m=y2000)
+# 
+# facet_wrap_labeller <- function(gg.plot,labels=NULL) {
+#   #works with R 3.0.1 and ggplot2 0.9.3.1
+#   require(gridExtra)
+#   
+#   g <- ggplotGrob(gg.plot)
+#   gg <- g$grobs      
+#   strips <- grep("strip_t", names(gg))
+#   
+#   for(ii in seq_along(labels))  {
+#     modgrob <- getGrob(gg[[strips[ii]]], "strip.text", 
+#                        grep=TRUE, global=TRUE)
+#     gg[[strips[ii]]]$children[[modgrob$name]] <- editGrob(modgrob,label=labels[ii])
+#   }
+#   
+#   g$grobs <- gg
+#   class(g) <- c("facetAdjust", "gtable", "ggplot")
+#   g
+# }
+# 
+# facetAdjust <- function(x, pos = c("up", "down"))
+# {
+#   pos <- match.arg(pos)
+#   p <- ggplot_build(x)
+#   gtable <- ggplot_gtable(p); dev.off()
+#   dims <- apply(p$panel$layout[2:3], 2, max)
+#   nrow <- dims[1]
+#   ncol <- dims[2]
+#   panels <- sum(grepl("panel", names(gtable$grobs)))
+#   space <- ncol * nrow
+#   n <- space - panels
+#   if(panels != space){
+#     idx <- (space - ncol - n + 1):(space - ncol)
+#     gtable$grobs[paste0("axis_b",idx)] <- list(gtable$grobs[[paste0("axis_b",panels)]])
+#     if(pos == "down"){
+#       rows <- grep(paste0("axis_b\\-[", idx[1], "-", idx[n], "]"), 
+#                    gtable$layout$name)
+#       lastAxis <- grep(paste0("axis_b\\-", panels), gtable$layout$name)
+#       gtable$layout[rows, c("t","b")] <- gtable$layout[lastAxis, c("t")]
+#     }
+#   }
+#   class(gtable) <- c("facetAdjust", "gtable", "ggplot"); gtable
+# }
+# 
+# print.facetAdjust <- function(x, newpage = is.null(vp), vp = NULL) {
+#   if(newpage)
+#     grid.newpage()
+#   if(is.null(vp)){
+#     grid.draw(x)
+#   } else {
+#     if (is.character(vp)) 
+#       seekViewport(vp)
+#     else pushViewport(vp)
+#     grid.draw(x)
+#     upViewport()
+#   }
+#   invisible(x)
+# }
+# 
+# ##
+# ##
+# ###########################################
+# ## Example individual-based data, spiders abundance data collected by Sackett et al. (2011)
+# ##
+# ##
+# Girdled <- c(46, 22, 17, 15, 15, 9, 8, 6, 6, 4, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+# Logged <- c(88, 22, 16, 15, 13, 10, 8, 8, 7, 7, 7, 5, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+# spider <- list(Girdled=Girdled, Logged=Logged)
+# 
+# ##
+# ##
+# ###########################################
+# ## Example sample-based data, tropical ant species data collected by Longino and Colwell (2011)
+# ## Note that first cell is number of total samples, and others are species incidence-based frequency.
+# ##
+# 
+# ## 50m
+# y50 <- c(599,rep(1,49),rep(2,23),rep(3,18),rep(4,14),rep(5,9),rep(6,10),rep(7,4),
+#          rep(8,8),rep(9,6),rep(10,2),rep(11,1),12,12,13,13,rep(14,5),15,15,
+#          rep(16,4),17,17,17,18,18,19,19,20,20,20,21,22,23,23,25,27,27,29,30,30,
+#          31,33,39,40,43,46,46,47,48,51,52,52,56,56,58,58,61,61,65,69,72,77,79,82,
+#          83,84,86,91,95,97,98,98,106,113,124,126,127,128,129,129,182,183,186,195,
+#          222,236,263,330)
+# 
+# ##500m
+# y500 <- c(230,rep(1,71),rep(2,34),rep(3,12),rep(4,14),rep(5,9),rep(6,11),rep(7,8),
+#           rep(8,4),rep(9,7),rep(10,5),rep(11,2),12,12,12,13,13,13,13,14,14,15,
+#           16,16,17,17,17,17,18,19,20,21,21,23,24,25,25,25,26,27,30,31,31,32,32,
+#           33,34,36,37,38,38,38,38,39,39,41,42,43,44,45,46,47,49,52,52,53,54,56,
+#           60,60,65,73,78,123,131,133)
+# 
+# ##1070m
+# y1070 <- c(150,rep(1,28),rep(2,16),rep(3,13),rep(4,3),rep(5,1),rep(6,3),rep(7,6),
+#            rep(8,1),rep(9,1),rep(10,1),rep(11,4),12,12,12,13,13,13,13,14,15,
+#            16,16,16,16,18,19,19,21,22,23,24,25,25,25,26,30,31,31,31,32,34,36,
+#            38,39,43,43,45,45,46,54,60,68,74,80,96,99)
+# ##1500m
+# y1500 <- c(200,rep(1,13),rep(2,4),rep(3,2),rep(4,2),rep(5,4),rep(6,2),rep(9,4),
+#            rep(11,2),rep(17,2),18,19,23,23,24,25,25,25,29,30,32,33,43,50,53,
+#            73,74,76,79,113,144)
+# 
+# ##2000m
+# y2000=c(200,1,2,2,3,4,8,8,13,15,19,23,34,59,80)
+# 
+# ant <- list(h50m=y50, h500m=y500, h1070m=y1070, h1500m=y1500, h2000m=y2000)
