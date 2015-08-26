@@ -828,7 +828,6 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
         g <- g + guides(colour=guide_legend(title="Guides", ncol=length(levels(factor(z$order))), byrow=TRUE),
                         fill=guide_legend(title="Guides"))
       }
-	  facet_wrap_labeller(g, labels = paste("q =", levels(factor(z$order))))
     }
   }
   
