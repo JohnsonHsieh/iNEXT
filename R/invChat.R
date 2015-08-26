@@ -23,7 +23,7 @@ invChat.Ind <- function(x, C)
   }
   if(mm > 2*n) 
 	warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
-  method <- ifelse(mm<n, "racefaction", ifelse(mm==n, "observation", "extrapolation"))
+  method <- ifelse(mm<n, "rarefaction", ifelse(mm==n, "observation", "extrapolation"))
   out <- data.frame(m=mm, method=method, 
                     "SC"=round(Chat.Ind(x,mm),4), 
                     "q = 0"=round(Dqhat.Ind(x,0,mm),3),
@@ -149,7 +149,7 @@ invSize <- function(x, datatype="abundance", size=NULL){
       if(is.null(size)){
         size <- sum(x)
       }
-      method <- ifelse(size<sum(x), "racefaction", ifelse(size==sum(x), "observation", "extrapolation"))
+      method <- ifelse(size<sum(x), "rarefaction", ifelse(size==sum(x), "observation", "extrapolation"))
       out <- data.frame(m=size, method=method, 
                  SamCov=round(Chat.Ind(x,size),3),
                  SpeRic=round(Dqhat.Ind(x,0,size),3),
@@ -164,13 +164,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
       }    
       
       do.call(rbind, lapply(x, function(x){
-        method <- ifelse(size<sum(x), "racefaction", ifelse(size==sum(x), "observation", "extrapolation"))
+        method <- ifelse(size<sum(x), "rarefaction", ifelse(size==sum(x), "observation", "extrapolation"))
         out <- data.frame(m=size, method=method, 
                    SamCov=round(Chat.Ind(x,size),3),
                    SpeRic=round(Dqhat.Ind(x,0,size),3),
                    ShaDiv=round(Dqhat.Ind(x,1,size),3),
                    SimDiv=round(Dqhat.Ind(x,2,size),3))
-		colnames(out) <- c("m", "method", "SC", "q=0", "q=1", "q=2")
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
 		out
       }))
     }else if(class(x)=="data.fram" | class(x)=="matrix"){
@@ -178,13 +178,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
         size <- min(unlist(apply(x, 2, function(x) sum(x))))
       }
       do.call(rbind, apply(x, 2, function(x){
-        method <- ifelse(size<sum(x), "racefaction", ifelse(size==sum(x), "observation", "extrapolation"))
+        method <- ifelse(size<sum(x), "rarefaction", ifelse(size==sum(x), "observation", "extrapolation"))
         out <- data.frame(m=size, method=method, 
                    SamCov=round(Chat.Ind(x,size),3),
                    SpeRic=round(Dqhat.Ind(x,0,size),3),
                    ShaDiv=round(Dqhat.Ind(x,1,size),3),
                    SimDiv=round(Dqhat.Ind(x,2,size),3))
-		colnames(out) <- c("m", "method", "SC", "q=0", "q=1", "q=2")
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
 		out
       }))
     }
@@ -194,13 +194,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
       if(is.null(size)){
         size <- max(x)
       }
-      method <- ifelse(size<max(x), "racefaction", ifelse(size==max(x), "observation", "extrapolation"))
+      method <- ifelse(size<max(x), "rarefaction", ifelse(size==max(x), "observation", "extrapolation"))
       out <- data.frame(t=size, method=method, 
                  SamCov=round(Chat.Sam(x,size),3),
                  SpeRic=round(Dqhat.Sam(x,0,size),3),
                  ShaDiv=round(Dqhat.Sam(x,1,size),3),
                  SimDiv=round(Dqhat.Sam(x,2,size),3))
-	  colnames(out) <- c("m", "method", "SC", "q=0", "q=1", "q=2")
+	  colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
 	  out
     }
     else if(class(x)=="list"){
@@ -208,13 +208,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
         size <- min(unlist(lapply(x, function(x) max(x))))
       }
       do.call(rbind, lapply(x, function(x){
-        method <- ifelse(size<max(x), "racefaction", ifelse(size==max(x), "observation", "extrapolation"))
+        method <- ifelse(size<max(x), "rarefaction", ifelse(size==max(x), "observation", "extrapolation"))
         out <- data.frame(t=size, method=method, 
                    SamCov=round(Chat.Sam(x,size),3),
                    SpeRic=round(Dqhat.Sam(x,0,size),3),
                    ShaDiv=round(Dqhat.Sam(x,1,size),3),
                    SimDiv=round(Dqhat.Sam(x,2,size),3))
-		colnames(out) <- c("m", "method", "SC", "q=0", "q=1", "q=2")
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
 		out
       }))
     }else if(class(x)=="data.fram" | class(x)=="matrix"){
@@ -222,13 +222,13 @@ invSize <- function(x, datatype="abundance", size=NULL){
         size <- min(unlist(apply(x, 2, function(x) max(x))))
       }
       do.call(rbind, apply(x, 2, function(x){
-        method <- ifelse(size<max(x), "racefaction", ifelse(size==max(x), "observation", "extrapolation"))
+        method <- ifelse(size<max(x), "rarefaction", ifelse(size==max(x), "observation", "extrapolation"))
         out <- data.frame(t=size, method=method, 
                    SamCov=round(Chat.Sam(x,size),3),
                    SpeRic=round(Dqhat.Sam(x,0,size),3),
                    ShaDiv=round(Dqhat.Sam(x,1,size),3),
                    SimDiv=round(Dqhat.Sam(x,2,size),3))
-		colnames(out) <- c("m", "method", "SC", "q=0", "q=1", "q=2")
+		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
 		out
       }))
     }
