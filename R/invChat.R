@@ -1,48 +1,74 @@
-invChat.Ind <- function(x, C, upper=sum(x)){
-  f <- function(m, C) abs(Chat.Ind(x,m)-C)
-  opt <- optimize(f, C=C, lower=0, upper=2*sum(x))
-  mm <- opt$minimum
-  if(opt$objective>0.0001){
-    warning("The specific extrapolation is too far away to reference sample size, the return won't be robust.")
-    m <- 1:(2*sum(x))
-    mm <- predict(smooth.spline(x=Chat.Ind(x,m), y=m), x=C)$y
-  }
+invChat.Ind <- function(x, C)
+{
   n <- sum(x)
+  refC <- Chat.Ind(x,n)
+  f <- function(m, C) abs(Chat.Ind(x,m)-C)
+  if(refC >= C)
+  {
+     opt <- optimize(f, C=C, lower=0, upper=sum(x))
+     mm <- opt$minimum
+     mm <- round(mm)
+  }
+  if(refC < C)
+  {
+     f1 <- sum(x==1)
+     f2 <- sum(x==2)
+     if(f1>0 & f2>0){A <- (n-1)*f1/((n-1)*f1+2*f2)}
+     if(f1>1 & f2==0){A <- (n-1)*(f1-1)/((n-1)*(f1-1)+2)}
+     if(f1==1 & f2==0){A <- 1}
+     if(f1==0 & f2==0){A <- 1}
+     mm <- (log(n/f1)+log(1-C))/log(A)-1
+     mm <- n+mm
+     mm <- round(mm)
+  }
+  if(mm > 2*n) 
+	warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   method <- ifelse(mm<n, "racefaction", ifelse(mm==n, "observation", "extrapolation"))
-  mm <- ceiling(mm)
   out <- data.frame(m=mm, method=method, 
-                    "SC"=round(Chat.Ind(x,mm),3), 
+                    "SC"=round(Chat.Ind(x,mm),4), 
                     "q = 0"=round(Dqhat.Ind(x,0,mm),3),
                     "q = 1"=round(Dqhat.Ind(x,1,mm),3),
                     "q = 2"=round(Dqhat.Ind(x,2,mm),3))
   colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
-  out  
+  out
 }
 
-
-invChat.Sam <- function(x, C, upper=max(x)){
-  f <- function(m, C) abs(Chat.Sam(x,m)-C)
-  opt <- optimize(f, C=C, lower=0, upper=2*sum(x))
-  mm <- opt$minimum
-  if(opt$objective>0.0001){
-    warning("The specific extrapolation is too far away to reference sample size, the return won't be robust.")
-    m <- 1:(2*sum(x))
-    mm <- predict(smooth.spline(x=Chat.Sam(x,m), y=m), x=C)$y
-  }
+invChat.Sam <- function(x, C)
+{
   n <- max(x)
-  method <- ifelse(mm<n, "racefaction", ifelse(mm==n, "observation", "extrapolation"))
-  mm <- ceiling(mm)
+  refC <- Chat.Sam(x,n)
+  f <- function(m, C) abs(Chat.Sam(x,m)-C)
+  if(refC >= C)
+  {
+     opt <- optimize(f, C=C, lower=0, upper=max(x))
+     mm <- opt$minimum
+     mm <- round(mm)
+  }
+  if(refC < C)
+  {
+     f1 <- sum(x==1)
+     f2 <- sum(x==2)
+	 U <- sum(x)-max(x)
+     if(f1>0 & f2>0){A <- (n-1)*f1/((n-1)*f1+2*f2)}
+     if(f1>1 & f2==0){A <- (n-1)*(f1-1)/((n-1)*(f1-1)+2)}
+     if(f1==1 & f2==0){A <- 1}
+     if(f1==0 & f2==0){A <- 1}
+     mm <- (log(U/f1)+log(1-C))/log(A)-1
+     mm <- n+mm
+     mm <- round(mm)
+  }
+  if(mm > 2*n) 
+	warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+  
+  method <- ifelse(mm<n, "rarefaction", ifelse(mm==n, "observation", "extrapolation"))
   out <- data.frame(t=mm, method=method, 
-                    "SC"=round(Chat.Sam(x,mm),3),
-                    "q = 0"=round(Dqhat.Sam(x,0,mm),3),
-                    "q = 1"=round(Dqhat.Sam(x,1,mm),3),
-                    "q = 2"=round(Dqhat.Sam(x,2,mm),3))
+                    "SC"=round(Chat.Ind(x,mm),4), 
+                    "q = 0"=round(Dqhat.Ind(x,0,mm),3),
+                    "q = 1"=round(Dqhat.Ind(x,1,mm),3),
+                    "q = 2"=round(Dqhat.Ind(x,2,mm),3))
   colnames(out) <- c("t", "method", "SC", "q = 0", "q = 1", "q = 2")
   out
-  
 }
-
-
 
 
 

@@ -990,64 +990,6 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
 
 
 
-facet_wrap_labeller <- function(gg.plot,labels=NULL) {
-  #works with R 3.0.1 and ggplot2 0.9.3.1
-  require(gridExtra)
-  
-  g <- ggplotGrob(gg.plot)
-  gg <- g$grobs      
-  strips <- grep("strip_t", names(gg))
-  
-  for(ii in seq_along(labels))  {
-    modgrob <- getGrob(gg[[strips[ii]]], "strip.text", 
-                       grep=TRUE, global=TRUE)
-    gg[[strips[ii]]]$children[[modgrob$name]] <- editGrob(modgrob,label=labels[ii])
-  }
-  
-  g$grobs <- gg
-  class(g) <- c("facetAdjust", "gtable", "ggplot")
-  g
-}
-
-facetAdjust <- function(x, pos = c("up", "down"))
-{
-  pos <- match.arg(pos)
-  p <- ggplot_build(x)
-  gtable <- ggplot_gtable(p); dev.off()
-  dims <- apply(p$panel$layout[2:3], 2, max)
-  nrow <- dims[1]
-  ncol <- dims[2]
-  panels <- sum(grepl("panel", names(gtable$grobs)))
-  space <- ncol * nrow
-  n <- space - panels
-  if(panels != space){
-    idx <- (space - ncol - n + 1):(space - ncol)
-    gtable$grobs[paste0("axis_b",idx)] <- list(gtable$grobs[[paste0("axis_b",panels)]])
-    if(pos == "down"){
-      rows <- grep(paste0("axis_b\\-[", idx[1], "-", idx[n], "]"), 
-                   gtable$layout$name)
-      lastAxis <- grep(paste0("axis_b\\-", panels), gtable$layout$name)
-      gtable$layout[rows, c("t","b")] <- gtable$layout[lastAxis, c("t")]
-    }
-  }
-  class(gtable) <- c("facetAdjust", "gtable", "ggplot"); gtable
-}
-
-print.facetAdjust <- function(x, newpage = is.null(vp), vp = NULL) {
-  if(newpage)
-    grid.newpage()
-  if(is.null(vp)){
-    grid.draw(x)
-  } else {
-    if (is.character(vp)) 
-      seekViewport(vp)
-    else pushViewport(vp)
-    grid.draw(x)
-    upViewport()
-  }
-  invisible(x)
-}
-
 ##
 ##
 ###########################################
