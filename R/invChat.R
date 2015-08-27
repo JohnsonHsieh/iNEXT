@@ -3,13 +3,13 @@ invChat.Ind <- function(x, C)
   n <- sum(x)
   refC <- Chat.Ind(x,n)
   f <- function(m, C) abs(Chat.Ind(x,m)-C)
-  if(refC >= C)
+  if(refC > C)
   {
      opt <- optimize(f, C=C, lower=0, upper=sum(x))
      mm <- opt$minimum
      mm <- round(mm)
   }
-  if(refC < C)
+  if(refC <= C)
   {
      f1 <- sum(x==1)
      f2 <- sum(x==2)
@@ -38,13 +38,13 @@ invChat.Sam <- function(x, C)
   n <- max(x)
   refC <- Chat.Sam(x,n)
   f <- function(m, C) abs(Chat.Sam(x,m)-C)
-  if(refC >= C)
+  if(refC > C)
   {
      opt <- optimize(f, C=C, lower=0, upper=max(x))
      mm <- opt$minimum
      mm <- round(mm)
   }
-  if(refC < C)
+  if(refC <= C)
   {
      f1 <- sum(x==1)
      f2 <- sum(x==2)
@@ -62,10 +62,10 @@ invChat.Sam <- function(x, C)
   
   method <- ifelse(mm<n, "rarefaction", ifelse(mm==n, "observation", "extrapolation"))
   out <- data.frame(t=mm, method=method, 
-                    "SC"=round(Chat.Ind(x,mm),4), 
-                    "q = 0"=round(Dqhat.Ind(x,0,mm),3),
-                    "q = 1"=round(Dqhat.Ind(x,1,mm),3),
-                    "q = 2"=round(Dqhat.Ind(x,2,mm),3))
+                    "SC"=round(Chat.Sam(x,mm),4), 
+                    "q = 0"=round(Dqhat.Sam(x,0,mm),3),
+                    "q = 1"=round(Dqhat.Sam(x,1,mm),3),
+                    "q = 2"=round(Dqhat.Sam(x,2,mm),3))
   colnames(out) <- c("t", "method", "SC", "q = 0", "q = 1", "q = 2")
   out
 }
@@ -120,7 +120,7 @@ invChat <- function(x, datatype="abundance", C=NULL){
       if(is.null(C)){
         C <- Chat.Sam(x, 2*max(x))
       }
-      invChat.Ind(x, C)
+      invChat.Sam(x, C)
     }
     else if(class(x)=="list"){
       if(is.null(C)){
@@ -247,9 +247,9 @@ invSize <- function(x, datatype="abundance", size=NULL){
 # 
 
 ###############################################
-#' Compute species diversity with specific level
+#' Compute species diversity with a particular of sample size/coverage 
 #' 
-#' \code{Auxiliary}: computes species diversity (Hill numbers with q = 0, 1 and 2) with a particular user-specified level of sample size or sample coverage.
+#' \code{estimateD}: computes species diversity (Hill numbers with q = 0, 1 and 2) with a particular user-specified level of sample size or sample coverage.
 #' @param x a \code{data.frame} or \code{list} of species abundances or incidence frequencies.\cr 
 #' If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units, followed 
 #' by species incidence frequencies in each column or list.
@@ -259,17 +259,17 @@ invSize <- function(x, datatype="abundance", size=NULL){
 #' @param level an integer specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage. 
 #' If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites. 
 #' If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites. 
-#' @return a \code{data.frame} of species diversity table including the reference sample size, sample coverage,
+#' @return a \code{data.frame} of species diversity table including the sample size, sample coverage,
 #' method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, and 2 for the user-specified sample size or sample coverage.
 #' @examples
 #' data(spider)
-#' Auxiliary(spider, "abundance", base="size", level=NULL)
-#' Auxiliary(spider, "abundance", base="coverage", level=NULL)
+#' estimateD(spider, "abundance", base="size", level=NULL)
+#' estimateD(spider, "abundance", base="coverage", level=NULL)
 #' 
 #' data(ant)
-#' Auxiliary(ant, "incidence", base="coverage", level=0.985)
+#' estimateD(ant, "incidence", base="coverage", level=0.985)
 #' @export
-Auxiliary <- function(x, datatype="abundance", base="size", level=NULL){
+estimateD <- function(x, datatype="abundance", base="size", level=NULL){
   TYPE <- c("abundance", "incidence")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid datatype")

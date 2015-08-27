@@ -15,7 +15,7 @@ Version: \tab 2.0.5\cr
 Date: \tab 2015-08-11\cr
 License: \tab GPL (>= 3)\cr
 }
-functions:  Auxiliary, ChaoEntropy, ChaoSpecies, DataInfo, EstSimpson, ggiNEXT, iNEXT \cr
+functions: ChaoEntropy, ChaoSpecies, DataInfo, estimateD, EstSimpson, ggiNEXT, iNEXT \cr
 data: ant, spider
 
 }
