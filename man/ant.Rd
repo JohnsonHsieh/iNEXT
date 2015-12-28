@@ -2,14 +2,14 @@
 \alias{ant}
 \docType{data}
 \title{
-Ant data
+Ant species incidence frequencies data
 }
 \description{
-Species incidence frequency counts for ant samples from five elevations in northeastern Costa Rica (Longino and Colwell 2011)
+Ant species incidence frequencies for samples from five elevations in northeastern Costa Rica (Longino and Colwell 2011). The number of sampling units (1m x 1m forest floor plot) for the 5 sites are respectively 599, 230, 150, 200 and 200. The number of observed species for the 5 sites are respectively 227, 241, 122, 56 and 14.
 }
 \usage{data(ant)}
 \format{
-  The first entry is the total number of sampling units, and followed by the incidences abundances. The format is: \cr
+  The input format for each site is a list of integers. For incidence data, the first entry must be the total number of sampling units, followed by the species incidence frequencies as shown below: \cr
 List of 5 \cr
  $ h50m  : num [1:228] 599 1 1 1 1 1 1 1 1 1 ... \cr
  $ h500m : num [1:242] 230 1 1 1 1 1 1 1 1 1 ... \cr
@@ -18,7 +18,7 @@ List of 5 \cr
  $ h2000m: num [1:15] 200 1 2 2 3 4 8 8 13 15 ... \cr
  }
 \references{
-Longino, J. T., and R. K. Colwell. (2011). Density compensation, species composition, and richness of ants on a neotropical elevational gradient. Ecosphere 2:art29.
+Longino, J.T. & Colwell, R.K. (2011) Density compensation, species composition, and richness of ants on a neotropical elevational gradient. Ecosphere, 2, art29.
 }
 
 \keyword{datasets}
