@@ -2,10 +2,10 @@
 \alias{BCI.inc}
 \docType{data}
 \title{
-Barro Colorado Island Tree Counts
+Barro colorado island tree incidence data
 }
 \description{
-Tree counts in 1-hectare plots in the Barro Colorado Island and associated site information.
+The 50-hectare permanent tree plot was established in 1985 in the tropical moist forest of Barro Colorado Island (BCI) in Gatun Lake in central Panama. 
 }
 \usage{data("BCI.inc")}
 \format{
