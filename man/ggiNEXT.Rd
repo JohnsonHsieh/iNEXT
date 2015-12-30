@@ -2,7 +2,7 @@
 % Please edit documentation in R/iNEXT.r
 \name{ggiNEXT}
 \alias{ggiNEXT}
-\title{ggplot2 extension for an iNEXT Object}
+\title{ggplot2 extension for an iNEXT object}
 \usage{
 ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "site",
   grey = FALSE)

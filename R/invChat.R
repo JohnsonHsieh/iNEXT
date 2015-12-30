@@ -127,7 +127,7 @@ invChat <- function(x, datatype="abundance", C=NULL){
         C <- min(unlist(lapply(x, function(x) Chat.Sam(x, max(x)))))
       }
       do.call(rbind, lapply(x, function(x) invChat.Sam(x, C)))
-    }else if(class(x)=="data.fram" | class(x)=="matrix"){
+    }else if(class(x)=="data.frame" | class(x)=="matrix"){
       if(is.null(C)){
         C <- min(unlist(apply(x, 2, function(x) Chat.Sam(x, max(x)))))
       }
@@ -173,7 +173,7 @@ invSize <- function(x, datatype="abundance", size=NULL){
 		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
 		out
       }))
-    }else if(class(x)=="data.fram" | class(x)=="matrix"){
+    }else if(class(x)=="data.frame" | class(x)=="matrix"){
       if(is.null(size)){
         size <- min(unlist(apply(x, 2, function(x) sum(x))))
       }
@@ -217,7 +217,7 @@ invSize <- function(x, datatype="abundance", size=NULL){
 		colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
 		out
       }))
-    }else if(class(x)=="data.fram" | class(x)=="matrix"){
+    }else if(class(x)=="data.frame" | class(x)=="matrix"){
       if(is.null(size)){
         size <- min(unlist(apply(x, 2, function(x) max(x))))
       }
@@ -303,7 +303,7 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL){
 # 
 
 ###############################################
-#' Transformation function from raw data to iNEXT input format 
+#' Transform incidence raw data to incidence frequencies (iNEXT input format) 
 #' 
 #' \code{as.incfreq}: transform incidence raw data (a species by sites presence-absence matrix) to incidence frequencies data (iNEXT input format, a row-sum frequencies vector contains total number of sampling units).
 #' @param x a \code{data.frame} or \code{matirx} of species by sites presence-absence matrix.

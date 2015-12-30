@@ -553,14 +553,18 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   
   Fun <- function(x, q){
     x <- as.numeric(unlist(x))
-    if(datatype == "abundance")
+    if(datatype == "abundance"){
+      if(sum(x)==0) stop("Zero abundance counts in one or more sample sites")
       out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot)
+    }
     if(datatype == "incidence"){
       t <- x[1]
       y <- x[-1]
       if(t>sum(y)){
         warning("Insufficient data to provide reliable estimators and associated s.e.") 
       }
+      if(sum(x)==0) stop("Zero incidence frequencies in one or more sample sites6")
+      
       out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot)  
     }
     out
@@ -651,7 +655,7 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #
 #
 ###############################################
-#' ggplot2 extension for an iNEXT Object
+#' ggplot2 extension for an iNEXT object
 #' 
 #' \code{ggiNEXT}: the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
 #' @param x an \code{iNEXT} object computed by \code{\link{iNEXT}}.
@@ -859,7 +863,6 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
     g <- g + theme_bw(base_size = 18) +
       scale_fill_grey(start = 0, end = .4) +
       scale_colour_grey(start = .2, end = .2) +
-      labs(x = "Number of individuals") +
       guides(linetype=guide_legend(title="Method"), 
              colour=guide_legend(title="Guides"), 
              fill=guide_legend(title="Guides"), 

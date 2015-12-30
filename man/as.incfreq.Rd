@@ -2,7 +2,7 @@
 % Please edit documentation in R/invChat.R
 \name{as.incfreq}
 \alias{as.incfreq}
-\title{Transformation function from raw data to iNEXT input format}
+\title{Transform incidence raw data to incidence frequencies (iNEXT input format)}
 \usage{
 as.incfreq(x)
 }
