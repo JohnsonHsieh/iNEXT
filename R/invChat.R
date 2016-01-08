@@ -309,8 +309,8 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL){
 #' @param x a \code{data.frame} or \code{matirx} of species by sites presence-absence matrix.
 #' @return a \code{vector} of species incidence frequencies, the first entry of the input data must be total number of sampling units.
 #' @examples
-#' data(BCI.inc)
-#' as.incfreq(BCI.inc)
+#' data(plant)
+#' lapply(plant, as.incfreq)
 #' 
 #' @export
 #' 
@@ -318,7 +318,7 @@ as.incfreq <- function(x){
   if(class(x) == "data.frame" | class(x) == "matrix"){
     a <- unique(unlist(x))
     if(!identical(a, c(0,1))){
-      warning("invalid data type, the element of species by sites presence-absence matrix should be 0 or 1. Set nonzero elements as 1.")
+      warning("Invalid data type, the element of species by sites presence-absence matrix should be 0 or 1. Set nonzero elements as 1.")
       x <- (x > 0)
     }
     nT <- ncol(x)
@@ -326,6 +326,33 @@ as.incfreq <- function(x){
     y <- c(nT, y)
     # names(y) <- c("nT", rownames(x))
     y
+  }else if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){
+    warnings("Ambiguous data type, the input object is a vector. Set total number of sampling units as 1.")
+    c(1, x) 
+  }else{
+    stop("Invalid data type, it should be a data.frame or matrix.")
+  }
+}
+
+###############################################
+#' Transform abundance raw data to abundance row-sum counts (iNEXT input format) 
+#' 
+#' \code{as.abucount}: transform abundance raw data (a species by sites matrix) to abundance rwo-sum counts data (iNEXT input format).
+#' @param x a \code{data.frame} or \code{matirx} of species by sites matrix.
+#' @return a \code{vector} of species abundance row-sum counts.
+#' @examples
+#' data(plant)
+#' lapply(plant, as.abucount)
+#' 
+#' @export
+#' 
+as.abucount <- function(x){
+  if(class(x) == "data.frame" | class(x) == "matrix"){
+    y <- rowSums(x)
+    y
+  }else if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){
+    warnings("Ambiguous data type, the input object is a vector. Set total number of sampling units as 1.")
+    x 
   }else{
     stop("invalid data type, it should be a data.frame or matrix.")
   }

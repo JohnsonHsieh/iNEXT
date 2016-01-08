@@ -521,6 +521,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' @param q a numeric value specifying the diversity order of Hill number .
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
 #' sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param rowsum a logical variable to check if the input object is raw data (species by sites matrix, \code{rowsum=FALSE}) or iNEXT default input (abundance counts or incidence frequencies, \code{rowsum=TRUE}).
 #' @param size an integer vector of sample sizes (number of individuals or sampling units) for which diversity estimates will be computed. 
 #' If NULL, then diversity estimates will be computed for those sample sizes determined by the specified/default \code{endpoint} and \code{knots} .
 #' @param endpoint an integer specifying the sample size that is the \code{endpoint} for rarefaction/extrapolation. 
@@ -542,7 +543,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
 #' @export
 #' 
-iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50)
+iNEXT <- function(x, q=0, datatype="abundance", rowsum=TRUE, size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50)
 {
   TYPE <- c("abundance", "incidence")
   if(is.na(pmatch(datatype, TYPE)))
@@ -575,6 +576,21 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   if(min(q) < 0){
     warning("ambigous of order q, we only compute postive q")
     q <- q[q >= 0]
+  }
+  if(rowsum==FALSE){
+    if(datatype=="abundance"){
+      if(class(x) =="list"){
+        x <- lapply(x, as.abucount)
+      }else{
+        x <- as.abucount(x)
+      }
+    }else if(datatype=="incidence"){
+      if(class(x) =="list"){
+        x <- lapply(x, as.incfreq)
+      }else{
+        x <- as.incfreq(x)
+      }
+    }
   }
   
   if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){

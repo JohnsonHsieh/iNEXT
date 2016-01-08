@@ -16,7 +16,7 @@ a \code{vector} of species incidence frequencies, the first entry of the input d
 \code{as.incfreq}: transform incidence raw data (a species by sites presence-absence matrix) to incidence frequencies data (iNEXT input format, a row-sum frequencies vector contains total number of sampling units).
 }
 \examples{
-data(BCI.inc)
-as.incfreq(BCI.inc)
+data(plant)
+lapply(plant, as.incfreq)
 }
 
