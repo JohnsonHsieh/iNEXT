@@ -12,7 +12,7 @@ citEntry(
 		 year = year,
 		 note = note,
 		 url = "http://chao.stat.nthu.edu.tw/blog/software-download/",
-		 textVersion = paste("T. C. Hsieh, K. H. Ma and Anne Chao. 2014. iNEXT: iNterpolation and EXTrapolation for species diversity. R package version 2.0, URL: http://chao.stat.nthu.edu.tw/blog/software-download")
+		 textVersion = paste("T. C. Hsieh, K. H. Ma and Anne Chao. 2016. iNEXT: iNterpolation and EXTrapolation for species diversity. R package version 2.0.7, URL: http://chao.stat.nthu.edu.tw/blog/software-download")
 )
 
 citEntry(

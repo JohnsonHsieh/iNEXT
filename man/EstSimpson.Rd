@@ -11,7 +11,8 @@ EstSimpson(x, datatype = "abundance", transform = FALSE, conf = 0.95,
 \item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"},
 then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.}
 
-\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).}
 
 \item{transform}{a \code{logical} constant to compute traditional Gini-Simpson index (\code{transform=FALSE}) or the transformed Simpson diversity (\code{transform=TRUE}).}
 

@@ -7,20 +7,31 @@
 #' 
 #' @param x a vector/matrix/list of species abundances or incidence frequencies.\cr If \code{datatype = "incidence"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
-#' sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @return a data.frame of basic data information including sample size, observed species richness, sample coverage estimate, and the first ten abundance/incidence frequency counts.
 #' @examples 
 #' data(spider)
 #' DataInfo(spider, datatype="abundance")
 #' @export
 DataInfo <- function(x, datatype="abundance"){
-  TYPE <- c("abundance", "incidence")
+  TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if(is.na(pmatch(datatype, TYPE)))
-    stop("invalid data type")
+    stop("invalid datatype")
   if(pmatch(datatype, TYPE) == -1)
-    stop("ambiguous data type")
+    stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
+  
+  if(datatype=="incidence_freq") datatype <- "incidence"
+  
+  if(datatype=="incidence_raw"){
+    if(class(x)=="list"){
+      x <- lapply(x, as.incfreq)
+    }else{
+      x <- as.incfreq(x)
+    }
+    datatype <- "incidence"
+  }
   
   Fun.abun <- function(x){
     n <- sum(x)
@@ -83,8 +94,8 @@ DataInfo <- function(x, datatype="abundance"){
 #' 
 #' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies. 
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
-#' sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
 #' @return A vector of observed species richness, species richness estimate, s.e. and the associated confidence interval.
 #' @seealso \code{\link{ChaoEntropy}, \link{EstSimpson}}
@@ -99,12 +110,24 @@ DataInfo <- function(x, datatype="abundance"){
 
 ChaoSpecies=function(x, datatype="abundance", conf=0.95){  
   
-  TYPE <- c("abundance", "incidence")
+  TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid data type")
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous data type")
   datatype <- match.arg(datatype, TYPE)
+  
+  if(datatype=="incidence_freq") datatype <- "incidence"
+  
+  if(datatype=="incidence_raw"){
+    if(class(x)=="list"){
+      x <- lapply(x, as.incfreq)
+    }else{
+      x <- as.incfreq(x)
+    }
+    datatype <- "incidence"
+  }
+  
   
   if (!is.numeric(conf) || conf > 1 || conf < 0) {
     warning("\"conf\"(confidence level) must be a numerical value between 0 and 1, We use \"conf\" = 0.95 to calculate!")
@@ -204,12 +227,23 @@ BootstrapFun <- function(x, FunName, datatype, B){
       stop("invalid data structure")
   }
   
-  TYPE <- c("abundance", "incidence")
+  TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid data type")
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous data type")
   datatype <- match.arg(datatype, TYPE)
+  
+  if(datatype=="incidence_freq") datatype <- "incidence"
+  
+  if(datatype=="incidence_raw"){
+    if(class(x)=="list"){
+      x <- lapply(x, as.incfreq)
+    }else{
+      x <- as.incfreq(x)
+    }
+    datatype <- "incidence"
+  }
   
   BootstrapFun.abun <- function(x, FunName, datatype, B) {
     n <- sum(x)
@@ -268,7 +302,8 @@ BootstrapFun <- function(x, FunName, datatype, B){
 #' 
 #' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies. 
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param transform a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}). 
 #' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
 #' @param B an integer specifying the number of bootstrap replications.
@@ -285,12 +320,23 @@ BootstrapFun <- function(x, FunName, datatype, B){
 
 ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=200) {
       
-  TYPE <- c("abundance", "incidence")
+  TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid data type")
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous data type")
   datatype <- match.arg(datatype, TYPE)
+  
+  if(datatype=="incidence_freq") datatype <- "incidence"
+  
+  if(datatype=="incidence_raw"){
+    if(class(x)=="list"){
+      x <- lapply(x, as.incfreq)
+    }else{
+      x <- as.incfreq(x)
+    }
+    datatype <- "incidence"
+  }
   
   if(!is.numeric(conf) || conf > 1 || conf < 0){
     warning("\"conf\"(confidence level) must be a numerical value between 0 and 1, We use \"conf\" = 0.95 to calculate!")
@@ -406,7 +452,8 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 #' 
 #' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param transform a \code{logical} constant to compute traditional Gini-Simpson index (\code{transform=FALSE}) or the transformed Simpson diversity (\code{transform=TRUE}). 
 #' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
 #' @param B an integer specifying the number of bootstrap replications.
@@ -423,12 +470,23 @@ ChaoEntropy <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 
 EstSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=200) {
     
-  TYPE <- c("abundance", "incidence")
+  TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid data type")
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous data type")
   datatype <- match.arg(datatype, TYPE)
+  
+  if(datatype=="incidence_freq") datatype <- "incidence"
+  
+  if(datatype=="incidence_raw"){
+    if(class(x)=="list"){
+      x <- lapply(x, as.incfreq)
+    }else{
+      x <- as.incfreq(x)
+    }
+    datatype <- "incidence"
+  }
   
   if(!is.numeric(conf) || conf > 1 || conf < 0){
     warning("\"conf\"(confidence level) must be a numerical value between 0 and 1, We use \"conf\" = 0.95 to calculate!")

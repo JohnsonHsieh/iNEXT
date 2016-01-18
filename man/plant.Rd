@@ -17,7 +17,7 @@ period 2002–2009 in the three most typical foredune habitats:
   $Transition is a data frame with 46 species (rows) on the following 71 sites (columns). 
 }
 \details{
-Random sampling was performed using georeferenced points extending over 250 km along the Tyrrhenian coast (Lazio Region; from 42º23'N, 11º39'E to 41º11'N, 13º20'E) and distributed in several study sites including most of the best conserved remnant dune systems of the region (for further details see Carboni, Santoro & Acosta 2010, 2011). At each random point, all vascular plants sampled in a square 2 x 2 mplot were listed together with a visual estimate of each species using a 10\%-interval rank scale. For each community type, all plant species present in at least 20\% of plots (for a total of 47 species) were described by a set of 16 functional traits related to different plant functions.
+Random sampling was performed using georeferenced points extending over 250 km along the Tyrrhenian coast and distributed in several study sites including most of the best conserved remnant dune systems of the region (for further details see Carboni, Santoro & Acosta 2010, 2011). At each random point, all vascular plants sampled in a square 2 x 2 mplot were listed together with a visual estimate of each species using a 10\%-interval rank scale.
 }
 \source{
 }
@@ -30,7 +30,7 @@ Ricotta, C., Pavoine, S., Bacaro, G. & Acosta, A.T.R. (2012) Functional rarefact
 }
 \examples{
 data(plant)
-out <- iNEXT(plant, datatype="abundance", rowsum=FALSE)
+out <- iNEXT(plant, datatype="incidence_raw")
 ggiNEXT(out)
 }
 \keyword{datasets}

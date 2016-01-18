@@ -4,18 +4,16 @@
 \alias{iNEXT}
 \title{iNterpolation and EXTrapolation of Hill number}
 \usage{
-iNEXT(x, q = 0, datatype = "abundance", rowsum = TRUE, size = NULL,
-  endpoint = NULL, knots = 40, se = TRUE, nboot = 50)
+iNEXT(x, q = 0, datatype = "abundance", size = NULL, endpoint = NULL,
+  knots = 40, se = TRUE, nboot = 50)
 }
 \arguments{
 \item{x}{a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list.}
 
 \item{q}{a numeric value specifying the diversity order of Hill number .}
 
-\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or
-sampling-unit-based incidence data (\code{datatype = "incidence"}).}
-
-\item{rowsum}{a logical variable to check if the input object is raw data (species by sites matrix, \code{rowsum=FALSE}) or iNEXT default input (abundance counts or incidence frequencies, \code{rowsum=TRUE}).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).}
 
 \item{size}{an integer vector of sample sizes (number of individuals or sampling units) for which diversity estimates will be computed.
 If NULL, then diversity estimates will be computed for those sample sizes determined by the specified/default \code{endpoint} and \code{knots} .}
@@ -45,6 +43,6 @@ data(spider)
 iNEXT(spider, q=0, datatype="abundance")
 
 data(ant)
-iNEXT(ant$h500m, q=1, datatype="incidence", size=round(seq(10, 500, length.out=20)), se=FALSE)
+iNEXT(ant$h500m, q=1, datatype="incidence_freq", size=round(seq(10, 500, length.out=20)), se=FALSE)
 }
 

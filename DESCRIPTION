@@ -1,8 +1,8 @@
 Package: iNEXT
 Type: Package
 Title: Interpolation and Extrapolation for Species Diversity
-Version: 2.0.5
-Date: 2015-08-11
+Version: 2.0.7
+Date: 2016-01-18
 Author: T. C. Hsieh, K. H. Ma and Anne Chao
 Description: The package provides simple functions to compute and plot two types (sample-size- and coverage-based) rarefaction and extrapolation of species diversity (Hill numbers) for individual-based (abundance) data or sampling-unit-based (incidence) data.
 License: GPL (>= 3)

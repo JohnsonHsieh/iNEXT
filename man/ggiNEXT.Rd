@@ -33,7 +33,7 @@ use different colors for combinations of order x site (\code{color.var="both"}).
 a ggplot2 object
 }
 \description{
-\code{ggiNEXT}: the \code{\link{ggplot2}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
+\code{ggiNEXT}: the \code{\link[ggplot2]{ggplot}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
 }
 \examples{
 data(spider)
@@ -47,7 +47,7 @@ ggiNEXT(x=out1, type=3)
 # single-assemblage incidence data with three orders q
 data(ant)
 size <- round(seq(10, 500, length.out=20))
-y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence", size=size, se=FALSE)
+y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence_freq", size=size, se=FALSE)
 ggiNEXT(y, se=FALSE, color.var="order")
 
 # multiple-assemblage abundance data with three orders q
