@@ -26,8 +26,8 @@ install:
 
 notifications:
   email:
-    on_success: euler96@gmail.com
-    on_failure: euler96@gmail.com
+    on_success: change
+    on_failure: change
 
 env:
   global:

@@ -204,7 +204,7 @@ ggiNEXT.default <- function(x, ...){
 #' data(spider)
 #' # single-assemblage abundance data
 #' out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
-#' fortify(out1, type=1)
+#' ggplot2::fortify(out1, type=1)
 
 fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
   datatype <- ifelse(names(model$DataInfo)[1]=="n","abundance","incidence")
