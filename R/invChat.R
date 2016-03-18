@@ -253,8 +253,8 @@ invSize <- function(x, datatype="abundance", size=NULL){
 #' @param x a \code{data.frame} or \code{list} of species abundances or incidence frequencies.\cr 
 #' If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units, followed 
 #' by species incidence frequencies in each column or list.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or 
-#' sampling-unit-based incidence data (\code{datatype = "incidence"}).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param base comparison base: sample-size-based (\code{base="size"}) or coverage-based \cr (\code{base="coverage"}).
 #' @param level an integer specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage. 
 #' If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites. 
@@ -267,16 +267,24 @@ invSize <- function(x, datatype="abundance", size=NULL){
 #' estimateD(spider, "abundance", base="coverage", level=NULL)
 #' 
 #' data(ant)
-#' estimateD(ant, "incidence", base="coverage", level=0.985)
+#' estimateD(ant, "incidence_freq", base="coverage", level=0.985)
 #' @export
 estimateD <- function(x, datatype="abundance", base="size", level=NULL){
-  TYPE <- c("abundance", "incidence")
+  TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
+  #TYPE <- c("abundance", "incidence")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid datatype")
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
   
+  if(datatype == "incidence"){
+    stop('datatype="incidence" was no longer supported after v2.0.8, 
+         please try datatype="incidence_freq".')  
+  }
+  if(datatype=="incidence_freq") datatype <- "incidence"
+  
+    
   BASE <- c("size", "coverage")
   if(is.na(pmatch(base, BASE)))
     stop("invalid datatype")
@@ -316,7 +324,7 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL){
 #' 
 as.incfreq <- function(x){
   if(class(x) == "data.frame" | class(x) == "matrix"){
-    a <- unique(unlist(x))
+    a <- unique(c(unlist(x)))
     if(!identical(a, c(0,1))){
       warning("Invalid data type, the element of species by sites presence-absence matrix should be 0 or 1. Set nonzero elements as 1.")
       x <- (x > 0)

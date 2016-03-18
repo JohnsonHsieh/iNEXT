@@ -12,7 +12,7 @@ iNEXT (iNterpolation and EXTrapolation) provides functions to compute and plot t
 Package: \tab iNEXT\cr
 Type: \tab Package\cr
 Version: \tab 2.0.7\cr
-Date: \tab 2016-01-18\cr
+Date: \tab 2016-03-16\cr
 License: \tab GPL (>= 3)\cr
 }
 functions: as.incfreq, ChaoEntropy, ChaoSpecies, DataInfo, estimateD, EstSimpson, ggiNEXT, iNEXT \cr

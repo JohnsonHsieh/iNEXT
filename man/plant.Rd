@@ -6,7 +6,7 @@ Three coastal dune plant communities
 }
 \description{
 The datset contains 272 random vegetation plots sampled in the
-period 2002–2009 in the three most typical foredune habitats:
+period 2002~2009 in the three most typical foredune habitats:
 (i) upper beach and embryo dunes (\code{Embryo}), (ii) mobile dunes and (\code{Mobile}) (iii) transition dunes (\code{Transition}). For further details see Carboni, Santoro & Acosta (2010, 2011).
 }
 \usage{data("plant")}
@@ -22,9 +22,9 @@ Random sampling was performed using georeferenced points extending over 250 km a
 \source{
 }
 \references{
-Carboni, M., Santoro, R. & Acosta, A.T.R. (2010) Are some communities of the coastal dune zonation more susceptible to alien plant invasion? Journal of Plant Ecology, 3, 139–147. \cr
+Carboni, M., Santoro, R. & Acosta, A.T.R. (2010) Are some communities of the coastal dune zonation more susceptible to alien plant invasion? Journal of Plant Ecology, 3, 139-147. \cr
 
-Carboni, M., Santoro, R. & Acosta, A.T. (2011) Dealing with scarse data to understand how environmental gradients and propagule pressure shape finescale distribution patterns on coastal dunes. Journal of Vegetation Science, 22, 751–765. \cr
+Carboni, M., Santoro, R. & Acosta, A.T. (2011) Dealing with scarse data to understand how environmental gradients and propagule pressure shape finescale distribution patterns on coastal dunes. Journal of Vegetation Science, 22, 751-765. \cr
 
 Ricotta, C., Pavoine, S., Bacaro, G. & Acosta, A.T.R. (2012) Functional rarefaction for species abundance data. Methods in Ecology and Evolution, 3, 519-525.
 }
