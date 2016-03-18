@@ -66,53 +66,8 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   if(facet.var=="order") color.var <- "site"
   if(facet.var=="site") color.var <- "order"
   
-  y <- method <- site <- shape <- y.lwr <- y.upr <- NULL
-  site <<- NULL
-  z <- x$iNextEst
-  if(class(z) == "list"){
-    z <- data.frame(do.call("rbind", z), site=rep(names(z), sapply(z, nrow)))
-    rownames(z) <- NULL
-  }else{
-    z$site <- ""
-  }
-  
-  
-  if("qD.95.LCL" %in% names(z) == FALSE & se) {
-    warning("invalid se setting, the iNEXT object do not consist confidence interval")
-    se <- FALSE
-  }else if("qD.95.LCL" %in% names(z) & se) {
-    se <- TRUE
-  }else{
-    se <- FALSE
-  }
-  
-  
-  if(type==1L) {
-    z$x <- z[,1]
-    z$y <- z$qD
-    if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
-    }
-  }else if(type==2L){
-    if(length(unique(z$order))>1){
-      z <- subset(z, order==unique(z$order)[1])
-    }
-    z$x <- z[,1]
-    z$y <- z$SC
-    if(se){
-      z$y.lwr <- z$SC.95.LCL
-      z$y.upr <- z$SC.95.UCL
-    }
-  }else if(type==3L){
-    z$x <- z$SC
-    z$y <- z$qD
-    if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
-    }
-  }
-  
+  z <- fortify(x, type=type)
+  datatype <- unique(z$datatype)
   if(color.var=="none"){
     if(levels(factor(z$order))>1 & "site"%in%names(z)){
       warning("invalid color.var setting, the iNEXT object consists multiple sites and orders, change setting as both")
@@ -146,7 +101,6 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     z$col <- z$shape <- paste(z$site, z$order, sep="-")
   }
   
-  
   g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + 
     geom_point(aes(shape=shape), size=5, data=subset(z, method=="observed"))
   
@@ -161,14 +115,14 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   
   if(type==2L) {
     g <- g + labs(x="Number of sampling units", y="Sample coverage")
-    if(names(x$DataInfo)[1]=="n") g <- g + labs(x="Number of individuals", y="Sample coverage")
+    if(datatype=="abundance") g <- g + labs(x="Number of individuals", y="Sample coverage")
   }
   else if(type==3L) {
     g <- g + labs(x="Sample coverage", y="Species diversity")
   }
   else {
     g <- g + labs(x="Number of sampling units", y="Species diversity")
-    if(names(x$DataInfo)[1]=="n") g <- g + labs(x="Number of individuals", y="Species diversity")
+    if(datatype=="abundance") g <- g + labs(x="Number of individuals", y="Species diversity")
   }
   
   if(se)
@@ -229,7 +183,78 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
 #' @export
 #' @rdname ggiNEXT
 ggiNEXT.default <- function(x, ...){
-  match_iNEXT <- sum(match(class(x), "iNEXT", 0)) > 0
-  if(!match_iNEXT)
-    stop("invalid object class")
+  stop(
+    "iNEXT doesn't know how to deal with data of class ",
+    paste(class(model), collapse = "/"),
+    call. = FALSE
+  )
 }
+
+
+#' Fortify method for classes from the iNEXT package.
+#'
+#' @name fortify.iNEXT
+#' @param model \code{iNEXT} to convert into a dataframe.
+#' @param data not used by this method
+#' @param type three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
+#' sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).                 
+#' @param ... not used by this method
+#' @export
+#' @examples
+#' data(spider)
+#' # single-assemblage abundance data
+#' out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
+#' fortify(out1, type=1)
+
+fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
+  datatype <- ifelse(names(model$DataInfo)[1]=="n","abundance","incidence")
+  z <- data
+  if(class(z) == "list"){
+    z <- data.frame(do.call("rbind", z), site=rep(names(z), sapply(z, nrow)))
+    rownames(z) <- NULL
+  }else{
+    z$site <- ""
+  }
+  
+  if("qD.95.LCL" %in% names(z) == FALSE) {
+    warning("invalid se setting, the iNEXT object do not consist confidence interval")
+    se <- FALSE
+  }else if("qD.95.LCL" %in% names(z)) {
+    se <- TRUE
+  }
+  
+  if(type==1L) {
+    z$x <- z[,1]
+    z$y <- z$qD
+    if(se){
+      z$y.lwr <- z$qD.95.LCL
+      z$y.upr <- z$qD.95.UCL
+    }
+  }else if(type==2L){
+    if(length(unique(z$order))>1){
+      z <- subset(z, order==unique(z$order)[1])
+    }
+    z$x <- z[,1]
+    z$y <- z$SC
+    if(se){
+      z$y.lwr <- z$SC.95.LCL
+      z$y.upr <- z$SC.95.UCL
+    }
+  }else if(type==3L){
+    z$x <- z$SC
+    z$y <- z$qD
+    if(se){
+      z$y.lwr <- z$qD.95.LCL
+      z$y.upr <- z$qD.95.UCL
+    }
+  }
+  z$datatype <- datatype
+  z$plottype <- type
+  if(se){
+    data <- z[,c("datatype","plottype","site","method","order","x","y","y.lwr","y.upr")]
+  }else{
+    data <- z[,c("datatype","plottype","site","method","order","x","y")]
+  }
+  data
+}
+

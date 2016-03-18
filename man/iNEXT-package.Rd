@@ -11,8 +11,8 @@ iNEXT (iNterpolation and EXTrapolation) provides functions to compute and plot t
 \tabular{ll}{
 Package: \tab iNEXT\cr
 Type: \tab Package\cr
-Version: \tab 2.0.7\cr
-Date: \tab 2016-03-16\cr
+Version: \tab 2.0.8\cr
+Date: \tab 2016-03-20\cr
 License: \tab GPL (>= 3)\cr
 }
 functions: as.incfreq, ChaoEntropy, ChaoSpecies, DataInfo, estimateD, EstSimpson, ggiNEXT, iNEXT \cr
@@ -30,5 +30,5 @@ Chao, A., Gotelli, N.J., Hsieh, T.C., Sander, E.L., Ma, K.H., Colwell, R.K. & El
 Chao, A. & Jost, L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93, 2533-2547.\cr\cr
 Colwell, R.K., Chao, A., Gotelli, N.J., Lin, S.-Y., Mao, C.X., Chazdon, R.L. & Longino, J.T. (2012) Models and estimators linking individual-based and sample-based rarefaction, extrapolation and comparison of assemblages. Journal of Plant Ecology, 5, 3-21. \cr\cr
 Hsieh, T.C., Ma, K.H. & Chao, A. (2013) iNEXT online: interpolation and extrapolation (Version 1.0) [Software]. Available from http://chao.stat.nthu.edu.tw/blog/software-download/.\cr\cr
-Hsieh, T.C., Ma, K.H. & Chao, A. (2015) iNEXT: An R package for rarefaction and extrapolation of Hill numbers. Submitted. 
+Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for rarefaction and extrapolation of species diversity (Hill numbers). Methods in Ecology and Evolution (in revision). 
 }
