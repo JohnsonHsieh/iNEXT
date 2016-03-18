@@ -4,5 +4,12 @@
 ^README\.md$
 ^README\.Rmd$
 ^README-*\.png$
-.travis.yml
 ^\.travis\.yml$
+^.*\.DS_Store$
+^\.RData$
+^\.Rhistory$
+^\.git$
+
+^\.DS_Store$
+^\.gitignore
+^README-.*\.png$

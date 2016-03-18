@@ -127,13 +127,13 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     }
     
     for(i in 1:length(SITE)){
-      tmp <- filter(tmp.j, site==SITE[i])
+      tmp <- subset(tmp.j, site==SITE[i])
       if(se==TRUE){
         conf.reg(x=tmp$x, LCL=tmp$y.lwr, UCL=tmp$y.upr, border=NA, col=adjustcolor(col[i], 0.25))
       }
-      lines(y~x, data=filter(tmp, method=="interpolated"), lty=1, lwd=2, col=col[i])
-      lines(y~x, data=filter(tmp, method=="extrapolated"), lty=2, lwd=2, col=col[i])
-      points(y~x, data=filter(tmp, method=="observed"), pch=pch[i], cex=2, col=col[i])
+      lines(y~x, data=subset(tmp, method=="interpolated"), lty=1, lwd=2, col=col[i])
+      lines(y~x, data=subset(tmp, method=="extrapolated"), lty=2, lwd=2, col=col[i])
+      points(y~x, data=subset(tmp, method=="observed"), pch=pch[i], cex=2, col=col[i])
       
     }
     if(show.legend==TRUE){

@@ -33,6 +33,6 @@ estimateD(spider, "abundance", base="size", level=NULL)
 estimateD(spider, "abundance", base="coverage", level=NULL)
 
 data(ant)
-estimateD(ant, "incidence", base="coverage", level=0.985)
+estimateD(ant, "incidence_freq", base="coverage", level=0.985)
 }
 

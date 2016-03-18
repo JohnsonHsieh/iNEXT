@@ -19,8 +19,7 @@ period 2002~2009 in the three most typical foredune habitats:
 \details{
 Random sampling was performed using georeferenced points extending over 250 km along the Tyrrhenian coast and distributed in several study sites including most of the best conserved remnant dune systems of the region (for further details see Carboni, Santoro & Acosta 2010, 2011). At each random point, all vascular plants sampled in a square 2 x 2 mplot were listed together with a visual estimate of each species using a 10\%-interval rank scale.
 }
-\source{
-}
+
 \references{
 Carboni, M., Santoro, R. & Acosta, A.T.R. (2010) Are some communities of the coastal dune zonation more susceptible to alien plant invasion? Journal of Plant Ecology, 3, 139-147. \cr
 

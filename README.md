@@ -2,8 +2,10 @@
 iNEXT (R package)
 =================
 
+[![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT)
+
 <h4 style="text-align: right;">
-Most recent update time: August 20, 2015
+Most recent update time: March 19, 2016
 
 A Quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by
 </h4>
@@ -85,7 +87,7 @@ plot(out, type=1)
 
 The argument `facet.var="site"` in ggiNEXT function creates a separate plot for each site as shown below:
 
-![](README-ex1-1.png)
+![](README/README-ex1-1.png)<!-- -->
 
 The argument `facet.var="order"` and `color.var = “site"` creates a separate plot for each diversity order site, and within each plot, different colors are used for two sites.
 
@@ -93,7 +95,7 @@ The argument `facet.var="order"` and `color.var = “site"` creates a separate p
 ggiNEXT(out, type=1, facet.var="order", color.var="site")
 ```
 
-![](README-ex1b-1.png)
+![](README/README-ex1b-1.png)<!-- -->
 
 The following commands returns the sample completeness curve in which different colors are used for the two sites:
 
@@ -101,14 +103,14 @@ The following commands returns the sample completeness curve in which different 
 ggiNEXT(out, type=2, facet.var="none", color.var="site")
 ```
 
-![](README-ex2-1.png)
+![](README/README-ex2-1.png)<!-- -->
 
 ``` r
 ggiNEXT(out, type=3, facet.var="site")
 ggiNEXT(out, type=3, facet.var="order", color.var="site")
 ```
 
-![](README-ex3-1.png) ![](README-ex3-2.png)
+![](README/README-ex3-1.png)<!-- -->![](README/README-ex3-2.png)<!-- -->
 
 ### Hacking ggiNEXT
 
@@ -117,7 +119,7 @@ ggiNEXT(out, type=3, facet.var="order", color.var="site")
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
 
-![](README-ex5-1.png)
+![](README/README-ex5-1.png)<!-- -->
 
 ``` r
 # free the scale of axis
@@ -125,7 +127,7 @@ ggiNEXT(out, type=1, facet.var="order") +
   facet_wrap(~order, scales="free")
 ```
 
-![](README-ex5-2.png)
+![](README/README-ex5-2.png)<!-- -->
 
 ``` r
 # change the shape of reference sample size
@@ -133,13 +135,13 @@ ggiNEXT(out, type=1, facet.var="site") +
   scale_shape_manual(values=c(19,19,19))
 ```
 
-![](README-ex5-3.png)
+![](README/README-ex5-3.png)<!-- -->
 
 ### How to cite
 
 If you use iNEXT to obtain results for publication, you should cite at least one of the relevant papers (Chao and Jost 2012; Colwell et al. 2012; Chao et al. 2014) along with the following reference for iNEXT:
 
-> Hsieh, T. C., K. H. Ma, and A. Chao. 2015. iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Submitted manuscript (<http://chao.stat.nthu.edu.tw/blog/software-download>).
+> Hsieh, T. C., K. H. Ma, and A. Chao. 2016. iNEXT: An R package for rarefaction and extrapolation of species diversity (Hill numbers). <http://chao.stat.nthu.edu.tw/blog/software-download> Methods in Ecology and Evolution (in revision).
 
 ### License
 
@@ -151,6 +153,6 @@ The iNEXT package is licensed under the GPLv3. To help refine iNEXT, your commen
 2.  Chao, A., and L. Jost. 2012. Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology 93:2533-2547.
 3.  Colwell, R. K., A. Chao, N. J. Gotelli, S. Y. Lin, C. X. Mao, R. L. Chazdon, and J. T. Longino. 2012. Models and estimators linking individual-based and sample-based rarefaction, extrapolation and comparison of assemblages. Journal of Plant Ecology 5:3-21.
 4.  Ellison, A. M., A. A. Barker-Plotkin, D. R. Foster, and D. A. Orwig. 2010. Experimentally testing the role of foundation species in forests: the Harvard Forest Hemlock Removal Experiment. Methods in Ecology and Evolution 1:168-179.
-5.  Hsieh, T. C., K. H. Ma, and A. Chao. 2013. iNEXT online: interpolation and extrapolation (Version 1.3.0) [Software]. Available from <http://chao.stat.nthu.edu.tw/blog/software-download/>.
+5.  Hsieh, T. C., K. H. Ma, and A. Chao. 2013. iNEXT online: interpolation and extrapolation (Version 1.3.0) \[Software\]. Available from <http://chao.stat.nthu.edu.tw/blog/software-download/>.
 6.  Hsieh T. C., K. H. Ma, and A. Chao. 2014. iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Submitted manuscript.
 7.  Longino, J. T., and R. K. Colwell. 2011. Density compensation, species composition, and richness of ants on a neotropical elevational gradient. Ecosphere 2:art29.

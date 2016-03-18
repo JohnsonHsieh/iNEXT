@@ -45,7 +45,7 @@
 #' @export
 #' 
 ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey=FALSE){  
-  UseMethod("ggiNEXT")
+  UseMethod("ggiNEXT", x)
 }
 
 #' @export

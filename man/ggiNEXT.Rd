@@ -35,6 +35,8 @@ use different colors for sites (\code{color.var="site"});
 use different colors for combinations of order x site (\code{color.var="both"}).}
 
 \item{grey}{a logical variable to display grey and white ggplot2 theme.}
+
+\item{...}{other arguments passed on to methods. Not currently used.}
 }
 \value{
 a ggplot2 object
