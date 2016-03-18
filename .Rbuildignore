@@ -4,3 +4,5 @@
 ^README\.md$
 ^README\.Rmd$
 ^README-*\.png$
+.travis.yml
+^\.travis\.yml$
