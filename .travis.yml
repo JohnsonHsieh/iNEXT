@@ -19,5 +19,13 @@ after_failure:
 
 notifications:
   email:
-    on_success: change
-    on_failure: change
+    on_success: euler96@gmail.com
+    on_failure: euler96@gmail.com
+    
+env:
+  global:
+    - WARNINGS_ARE_ERRORS=1
+    - _R_CHECK_FORCE_SUGGESTS_=0
+    - R_BUILD_ARGS="--no-manual"
+    - R_CHECK_ARGS="--no-manual --as-cran --no-vignettes"
+    - PKG_CFLAGS="-g -O3 -Wall -pedantic -I../inst/include -DLOGGER_LEVEL=LL_WARN"
