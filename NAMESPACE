@@ -1,7 +1,6 @@
 import(stats)
 import(ggplot2)
 import(graphics)
-importFrom(ggplot2,fortify)
 S3method(plot,iNEXT)
 S3method(ggiNEXT,iNEXT)
 S3method(ggiNEXT,default)
