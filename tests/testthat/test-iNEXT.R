@@ -5,7 +5,7 @@ test_that("iNEXT for abundance-based data", {
   out <- iNEXT(spider, q=0, datatype="abundance")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
-  expect_equal(names(out$DataInfo)[1], "n")
+  expect_equal(names(out$DataInfo)[2], "n")
   expect_equal(nrow(out$DataInfo), length(spider))
   
   # Test input by a vector
@@ -13,7 +13,7 @@ test_that("iNEXT for abundance-based data", {
   out <- iNEXT(x, q=0, datatype="abundance")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
-  expect_equal(names(out$DataInfo)[1], "n")
+  expect_equal(names(out$DataInfo)[2], "n")
   expect_equal(nrow(out$DataInfo), 1)
   
   # Test input by a data.frame
@@ -21,7 +21,7 @@ test_that("iNEXT for abundance-based data", {
   out <- iNEXT(x, q=0, datatype="abundance")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
-  expect_equal(names(out$DataInfo)[1], "n")
+  expect_equal(names(out$DataInfo)[2], "n")
   expect_equal(nrow(out$DataInfo), ncol(x))
   
 })
@@ -32,14 +32,14 @@ test_that("iNEXT for sampling-unit-based incidence frequencies data", {
   out <- iNEXT(ant, q=0, datatype="incidence_freq")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
-  expect_equal(names(out$DataInfo)[1], "T")
+  expect_equal(names(out$DataInfo)[2], "T")
   expect_equal(nrow(out$DataInfo), length(ant))
   
   # Test input by a vector
   out <- iNEXT(ant$h50m, q=0, datatype="incidence_freq")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
-  expect_equal(names(out$DataInfo)[1], "T")
+  expect_equal(names(out$DataInfo)[2], "T")
   expect_equal(nrow(out$DataInfo), 1)
 })
 
@@ -51,7 +51,7 @@ test_that("iNEXT for species by sampling-units incidence matrix", {
   out <- iNEXT(plant, q=0, datatype="incidence_raw")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
-  expect_equal(names(out$DataInfo)[1], "T")
+  expect_equal(names(out$DataInfo)[2], "T")
   expect_equal(nrow(out$DataInfo), length(plant))
   
   # Test input by a data.frame
@@ -60,7 +60,7 @@ test_that("iNEXT for species by sampling-units incidence matrix", {
   out <- iNEXT(x, q=0, datatype="incidence_raw")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
-  expect_equal(names(out$DataInfo)[1], "T")
+  expect_equal(names(out$DataInfo)[2], "T")
   expect_equal(nrow(out$DataInfo), 1)
 })
 

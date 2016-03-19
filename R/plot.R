@@ -149,3 +149,34 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   }
   par(ask=FALSE)
 }
+
+#' @export
+print.iNEXT <- function(x){
+  site.n <- nrow(x$DataInfo)
+  order.n <- ifelse(site.n > 1, 
+                    paste(unique(x$iNextEst[[1]]$order), collapse = ", "),
+                    paste(unique(x$iNextEst$order), collapse = ", "))
+  cat("Compare ", site.n, " assemblages with Hill number order q = ", order.n,".\n", sep="")
+  cat("$class: iNEXT\n\n")
+  cat("$DataInfo: basic data information\n")
+  print(x$DataInfo)
+  cat("\n")
+  cat("$iNextEst: diversity estimates with rarefied and extrapolated samples.\n")
+  if(class(x$iNextEst)=="data.frame"){
+    y <- x$iNextEst
+    m <- quantile(y[,1], type = 1)
+    res <- y[y[,1]%in%m,]
+  }else{
+    res <- lapply((x$iNextEst), function(y){
+      m <- quantile(y[,1], type = 1)
+      y[y[,1]%in%m,]
+    })
+  }
+  print(res)
+  cat("\n")
+  cat("$AsyEst: asymptotic diversity estimates along with related statistics.\n")
+  print(x$AsyEst)
+  car("\n")
+  cat("NOTE: Only show five estimates, call iNEXT.objext$iNextEst. to show complete output.\n")
+  return(invisible())
+}
