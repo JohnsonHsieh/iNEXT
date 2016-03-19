@@ -2,7 +2,7 @@
 iNEXT (R package)
 =================
 
-[![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT)
+[![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT) [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/iNEXT)](https://github.com/metacran/cranlogs.app)
 
 <h4 style="text-align: right;">
 Most recent update time: March 19, 2016
