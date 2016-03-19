@@ -101,10 +101,15 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     z$col <- z$shape <- paste(z$site, z$order, sep="-")
   }
   
-  g <- ggplot(z, aes(x=x, y=y, colour=factor(col))) + 
-    geom_point(aes(shape=shape), size=5, data=subset(z, method=="observed"))
+  z$lty <- factor(z$method, c("interpolated", "extrapolated"), c("interpolation", "extrapolation"))
+  z$col <- factor(z$col)
   
-  g <- g + geom_line(aes(linetype=factor(method, c("interpolated", "extrapolated"), c("interpolation", "extrapolation"))), size=1.5) +
+  data.sub <- z[which(z$method=="observed"),]
+  g <- ggplot(z, aes_string(x="x", y="y", colour="col")) + 
+    geom_point(aes_string(shape="shape"), size=5, data=data.sub)
+  
+  
+  g <- g + geom_line(aes_string(linetype="lty"), size=1.5) +
     guides(linetype=guide_legend(title="Method"), 
            colour=guide_legend(title="Guides"), 
            fill=guide_legend(title="Guides"), 
@@ -126,7 +131,7 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   }
   
   if(se)
-    g <- g + geom_ribbon(aes(ymin=y.lwr, ymax=y.upr, fill=factor(col), colour=NULL), alpha=0.2)
+    g <- g + geom_ribbon(aes_string(ymin="y.lwr", ymax="y.upr", fill="factor(col)", colour="NULL"), alpha=0.2)
   
   
   if(facet.var=="order"){
@@ -185,7 +190,7 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
 ggiNEXT.default <- function(x, ...){
   stop(
     "iNEXT doesn't know how to deal with data of class ",
-    paste(class(model), collapse = "/"),
+    paste(class(x), collapse = "/"),
     call. = FALSE
   )
 }
