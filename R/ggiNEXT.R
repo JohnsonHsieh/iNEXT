@@ -101,22 +101,15 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     z$col <- z$shape <- paste(z$site, z$order, sep="-")
   }
   
-<<<<<<< HEAD
   z$lty <- factor(z$method, c("interpolated", "extrapolated"), c("interpolation", "extrapolation"))
   z$col <- factor(z$col)
-  
   data.sub <- z[which(z$method=="observed"),]
+  
   g <- ggplot(z, aes_string(x="x", y="y", colour="col")) + 
     geom_point(aes_string(shape="shape"), size=5, data=data.sub)
   
   
   g <- g + geom_line(aes_string(linetype="lty"), size=1.5) +
-=======
-  g <- ggplot(z, aes_string(x="x", y="y", colour="factor(col)")) + 
-    geom_point(aes_string(shape="shape"), size=5, data=subset(z, method=="observed"))
-  
-  g <- g + geom_line(aes_string(linetype='factor(method, c("interpolated", "extrapolated"), c("interpolation", "extrapolation")')), size=1.5) +
->>>>>>> 48c63cd5f431ec2a9e62a1644d25c6898cb93110
     guides(linetype=guide_legend(title="Method"), 
            colour=guide_legend(title="Guides"), 
            fill=guide_legend(title="Guides"), 
