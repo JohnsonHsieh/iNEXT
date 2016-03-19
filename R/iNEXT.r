@@ -537,10 +537,14 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' and \code{$AsyEst} for showing asymptotic diversity estimates along with related statistics.  
 #' @examples
 #' data(spider)
-#' iNEXT(spider, q=0, datatype="abundance")
-#' 
+#' out1 <- iNEXT(spider, q=0, datatype="abundance")
+#' out1$DataInfo # showing basic data information.
+#' out1$AsyEst # showing asymptotic diversity estimates.
+#' out1$iNextEst # showing diversity estimates with rarefied and extrapolated.
 #' data(ant)
-#' iNEXT(ant$h500m, q=1, datatype="incidence_freq", size=round(seq(10, 500, length.out=20)), se=FALSE)
+#' out2 <- iNEXT(ant$h500m, q=1, datatype="incidence_freq", size=round(seq(10, 500, length.out=20)), se=FALSE)
+#' out2$iNextEst
+#' 
 #' @export
 #' 
 iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50)

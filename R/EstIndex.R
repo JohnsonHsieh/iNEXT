@@ -67,7 +67,14 @@ DataInfo <- function(x, datatype="abundance"){
     } else if(class(x) == "matrix" | class(x) == "data.frame"){
       out <- t(apply(as.matrix(x), 2, Fun.abun))  
     }
-    colnames(out) <-  c("n", "S.obs", "SC", paste("f",1:10, sep=""))
+    if(nrow(out) > 1){
+      out <- data.frame(site=rownames(out), out)
+      colnames(out) <-  c("site", "n", "S.obs", "SC", paste("f",1:10, sep=""))
+      rownames(out) <- NULL
+    }else{
+      out <- data.frame(site="site.1", out)
+      colnames(out) <-  c("site", "n", "S.obs", "SC", paste("f",1:10, sep=""))
+    }
     as.data.frame(out)
   }else if(datatype == "incidence"){
     if(class(x) == "numeric" | class(x) == "integer"){
@@ -77,7 +84,14 @@ DataInfo <- function(x, datatype="abundance"){
     } else if(class(x) == "matrix" | class(x) == "data.frame"){
       out <- t(apply(as.matrix(x), 2, Fun.ince))  
     }
-    colnames(out) <-  c("T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
+    if(nrow(out) > 1){
+      out <- data.frame(site=rownames(out), out)
+      colnames(out) <-  c("site","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
+      rownames(out) <- NULL
+    }else{
+      out <- data.frame(site="site.1", out)
+      colnames(out) <-  c("site","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
+    }
     as.data.frame(out)
   }
 }

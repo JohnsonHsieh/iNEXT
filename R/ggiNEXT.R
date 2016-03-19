@@ -212,7 +212,7 @@ ggiNEXT.default <- function(x, ...){
 #' ggplot2::fortify(out1, type=1)
 
 fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
-  datatype <- ifelse(names(model$DataInfo)[1]=="n","abundance","incidence")
+  datatype <- ifelse(names(model$DataInfo)[2]=="n","abundance","incidence")
   z <- data
   if(class(z) == "list"){
     z <- data.frame(do.call("rbind", z), site=rep(names(z), sapply(z, nrow)))
