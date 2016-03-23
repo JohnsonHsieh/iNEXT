@@ -11,9 +11,10 @@ output:
 ---
 ```{r, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "", 
-                      fig.retina=3,
-                      fig.align='center', 
-                      out.width="600px")
+                      fig.retina=2,
+                      fig.align='center',
+                      fig.width = 8, fig.height = 6,
+                      out.width = "100%")
 library(iNEXT)
 library(ggplot2)
 data("spider")
@@ -27,7 +28,7 @@ data("plant")
 to compute diversity estimates and the associated 95% confidence intervals for the following two types of rarefaction and extrapolation (R/E): 
 
 1. Sample‐size‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples up to a proper size. This type of sampling curve plots the diversity estimates with respect to sample size.     
-2. Coverage‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples with sample completeness (as measured by sample coverage) up to a coverage. This type of sampling curve plots the diversity estimates with respect to sample coverage. 
+2. Coverage‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples with sample completeness (as measured by sample coverage) up to an appropriate coverage. This type of sampling curve plots the diversity estimates with respect to sample coverage. 
 
 `iNEXT` also plots the above two types of sampling curves and a sample completeness curve. The sample completeness curve provides a bridge between these two types of curves.
 
@@ -116,9 +117,9 @@ This function returns an `"iNEXT"` object which can be further used to make plot
 using the function `ggiNEXT()` to be described below. 
 
 ## DATA FORMAT/INFORMATION
-Three types of data are:
+Three types of data are supported:
 
-1. Individual‐based abundance data (`datatype="abundance"`): Input data for each assemblage/site include sample species abundances in an empirical sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances.  
+1. Individual‐based abundance data (`datatype="abundance"`): Input data for each assemblage/site include samples species abundances in an empirical sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances.  
 
 2. Sampling‐unit‐based incidence data: There are two kinds of input data.  
   (1) Incidence‐raw data (`datatype="incidence_raw"`): for each assemblage, input data for a reference sample consist of a species‐by‐sampling‐unit matrix; when there are N assemblages, input data consist of N lists of matrices, and each matrix is a species‐by‐sampling‐unit matrix.  
@@ -236,56 +237,43 @@ ggiNEXT(out, type=1, facet.var="site")
 
 ```{r echo=FALSE}
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
-ggiNEXT(out, type=1, facet.var="site") + 
-  theme(text=element_text(size=8))
+ggiNEXT(out, type=1, facet.var="site")
 ```
 
 
 The argument `facet.var="order"` and `color.var="site"` creates a separate plot for each diversity order site, and within each plot, different colors are used for two 
 sites. 
 
-```{r eval=FALSE}
+```{r}
 ggiNEXT(out, type=1, facet.var="order", color.var="site")
 ```
-```{r echo=FALSE}
-ggiNEXT(out, type=1, facet.var="order", color.var="site") +
-  theme(text=element_text(size=8))
-```
+
 
 
 The following commands return the sample completeness curve in which different colors are used for the two sites: 
 
-```{r eval=FALSE}
+```{r}
 ggiNEXT(out, type=2, facet.var="none", color.var="site")
 ```
-```{r echo=FALSE}
-ggiNEXT(out, type=2, facet.var="none", color.var="site")  +
-  theme(text=element_text(size=8))
-```
+
 
 The following commands return the coverage‐based R/E sampling curves in which different colors are used for the two sites (`facet.var="site"`) and for three orders 
 (`facet.var="order"`)
 
 
-```{r eval=FALSE}
+```{r}
 ggiNEXT(out, type=3, facet.var="site")
 ```
-```{r echo=FALSE}
-ggiNEXT(out, type=3, facet.var="site") +
-  theme(text=element_text(size=8))
-```
 
 
-```{r eval=FALSE}
+
+```{r}
 ggiNEXT(out, type=3, facet.var="order", color.var="site")
 ```
-```{r echo=FALSE}
-ggiNEXT(out, type=3, facet.var="order", color.var="site") +
-  theme(text=element_text(size=8))
-```
+
 ## INCIDENCE DATA
 
-We use the tropical ant data (in the dataset ant included in the package) at five elevations (50m, 500m, 1070m, 1500m, and 2000m) collected by Longino & Colwell (2011) from Costa Rica. The 5 lists of incidence frequencies are shown below. The first entry of each list must be the total number of sampling units, followed by the species incidence frequencies.
+For illustration, we use the tropical ant data (in the dataset ant included in the package) at five elevations (50m, 500m, 1070m, 1500m, and 2000m) collected by Longino & Colwell (2011) from Costa Rica. The 5 lists of incidence frequencies are shown below. The first entry of each list must be the total number of sampling units, followed by the species incidence frequencies.
 
 ```{r}
 data(ant)
@@ -295,7 +283,7 @@ str(ant)
 The argument `color.var = ("none", "order", "site" or "both")` is used to display curves in different colors for values of the specified variable. For example, the following code using the argument `color.var="site"` displays the sampling curves in different colors for the five sites. Note that `theme_bw()` is a ggplot2
 function to modify display setting from grey background to black‐and‐white. The following commands return three types R/E sampling curves for ant data. 
 
-```{r eval=FALSE}
+```{r}
 t <- seq(1, 700, by=10)
 out.inc <- iNEXT(ant, q=0, datatype="incidence_freq", size=t)
 
@@ -305,35 +293,18 @@ ggiNEXT(out.inc, type=1, color.var="site") +
   theme(legend.position="none")
 ```
 
-```{r echo=FALSE}
-t <- seq(1, 700, by=10)
-out.inc <- iNEXT(ant, q=0, datatype="incidence_freq", size=t)
-
-# Sample‐size‐based R/E curves
-ggiNEXT(out.inc, type=1, color.var="site") + 
-  theme_bw(base_size = 8) + 
-  theme(legend.position="none")
-```
 
 
-```{r eval=FALSE}
+```{r}
 # Sample completeness curves
 ggiNEXT(out.inc, type=2, color.var="site") +
   ylim(c(0.9,1)) +
   theme_bw(base_size = 18) + 
   theme(legend.position="none")
 ```
-```{r echo=FALSE}
-# Sample completeness curves
-ggiNEXT(out.inc, type=2, color.var="site") +
-  ylim(c(0.9,1)) +
-  theme_bw(base_size = 8) + 
-  theme(legend.position="none")
-```
 
 
-
-```{r eval=FALSE}
+```{r}
 # Coverage‐based R/E curves
 ggiNEXT(out.inc, type=3, color.var ="site") + 
   xlim(c(0.9,1)) +
@@ -341,14 +312,7 @@ ggiNEXT(out.inc, type=3, color.var ="site") +
   theme(legend.position="bottom",
         legend.title=element_blank())
 ```
-```{r echo=FALSE}
-# Coverage‐based R/E curves
-ggiNEXT(out.inc, type=3, color.var ="site") + 
-  xlim(c(0.9,1)) +
-  theme_bw(base_size = 8) +
-  theme(legend.position="bottom",
-        legend.title=element_blank())
-```
+
 
 ## POINT ESTIMATION FUNCTION: estimateD()
 We also supply the function  
@@ -365,20 +329,17 @@ estimateD(ant, datatype="incidence_freq",
           base="coverage", level=0.985)
 ```
 
+## RAW INCIDENCE DATA FUNCTION: incidence_raw
+
 Note that `datatype="incidence_raw"` is a new feature in iNEXT version 2.0.6. We here demonstrate its use via the plant data from three coastal dune habitats. The data set (`plant`) included in the package is a list of thee matrices; each matrix is a species by plots data.frame. Run the following commands to get the output graphics as shown below. 
 
 ```{r}
 data(plant)
 str(plant)
 ```
-```{r eval=FALSE}
+```{r}
 out.raw <- iNEXT(plant, datatype="incidence_raw", endpoint=150)
 ggiNEXT(out.raw)
-```
-
-```{r echo=FALSE}
-out.raw <- iNEXT(plant, datatype="incidence_raw", endpoint=150)
-ggiNEXT(out.raw) + theme(text=element_text(size=8))
 ```
 
 
@@ -386,63 +347,35 @@ ggiNEXT(out.raw) + theme(text=element_text(size=8))
 
 The `ggiNEXT()` function is a wrapper around `ggplot2` package to create a R/E curve using a single line of code. The resulting object is of class `"ggplot"`, so can be manipulated using the `ggplot2` tools. The following are some useful examples for customizing graphs. 
 
-# remove legend
-```{r eval=FALSE}
+### remove legend
+```{r}
 ggiNEXT(out, type=3, facet.var="site") + 
   theme(legend.position="none")
 ```
-```{r echo=FALSE}
-ggiNEXT(out, type=3, facet.var="site") + 
-  theme(legend.position="none", text=element_text(size=8))
-```
 
-
-```{r eval=FALSE}
-# change to theme and legend.position
+### change to theme and legend.position
+```{r}
 ggiNEXT(out, type=1, facet.var="site") + 
   theme_bw(base_size = 18) +
   theme(legend.position="right")
 ```
-```{r echo=FALSE}
-# change to theme and legend.position
-ggiNEXT(out, type=1, facet.var="site") + 
-  theme_bw(base_size = 8) +
-  theme(legend.position="right")
-```
 
-
-```{r eval=FALSE}
-# display black‐white theme
+### display black‐white theme
+```{r}
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
-```{r echo=FALSE}
-# display black‐white theme
-ggiNEXT(out, type=1, facet.var="order", grey=TRUE) +
-  theme(text=element_text(size=8))
-```
 
-```{r eval=FALSE}
-# free the scale of axis
+### free the scale of axis
+```{r}
 ggiNEXT(out, type=1, facet.var="order") + 
   facet_wrap(~order, scales="free")
 ```
-```{r echo=FALSE}
-# free the scale of axis
-ggiNEXT(out, type=1, facet.var="order") + 
-  facet_wrap(~order, scales="free") +
-  theme(text=element_text(size=8))
-```
 
-```{r eval=FALSE}
-# change the shape of reference sample size
+
+### change the shape of reference sample size
+```{r}
 ggiNEXT(out, type=1, facet.var="site") +
   scale_shape_manual(values=c(19,19,19))
-```
-```{r echo=FALSE}
-# change the shape of reference sample size
-ggiNEXT(out, type=1, facet.var="site") +
-  scale_shape_manual(values=c(19,19,19)) +
-  theme(text=element_text(size=8))
 ```
 
 ## License
