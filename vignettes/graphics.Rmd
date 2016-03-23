@@ -15,12 +15,11 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "",
                       fig.align='center',
                       fig.width = 8, fig.height = 6,
                       out.width = "100%")
-library(BiocStyle)
 ```
 
 
 ## General customization
-The data visualization package `r CRANpkg("ggplot2")` provides `scale_` function to customize  data which is mapped into an aesthetic property of a `geom_`. The following functions would help user to customize `ggiNEXT` output.
+The data visualization package [`ggplot2`](http://cran.fhcrc.org/web/packages/ggplot2/index.html) provides `scale_` function to customize  data which is mapped into an aesthetic property of a `geom_`. The following functions would help user to customize `ggiNEXT` output.
 
 - change point shape: `scale_shape_manual`    
 - change line type : `scale_linetype_manual`    
@@ -84,7 +83,7 @@ grid.arrange(gt3, gt4, ncol=2)
 
 
 ## Customize theme
-A `ggplot` object can be themed by adding a theme. User could run `help(theme_grey)` to show the default themes in `ggplot2`. Further, some extra themes provided by `r CRANpkg("ggthemes")` package. Examples shown in the following:
+A `ggplot` object can be themed by adding a theme. User could run `help(theme_grey)` to show the default themes in `ggplot2`. Further, some extra themes provided by  [`ggthemes`](http://cran.fhcrc.org/web/packages/ggthemes/index.html) package. Examples shown in the following:
 ```{r}
 g5 <- g + theme_bw() + theme(legend.position = "bottom")
 g6 <- g + theme_classic() + theme(legend.position = "bottom")
@@ -118,7 +117,7 @@ grid.arrange(g9, g10, ncol=2)
 ```
 
 ### Draw R/E curves by yourself
-In `r CRANpkg("iNEXT")`, we provide a S3 `ggplot2::fortify` method for class `iNEXT`. The function `fortify` offers a single plotting interface for rarefaction/extrapolation curves. Set  argument `type = 1, 2, 3` to plot the corresponding rarefaction/extrapolation curves.
+In [`iNEXT`](http://cran.fhcrc.org/web/packages/iNEXT/index.html), we provide a S3 `ggplot2::fortify` method for class `iNEXT`. The function `fortify` offers a single plotting interface for rarefaction/extrapolation curves. Set  argument `type = 1, 2, 3` to plot the corresponding rarefaction/extrapolation curves.
 ```{r}
 df <- fortify(out, type=1)
 head(df)

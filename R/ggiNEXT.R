@@ -109,11 +109,11 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     geom_point(aes_string(shape="shape"), size=5, data=data.sub)
   
   
-  g <- g + geom_line(aes_string(linetype="lty"), size=1.5) +
-    guides(linetype=guide_legend(title="Method"), 
+  g <- g + geom_line(aes_string(linetype="lty"), lwd=1.5) +
+    guides(linetype=guide_legend(title="Method"),
            colour=guide_legend(title="Guides"), 
            fill=guide_legend(title="Guides"), 
-           shape=guide_legend(title="Guides")) + 
+           shape=guide_legend(title="Guides")) +
     theme(legend.position = "bottom", 
           legend.title=element_blank(),
           text=element_text(size=18)) 
