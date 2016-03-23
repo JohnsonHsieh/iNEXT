@@ -145,13 +145,13 @@ If you use iNEXT to obtain results for publication, you should cite at least one
 
 ### Vignettes
 
--   [A Quick Introduction to iNEXT via Examples](inst/doc/Introduction.html)
+-   [A Quick Introduction to iNEXT via Examples](http://johnsonhsieh.github.io/iNEXT/inst/doc/Introduction.html)
 
 ``` r
 vignette("introduction",package="iNEXT")
 ```
 
--   [Customize Plots and Graphics](inst/doc/graphics.html)
+-   [Customize Plots and Graphics](http://johnsonhsieh.github.io/iNEXT/inst/doc/graphics.html)
 
 ``` r
 vignette("graphics",package="iNEXT")
