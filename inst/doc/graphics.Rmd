@@ -1,0 +1,141 @@
+---
+title: "Customize Plots and Graphics"
+author: "T. C. Hsieh, K. H. Ma, and Anne Chao"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+vignette: >
+      %\VignetteIndexEntry{Customize Plots and Graphics}
+      %\VignetteEngine{knitr::rmarkdown}
+      %\VignetteEncoding{UTF-8}
+---
+```{r include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "", 
+                      fig.retina=2,
+                      fig.align='center',
+                      fig.width = 8, fig.height = 6,
+                      out.width = "100%")
+```
+
+
+## General customization
+The data visualization package [`ggplot2`](http://cran.fhcrc.org/web/packages/ggplot2/index.html) provides `scale_` function to customize  data which is mapped into an aesthetic property of a `geom_`. The following functions would help user to customize `ggiNEXT` output.
+
+- change point shape: `scale_shape_manual`    
+- change line type : `scale_linetype_manual`    
+- change line color: `scale_colour_manual`    
+- change band color: `scale_fill_manual`    
+see [quick reference](http://sape.inf.usi.ch/quick-reference/ggplot2/scale) for style setting.
+
+### Example: `spider` data
+To show how to custmized `ggiNEXT` output, we use abundance-based data `spider` as an example.
+```{r}
+library(iNEXT)
+library(ggplot2)
+library(gridExtra)
+library(grid)
+data("spider")
+out <- iNEXT(spider, q=0, datatype="abundance")
+g <- ggiNEXT(out, type=1, color.var = "site")
+g
+```
+
+### Change shapes, line types and colors
+```{r}
+g1 <- g + scale_shape_manual(values=c(11, 12)) + 
+          scale_linetype_manual(values=c(1,2))
+g2 <- g + scale_colour_manual(values=c("red", "blue")) +
+          scale_fill_manual(values=c("red", "blue"))
+
+# Draw multiple graphical objec on a page
+# library(gridExtra)
+grid.arrange(g1, g2, ncol=2)
+```
+
+## Customize point/line size by hacking
+In order to chage the size of reference sample point or rarefaction/extrapolation curve, user need modify `ggplot` object.
+
+- change point size:    
+the reference sample size point is drawn on the first layer by `ggiNEXT`. Hacking point size by the following
+```{r}
+# point is drawn on the 1st layer, default size is 5
+gb3 <- ggplot_build(g)
+gb3$data[[1]]$size <- 10
+gt3 <- ggplot_gtable(gb3)
+
+# use grid.draw to draw the graphical object
+# library(grid)
+# grid.draw(gt3)
+```
+
+- change line width (size):      
+the reference sample size point is drawn on the second layer by `ggiNEXT`. Hacking point size by the following
+```{r}
+# line is drawn on the 2nd layer, default size is 1.5
+gb4 <- ggplot_build(g)
+gb4$data[[2]]$size <- 3
+gt4 <- ggplot_gtable(gb4)
+# grid.draw(gt4)
+```
+```{r}
+grid.arrange(gt3, gt4, ncol=2)
+```
+
+
+## Customize theme
+A `ggplot` object can be themed by adding a theme. User could run `help(theme_grey)` to show the default themes in `ggplot2`. Further, some extra themes provided by  [`ggthemes`](http://cran.fhcrc.org/web/packages/ggthemes/index.html) package. Examples shown in the following:
+```{r}
+g5 <- g + theme_bw() + theme(legend.position = "bottom")
+g6 <- g + theme_classic() + theme(legend.position = "bottom")
+grid.arrange(g5, g6, ncol=2)
+```
+```{r}
+library(ggthemes)
+g7 <- g + theme_hc(bgcolor = "darkunica") +
+          scale_colour_hc("darkunica")
+
+g8 <- g + theme_economist() + scale_colour_economist()
+grid.arrange(g7, g8, ncol=2)
+```
+
+### Black-White theme
+The following are custmized themes for black-white figure. To modifiy legend, see [Cookbook for R](http://www.cookbook-r.com/Graphs/Legends_(ggplot2)/) for more details.
+
+```{r}
+g9 <- g + theme_bw(base_size = 18) +
+      scale_fill_grey(start = 0, end = .4) +
+      scale_colour_grey(start = .2, end = .2) +
+      theme(legend.position="bottom",
+            legend.title=element_blank())
+
+g10 <- g + theme_tufte(base_size = 12) +       
+    scale_fill_grey(start = 0, end = .4) +
+    scale_colour_grey(start = .2, end = .2) +
+    theme(legend.position="bottom",
+          legend.title=element_blank())
+grid.arrange(g9, g10, ncol=2)
+```
+
+### Draw R/E curves by yourself
+In [`iNEXT`](http://cran.fhcrc.org/web/packages/iNEXT/index.html), we provide a S3 `ggplot2::fortify` method for class `iNEXT`. The function `fortify` offers a single plotting interface for rarefaction/extrapolation curves. Set  argument `type = 1, 2, 3` to plot the corresponding rarefaction/extrapolation curves.
+```{r}
+df <- fortify(out, type=1)
+head(df)
+
+df.point <- df[which(df$method=="observed"),]
+df.line <- df[which(df$method!="observed"),]
+df.line$method <- factor(df.line$method, 
+                         c("interpolated", "extrapolated"),
+                         c("interpolation", "extrapolation"))
+ 
+ggplot(df, aes(x=x, y=y, colour=site)) + 
+  geom_point(aes(shape=site), size=5, data=df.point) +
+  geom_line(aes(linetype=method), lwd=1.5, data=df.line) +
+  geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
+                  fill=site, colour=NULL), alpha=0.2) +
+  labs(x="Number of individuals", y="Species diversity") +
+  theme(legend.position = "bottom", 
+        legend.title=element_blank(),
+        text=element_text(size=18)) 
+```
+
