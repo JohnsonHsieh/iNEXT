@@ -133,7 +133,7 @@ ggplot(df, aes(x=x, y=y, colour=site)) +
   geom_line(aes(linetype=method), lwd=1.5, data=df.line) +
   geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
                   fill=site, colour=NULL), alpha=0.2) +
-  labs(x="Number of sampling units", y="Species diversity") +
+  labs(x="Number of individuals", y="Species diversity") +
   theme(legend.position = "bottom", 
         legend.title=element_blank(),
         text=element_text(size=18)) 
