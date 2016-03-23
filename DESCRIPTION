@@ -21,5 +21,8 @@ LazyLoad: yes
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    gridExtra,
+    ggthemes,
+    BiocStyle
 VignetteBuilder: knitr

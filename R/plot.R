@@ -150,8 +150,14 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   par(ask=FALSE)
 }
 
+
+#' Printing iNEXT object
+#' 
+#' \code{print.iNEXT}: Print method for objects inheriting from class "iNEXT"
+#' @param x an \code{iNEXT} object computed by \code{\link{iNEXT}}.
+#' @param ... additional arguments.
 #' @export
-print.iNEXT <- function(x){
+print.iNEXT <- function(x, ...){
   site.n <- nrow(x$DataInfo)
   order.n <- ifelse(site.n > 1, 
                     paste(unique(x$iNextEst[[1]]$order), collapse = ", "),

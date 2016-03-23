@@ -542,7 +542,8 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' out1$AsyEst # showing asymptotic diversity estimates.
 #' out1$iNextEst # showing diversity estimates with rarefied and extrapolated.
 #' data(ant)
-#' out2 <- iNEXT(ant$h500m, q=1, datatype="incidence_freq", size=round(seq(10, 500, length.out=20)), se=FALSE)
+#' t <- round(seq(10, 500, length.out=20))
+#' out2 <- iNEXT(ant$h500m, q=1, datatype="incidence_freq", size=t, se=FALSE)
 #' out2$iNextEst
 #' 
 #' @export
