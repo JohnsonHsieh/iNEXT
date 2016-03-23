@@ -9,6 +9,7 @@
 ^\.RData$
 ^\.Rhistory$
 ^\.git$
+^index\.html$
 
 ^\.DS_Store$
 ^\.gitignore
