@@ -23,6 +23,5 @@ Suggests: testthat,
     knitr,
     rmarkdown,
     gridExtra,
-    ggthemes,
-    BiocStyle
+    ggthemes
 VignetteBuilder: knitr
