@@ -55,7 +55,7 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   if(type==1L) {
     z$x <- z[,1]
     z$y <- z$qD
-    if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[1]=="n", "Number of individuals", "Number of sampling units")
+    if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[2]=="n", "Number of individuals", "Number of sampling units")
     if(!is.null(ylab)) ylab <- "Species diversity"
     if(se){
       z$y.lwr <- z$qD.95.LCL
@@ -67,7 +67,7 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     }
     z$x <- z[,1]
     z$y <- z$SC
-    if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[1]=="n", "Number of individuals", "Number of sampling units")
+    if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[2]=="n", "Number of individuals", "Number of sampling units")
     if(!is.null(ylab)) ylab <- "Sample coverage"
     if(se){
       z$y.lwr <- z$SC.95.LCL
@@ -182,7 +182,7 @@ print.iNEXT <- function(x, ...){
   cat("\n")
   cat("$AsyEst: asymptotic diversity estimates along with related statistics.\n")
   print(x$AsyEst)
-  car("\n")
+  cat("\n")
   cat("NOTE: Only show five estimates, call iNEXT.objext$iNextEst. to show complete output.\n")
   return(invisible())
 }
