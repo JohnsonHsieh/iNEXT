@@ -143,6 +143,20 @@ If you use iNEXT to obtain results for publication, you should cite at least one
 
 > Hsieh, T. C., K. H. Ma, and A. Chao. 2016. iNEXT: An R package for rarefaction and extrapolation of species diversity (Hill numbers). <http://chao.stat.nthu.edu.tw/blog/software-download> Methods in Ecology and Evolution (in revision).
 
+### Vignettes
+
+-   [A Quick Introduction to iNEXT via Examples](inst/doc/Introduction.html)
+
+``` r
+vignette("introduction",package="iNEXT")
+```
+
+-   [Customize Plots and Graphics](inst/doc/graphics.html)
+
+``` r
+vignette("graphics",package="iNEXT")
+```
+
 ### License
 
 The iNEXT package is licensed under the GPLv3. To help refine iNEXT, your comments or feedbacks would be welcome (please send them to [Anne Chao](chao@stat.nthu.edu.tw)).
