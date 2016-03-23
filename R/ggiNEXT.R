@@ -66,7 +66,10 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   if(facet.var=="order") color.var <- "site"
   if(facet.var=="site") color.var <- "order"
   
+  options(warn = -1)
   z <- fortify(x, type=type)
+  options(warn = 0)
+  if(ncol(z) ==7) {se <- FALSE}
   datatype <- unique(z$datatype)
   if(color.var=="none"){
     if(levels(factor(z$order))>1 & "site"%in%names(z)){
