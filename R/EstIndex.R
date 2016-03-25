@@ -532,7 +532,7 @@ ChaoSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
       Q1 <- sum(y==1)
       a <- sum(choose(y,2)/choose(t,2))
       b <- (sum(y %*% t(y)) - sum(diag(y %*% t(y))))/t^2
-      if(Q1!=t){
+      if(sum(y)!=Q1){
         est <- 1-a/(a+b)
       }else{
         est <- 1-2/t/(t+1)
