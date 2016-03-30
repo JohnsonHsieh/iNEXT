@@ -148,13 +148,7 @@ If you use iNEXT to obtain results for publication, you should cite at least one
 -   [A Quick Introduction to iNEXT via Examples](http://johnsonhsieh.github.io/iNEXT/inst/doc/Introduction.html)
 
 ``` r
-vignette("introduction",package="iNEXT")
-```
-
--   [Customize Plots and Graphics](http://johnsonhsieh.github.io/iNEXT/inst/doc/graphics.html)
-
-``` r
-vignette("graphics",package="iNEXT")
+vignette("Introduction",package="iNEXT")
 ```
 
 ### License
