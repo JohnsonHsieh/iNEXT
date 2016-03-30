@@ -387,7 +387,7 @@ Chat.Sam <- function(x, t){
 # iNEXT.Ind(spider$Girdled, q=0, endpoint=500)
 # # q = 1 with specific sample size m and don't calculate standard error
 # iNEXT.Ind(spider$Girdled, q=1, m=c(1, 10, 20, 50, 100, 200, 400, 600), se=FALSE)
-iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE, nboot=200)
+iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE, nboot=200, conf=0.95)
 {
   
   n <- sum(Spec)		  	#sample size
@@ -410,21 +410,21 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
     Prob.hat <- EstiBootComm.Ind(Spec)
     Abun.Mat <- rmultinom(nboot, n, Prob.hat)
     
-    error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(x) Dqhat.Ind(x, q, m)), 1, sd, na.rm=TRUE)
+    error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(x) Dqhat.Ind(x, q, m)), 1, sd, na.rm=TRUE)
     left  <- Dq.hat - error
     right <- Dq.hat + error
     
-    error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)), 1, sd, na.rm=TRUE)
+    error.C <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)), 1, sd, na.rm=TRUE)
     left.C  <- C.hat - error.C
     right.C <- C.hat + error.C
-    out <- cbind("m"=m, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
+    out <- cbind("m"=m, "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, "SC"=C.hat, "SC.LCL"=left.C, "SC.UCL"=right.C)
   } else {
     out <- cbind("m"=m, "qD"=Dq.hat, "SC"=C.hat)
   }
   out <- data.frame(out)
   out$method <- ifelse(out$m<n, "interpolated", ifelse(out$m==n, "observed", "extrapolated"))
   out$order <- q
-  id <- match(c("m", "method", "order", "qD", "qD.95.LCL", "qD.95.UCL", "SC", "SC.95.LCL", "SC.95.UCL"), names(out), nomatch = 0)
+  id <- match(c("m", "method", "order", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out), nomatch = 0)
   out <- out[, id]
   return(out)
 }
@@ -453,7 +453,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 # iNEXT.Sam(ant$h50m, q=0, endpoint=100)
 # # q = 1 with specific sample size m and don't calculate standard error
 # iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
-iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE, nboot=200)
+iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE, nboot=200, conf=0.95)
 {
   
   if(which.max(Spec)!=1) 
@@ -485,18 +485,18 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
       out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
       warning("Insufficient data to compute bootstrap s.e.")
     }else{		
-      error <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
+      error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
       left  <- Dq.hat - error
       right <- Dq.hat + error
       left[left<=0] <- 0
       
-      error.C <-  qnorm(0.975) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
+      error.C <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
       left.C  <- C.hat - error.C
       right.C <- C.hat + error.C
       left.C[left.C<=0] <- 0
       right.C[right.C>=1] <- 1
       
-      out <- cbind("t"=t, "qD"=Dq.hat, "qD.95.LCL"=left, "qD.95.UCL"=right, "SC"=C.hat, "SC.95.LCL"=left.C, "SC.95.UCL"=right.C)
+      out <- cbind("t"=t, "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, "SC"=C.hat, "SC.LCL"=left.C, "SC.UCL"=right.C)
     }
   }else {
     out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
@@ -504,7 +504,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
   out <- data.frame(out)
   out$method <- ifelse(out$t<nT, "interpolated", ifelse(out$t==nT, "observed", "extrapolated"))
   out$order <- q
-  id <- match(c("t", "method", "order", "qD", "qD.95.LCL", "qD.95.UCL", "SC", "SC.95.LCL", "SC.95.UCL"), names(out), nomatch = 0)
+  id <- match(c("t", "method", "order", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out), nomatch = 0)
   out <- out[, id]
   return(out)
 }
@@ -530,7 +530,8 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' each knot represents a particular sample size for which diversity estimate will be calculated.  
 #' If the \code{endpoint} is smaller than the reference sample size, then \code{iNEXT()} computes only the rarefaction esimates for approximately K evenly spaced \code{knots}. 
 #' If the \code{endpoint} is larger than the reference sample size, then \code{iNEXT()} computes rarefaction estimates for approximately K/2 evenly spaced \code{knots} between sample size 1 and the reference sample size, and computes extrapolation estimates for approximately K/2 evenly spaced \code{knots} between the reference sample size and the \code{endpoint}.
-#' @param se a logical variable to calculate the bootstrap standard error and 95\% confidence interval.
+#' @param se a logical variable to calculate the bootstrap standard error and \code{conf} confidence interval.
+#' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95
 #' @param nboot an integer specifying the number of replications.
 #' @return a list of three objects: \code{$DataInfo} for summarizing data information; 
 #' \code{$iNextEst} for showing diversity estimates for rarefied and extrapolated samples along with related statistics;
@@ -556,7 +557,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' 
 #' @export
 #' 
-iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50)
+iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, conf=0.95, nboot=50)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if(is.na(pmatch(datatype, TYPE)))
@@ -601,7 +602,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     x <- as.numeric(unlist(x))
     if(datatype == "abundance"){
       if(sum(x)==0) stop("Zero abundance counts in one or more sample sites")
-      out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot)
+      out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot, conf=conf)
     }
     if(datatype == "incidence"){
       t <- x[1]
@@ -611,7 +612,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       }
       if(sum(x)==0) stop("Zero incidence frequencies in one or more sample sites")
       
-      out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot)  
+      out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot, conf=conf)  
     }
     out
   }
@@ -626,9 +627,9 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){
     out <- do.call("rbind", lapply(q, function(q) Fun(x, q)))
     out[,-(1:3)] <- round(out[,-(1:3)],3)
-    index <- rbind(as.matrix(ChaoSpecies(x, datatype)), 
-                   as.matrix(ChaoEntropy(x, datatype, transform=TRUE)),
-                   as.matrix(EstSimpson(x, datatype, transform=TRUE)))
+    index <- rbind(as.matrix(ChaoSpecies(x, datatype, conf)), 
+                   as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)),
+                   as.matrix(EstSimpson(x, datatype, transform=TRUE, conf)))
     rownames(index) <- c("Species Richness", "Shannon diversity", "Simpson diversity")
     
   }else if(class(x)=="matrix" | class(x)=="data.frame"){
@@ -638,12 +639,12 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       tmp
     })
     arr <- array(0, dim = c(3, 5, ncol(x)))
-    arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype)))
-    arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
-    arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE)))  
+    arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype, conf)))
+    arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)))
+    arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE, conf)))  
     dimnames(arr)[[3]] <- names(x)
     dimnames(arr)[[1]] <- c("Species richness", "Shannon diversity", "Simpson diversity")
-    dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
+    dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "Lower_CI", "Upper_CI")
     index <- ftable(arr, row.vars = c(3,1))
     
   }else if(class(x)=="list"){
@@ -654,12 +655,12 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     })
     
     arr <- array(0, dim = c(3, 5, length(x)))
-    arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype)))
-    arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE)))
-    arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE)))  
+    arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype, conf)))
+    arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)))
+    arr[3,,] <- t(as.matrix(EstSimpson(x, datatype, transform=TRUE, conf)))  
     dimnames(arr)[[3]] <- names(x)
     dimnames(arr)[[1]] <- c("Species richness", "Shannon diversity", "Simpson diversity")
-    dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "95% Lower", "95% Upper")
+    dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "Lower_CI", "Upper_CI")
     index <- ftable(arr, row.vars = c(3,1))
   }else{
     stop("invalid class of x, x should be a object of numeric, matrix, data.frame, or list")

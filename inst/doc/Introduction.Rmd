@@ -27,7 +27,7 @@ data("plant")
 (`q = 2`, the inverse of Simpson concentration). For each diversity measure, `iNEXT` uses the observed sample of abundance or incidence data (called the “reference sample”) 
 to compute diversity estimates and the associated 95% confidence intervals for the following two types of rarefaction and extrapolation (R/E): 
 
-1. Sample‐size‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples up to a proper size. This type of sampling curve plots the diversity estimates with respect to sample size.     
+1. Sample‐size‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples up to an appropriate size. This type of sampling curve plots the diversity estimates with respect to sample size.     
 2. Coverage‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples with sample completeness (as measured by sample coverage) up to an appropriate coverage. This type of sampling curve plots the diversity estimates with respect to sample coverage. 
 
 `iNEXT` also plots the above two types of sampling curves and a sample completeness curve. The sample completeness curve provides a bridge between these two types of curves.
@@ -61,7 +61,7 @@ library(ggplot2)
 We first describe the main function `iNEXT()` with default arguments: 
 
 ```{r eval=FALSE}
-iNEXT(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, nboot=50)
+iNEXT(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, conf=0.95, nboot=50)
 ```
 
 The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. This main function computes diversity estimates of order q, the sample coverage estimates and related statistics for K (if `knots=K`) evenly‐spaced knots (sample sizes) between size 1 and the `endpoint`, where the endpoint is described below. Each knot represents a particular sample size for which diversity estimates will be calculated. By default, endpoint = double the reference sample size (total sample size for abundance data; total sampling units for incidence data). For example, if `endpoint = 10`, `knot = 4`, diversity estimates will be computed for a sequence of samples with sizes (1, 4, 7, 10).  
@@ -103,12 +103,17 @@ The arguments of this function are briefly described below, and will be explaine
 </tr>
 <tr class="odd">
 <td align="center"><code>se</code></td>
-<td align="left">a logical variable to calculate the bootstrap standard error and 95% confidence interval.</td>
+<td align="left">a logical variable to calculate the bootstrap standard error and <code>conf</code> confidence interval.</td>
 </tr>
 <tr class="even">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive number < 1 specifying the level of confidence interval.</td>
+</tr>
+<tr class="odd">
 <td align="center"><code>nboot</code></td>
 <td align="left">an integer specifying the number of bootstrap replications.</td>
 </tr>
+
 </tbody>
 </table>
 
@@ -123,7 +128,7 @@ Three types of data are supported:
 
 2. Sampling‐unit‐based incidence data: There are two kinds of input data.  
   (1) Incidence‐raw data (`datatype="incidence_raw"`): for each assemblage, input data for a reference sample consist of a species‐by‐sampling‐unit matrix; when there are N assemblages, input data consist of N lists of matrices, and each matrix is a species‐by‐sampling‐unit matrix.  
-  (2) Incidence‐frequency data (`datatype="incidence_freq"`): input data for each assemblage consist of species sample incidence frequencies (row sums of each incidence matrix). When there are N assemblages, input data consist of an S by N matrix, or N lists of species incidence frequencies.  
+  (2) Incidence‐frequency data (`datatype="incidence_freq"`): input data for each assemblage consist of species sample incidence frequencies (row sums of each incidence matrix). When there are N assemblages, input data consist of an S by N matrix, or N lists of species incidence frequencies. The first entry of each list must be the total number of sampling units, followed by the species incidence frequencies.
 
 ## RAREFACTION/EXTRAPOLATION VIA EXAMPLES
 
@@ -139,10 +144,10 @@ The `iNEXT()` function returns the `"iNEXT"` object including three data frames:
 statistics.  `$DataInfo`, as shown below, returns basic data information including the reference sample size (`n`), observed species richness (`S.obs`), a sample coverage estimate (`SC`), and the first ten frequency counts (`f1‐f10`). This part of output can also be computed by the function `DataInfo()`
 
 ```
-$DataInfo
-          n S.obs     SC f1 f2 f3 f4 f5 f6 f7 f8 f9 f10
-Girdled 168    26 0.9289 12  4  0  1  0  2  0  1  1   0
-Logged  252    37 0.9446 14  4  4  3  1  0  3  2  0   1
+$DataInfo: basic data information
+     site   n S.obs     SC f1 f2 f3 f4 f5 f6 f7 f8 f9 f10
+1 Girdled 168    26 0.9289 12  4  0  1  0  2  0  1  1   0
+2  Logged 252    37 0.9446 14  4  4  3  1  0  3  2  0   1
 ```
 
 For incidence data, the list `$DataInfo` includes the reference sample size (`T`), observed species richness (`S.obs`), total number of incidences (`U`), a sample coverage estimate (`SC`), and the first ten incidence frequency counts (`Q1‐Q10`). 
@@ -151,35 +156,34 @@ For incidence data, the list `$DataInfo` includes the reference sample size (`T`
 
 In the Girdled treatment site, by default, 40 equally spaced knots (samples sizes) between 1 and 336 (= 2 x 168, double reference sample size, Chao et al. 2014) are selected. Diversity estimates and related statistics are computed for these 40 knots (corresponding to sample sizes m = 1, 10, 19, …, 336), which locates the reference sample at the mid‐point of the selected knots. If the argument se=TRUE, then the bootstrap method is applied to obtain the 95% confidence intervals for each diversity and sample coverage estimates. 
 
-For the sample size corresponding to each knot, the list `$iNextEst` (as shown below for the Girdled treatment site) includes the sample size (`m`, i.e., each of the 40 knots), the method (`interpolated`, `observed`, or `extrapolated`, depending on whether the size `m` is less than, equal to, or greater than the reference sample size), the diversity order, the diversity estimate of order q (`qD`), the 95% lower and upper confidence limits of diversity (`qD.95.LCL`, `qD.95.UCL`), and the sample coverage estimate (`SC`) along with the 95% lower and upper confidence limits of sample coverage (`SC.95.LCL`, `SC.95.UCL`). These sample coverage estimates with confidence intervals are used for plotting the sample completeness curve and coverage‐based R/E curves. 
+For the sample size corresponding to each knot, the list `$iNextEst` (as shown below for the Girdled treatment site) includes the sample size (`m`, i.e., each of the 40 knots), the method (`interpolated`, `observed`, or `extrapolated`, depending on whether the size `m` is less than, equal to, or greater than the reference sample size), the diversity order, the diversity estimate of order q (`qD`), the 95% lower and upper confidence limits of diversity (`qD.LCL`, `qD.UCL`), and the sample coverage estimate (`SC`) along with the 95% lower and upper confidence limits of sample coverage (`SC.LCL`, `SC.UCL`). These sample coverage estimates with confidence intervals are used for plotting the sample completeness curve and coverage-based R/E curves. 
 
 
 ```
-$iNextEst
-$iNextEst$Girdled
-   m       method     order   qD   qD.95.LCL qD.95.UCL SC SC.95.LCL SC.95.UCL
-1    1 interpolated     0  1.000     1.000     1.000 0.122     0.090     0.154
-2   10 interpolated     0  6.479     5.981     6.977 0.597     0.541     0.653
-3   19 interpolated     0  9.450     8.533    10.367 0.738     0.691     0.785
-.
-20  168    observed     0 26.000    21.298    30.702 0.929     0.898     0.960
-.
-39 327 extrapolated     0 34.396    26.269    42.524 0.962     0.936     0.988
-40 336 extrapolated     0 34.731    26.419    43.042 0.964     0.938     0.990
+$iNextEst: diversity estimates with rarefied and extrapolated samples.
+$Girdled
+     m       method order     qD qD.LCL qD.UCL    SC SC.LCL SC.UCL
+1    1 interpolated     0  1.000  1.000  1.000 0.122  0.089  0.156
+10  84 interpolated     0 18.912 15.902 21.923 0.900  0.872  0.927
+20 168     observed     0 26.000 21.492 30.508 0.929  0.904  0.954
+30 248 extrapolated     0 30.883 25.149 36.618 0.948  0.918  0.979
+40 336 extrapolated     0 34.731 27.187 42.275 0.964  0.931  0.996
+
+NOTE: Only show five estimates, call iNEXT.objext$iNextEst. to show complete output.
 ```
 
 `$AsyEst` lists the observed diversity, asymptotic estimates, estimated bootstrap s.e. and 95% confidence intervals for Hill numbers with q = 0, 1, and 2. The estimated asymptotes are calculated via the functions `ChaoSpecies()` for q = 0, `ChaoEntropy()` for q = 1 and `EstSimpson()` for q = 2; see Chao et al. (2014) for asymptotic estimators. The output for the spider data is shown below. All row and column variables are self‐explanatory. 
 
 ```
-$AsyEst
-                           Observed   Estimator   Est_s.e. 95% Lower 95% Upper
-                                                                             
-Girdled  Species richness     26.000    43.893    14.306    30.511     96.971
-         Shannon diversity    12.060    13.826    1.438     12.060     16.645
-         Simpson diversity    7.840     8.175     0.930     7.840      9.999
-Logged   Species richness     37.000    61.403    18.532    43.502     128.583
-         Shannon diversity    14.421    16.337    1.493     14.421     19.263
-         Simpson diversity    6.761     6.920     0.852     6.761      8.591
+$AsyEst: asymptotic diversity estimates along with related statistics.
+                           Observed Estimator Est_s.e. Lower_CI Upper_CI
+                                                                        
+Girdled Species richness     26.000    43.893   14.306   30.511   96.971
+        Shannon diversity    12.060    13.826    1.531   12.060   16.827
+        Simpson diversity     7.840     8.175    0.879    7.840    9.897
+Logged  Species richness     37.000    61.403   18.532   43.502  128.583
+        Shannon diversity    14.421    16.337    1.629   14.421   19.531
+        Simpson diversity     6.761     6.920    0.802    6.761    8.492
 ```
 
 The user may specify an integer sample size for the argument endpoint to designate the maximum sample size of R/E calculation. For species richness, the extrapolation method is reliable up to the double reference sample size; beyond that, the prediction bias may be large. However, for measures of q = 1 and 2, the extrapolation can usually be safely extended to the asymptote if data are not sparse; thus there is no limit for the value of endpoint for these two measures. 
@@ -199,6 +203,13 @@ Further, `iNEXT` can simultaneously run R/E computation for Hill numbers with q 
 out <- iNEXT(spider, q=c(0,1,2), datatype="abundance", size=m)
 ```
 
+Remark that a data.frame input format for abundance-based analysis also allows in iNEXT:
+```{r eval=FALSE}
+data(bird)
+str(bird) # 41 obs. of 2 variables
+iNEXT(bird, q=0, datatype="abundance")
+```
+
 ## GRAPHIC DISPLAYS: FUNCTION ggiNEXT()
 
 The function `ggiNEXT()`, which extends `ggplot2` to the `"iNEXT"` object with default arguments, is described as follows: 
@@ -207,11 +218,11 @@ ggiNEXT(x, type=1, se=TRUE, facet.var="none", color.var="site", grey=FALSE)
 ```
 Here `x` is an `"iNEXT"` object. Three types of curves are allowed:  
 
-(1) Sample‐size‐based R/E curve (`type=1`): see Figs. 1a and 2a in the main text. This curve plots diversity estimates with confidence intervals (if `se=TRUE`) as a function of sample size up to double the reference sample `size`, by default, or a user‐specified `endpoint`.  
+(1) Sample-size-based R/E curve (`type=1`): see Figs. 1a and 2a in the main text. This curve plots diversity estimates with confidence intervals (if `se=TRUE`) as a function of sample size up to double the reference sample size, by default, or a user‐specified `endpoint`.  
 
 (2) Sample completeness curve (`type=2`) with confidence intervals (if `se=TRUE`): see Figs. 1b and 2b in the main text. This curve plots the sample coverage with respect to sample size for the same range described in (1).  
 
-(3) Coverage‐based R/E curve (`type=3`): see Figs. 1c and 2c in the main text. This curve plots the diversity estimates with confidence intervals (if `se=TRUE`) as a 
+(3) Coverage-based R/E curve (`type=3`): see Figs. 1c and 2c in the main text. This curve plots the diversity estimates with confidence intervals (if `se=TRUE`) as a 
 function of sample coverage up to the maximum coverage obtained from the maximum size described in (1). 
 
 The argument `facet.var=("none", "order", "site" or "both")` is used to create a separate plot for each value of the specified variable. For example, the following code displays a separate plot (in Figs 1a and 1c) for each value of the diversity order q. The user may also use the argument `grey=TRUE` to plot black/white figures. The usage of color.var is illustrated in the incidence data example described in later text. The `ggiNEXT()` function is a wrapper around 
@@ -331,7 +342,7 @@ estimateD(ant, datatype="incidence_freq",
 
 ## RAW INCIDENCE DATA FUNCTION: incidence_raw
 
-Note that `datatype="incidence_raw"` is a new feature in iNEXT version 2.0.6. We here demonstrate its use via the plant data from three coastal dune habitats. The data set (`plant`) included in the package is a list of thee matrices; each matrix is a species by plots data.frame. Run the following commands to get the output graphics as shown below. 
+Note that `datatype="incidence_raw"` is a new feature in iNEXT version 2.0.6. We here demonstrate its use via the plant data from three coastal dune habitats. The data set (`plant`) included in the package is a list of three matrices; each matrix is a species by plots data.frame. Run the following commands to get the output graphics as shown below. 
 
 ```{r}
 data(plant)
@@ -377,6 +388,128 @@ ggiNEXT(out, type=1, facet.var="order") +
 ggiNEXT(out, type=1, facet.var="site") +
   scale_shape_manual(values=c(19,19,19))
 ```
+
+## General customization
+The data visualization package [`ggplot2`](http://cran.fhcrc.org/web/packages/ggplot2/index.html) provides `scale_` function to customize  data which is mapped into an aesthetic property of a `geom_`. The following functions would help user to customize `ggiNEXT` output.
+
+- change point shape: `scale_shape_manual`    
+- change line type : `scale_linetype_manual`    
+- change line color: `scale_colour_manual`    
+- change band color: `scale_fill_manual`    
+see [quick reference](http://sape.inf.usi.ch/quick-reference/ggplot2/scale) for style setting.
+
+### Example: `spider` data
+To show how to custmized `ggiNEXT` output, we use abundance-based data `spider` as an example.
+```{r}
+library(iNEXT)
+library(ggplot2)
+library(gridExtra)
+library(grid)
+data("spider")
+out <- iNEXT(spider, q=0, datatype="abundance")
+g <- ggiNEXT(out, type=1, color.var = "site")
+g
+```
+
+### Change shapes, line types and colors
+```{r}
+g1 <- g + scale_shape_manual(values=c(11, 12)) + 
+          scale_linetype_manual(values=c(1,2))
+g2 <- g + scale_colour_manual(values=c("red", "blue")) +
+          scale_fill_manual(values=c("red", "blue"))
+
+# Draw multiple graphical objec on a page
+# library(gridExtra)
+grid.arrange(g1, g2, ncol=2)
+```
+
+## Customize point/line size by hacking
+In order to chage the size of reference sample point or rarefaction/extrapolation curve, user need modify `ggplot` object.
+
+- change point size:    
+the reference sample size point is drawn on the first layer by `ggiNEXT`. Hacking point size by the following
+```{r}
+# point is drawn on the 1st layer, default size is 5
+gb3 <- ggplot_build(g)
+gb3$data[[1]]$size <- 10
+gt3 <- ggplot_gtable(gb3)
+
+# use grid.draw to draw the graphical object
+# library(grid)
+# grid.draw(gt3)
+```
+
+- change line width (size):      
+the reference sample size point is drawn on the second layer by `ggiNEXT`. Hacking point size by the following
+```{r}
+# line is drawn on the 2nd layer, default size is 1.5
+gb4 <- ggplot_build(g)
+gb4$data[[2]]$size <- 3
+gt4 <- ggplot_gtable(gb4)
+# grid.draw(gt4)
+```
+```{r}
+grid.arrange(gt3, gt4, ncol=2)
+```
+
+
+## Customize theme
+A `ggplot` object can be themed by adding a theme. User could run `help(theme_grey)` to show the default themes in `ggplot2`. Further, some extra themes provided by  [`ggthemes`](http://cran.fhcrc.org/web/packages/ggthemes/index.html) package. Examples shown in the following:
+```{r}
+g5 <- g + theme_bw() + theme(legend.position = "bottom")
+g6 <- g + theme_classic() + theme(legend.position = "bottom")
+grid.arrange(g5, g6, ncol=2)
+```
+```{r}
+library(ggthemes)
+g7 <- g + theme_hc(bgcolor = "darkunica") +
+          scale_colour_hc("darkunica")
+
+g8 <- g + theme_economist() + scale_colour_economist()
+grid.arrange(g7, g8, ncol=2)
+```
+
+### Black-White theme
+The following are custmized themes for black-white figure. To modifiy legend, see [Cookbook for R](http://www.cookbook-r.com/Graphs/Legends_(ggplot2)/) for more details.
+
+```{r}
+g9 <- g + theme_bw(base_size = 18) +
+      scale_fill_grey(start = 0, end = .4) +
+      scale_colour_grey(start = .2, end = .2) +
+      theme(legend.position="bottom",
+            legend.title=element_blank())
+
+g10 <- g + theme_tufte(base_size = 12) +       
+    scale_fill_grey(start = 0, end = .4) +
+    scale_colour_grey(start = .2, end = .2) +
+    theme(legend.position="bottom",
+          legend.title=element_blank())
+grid.arrange(g9, g10, ncol=2)
+```
+
+### Draw R/E curves by yourself
+In [`iNEXT`](http://cran.fhcrc.org/web/packages/iNEXT/index.html), we provide a S3 `ggplot2::fortify` method for class `iNEXT`. The function `fortify` offers a single plotting interface for rarefaction/extrapolation curves. Set  argument `type = 1, 2, 3` to plot the corresponding rarefaction/extrapolation curves.
+```{r}
+df <- fortify(out, type=1)
+head(df)
+
+df.point <- df[which(df$method=="observed"),]
+df.line <- df[which(df$method!="observed"),]
+df.line$method <- factor(df.line$method, 
+                         c("interpolated", "extrapolated"),
+                         c("interpolation", "extrapolation"))
+ 
+ggplot(df, aes(x=x, y=y, colour=site)) + 
+  geom_point(aes(shape=site), size=5, data=df.point) +
+  geom_line(aes(linetype=method), lwd=1.5, data=df.line) +
+  geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
+                  fill=site, colour=NULL), alpha=0.2) +
+  labs(x="Number of individuals", y="Species diversity") +
+  theme(legend.position = "bottom", 
+        legend.title=element_blank(),
+        text=element_text(size=18)) 
+```
+
 
 ## License
 The iNEXT package is licensed under the GPLv3. To help refine `iNEXT`, your comments or feedbacks would be welcome (please send them to Anne Chao or report an issue on iNEXT github [reop](https://github.com/JohnsonHsieh/iNEXT)). 

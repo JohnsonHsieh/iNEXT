@@ -224,10 +224,10 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$site <- ""
   }
   
-  if("qD.95.LCL" %in% names(z) == FALSE) {
+  if("qD.LCL" %in% names(z) == FALSE) {
     warning("invalid se setting, the iNEXT object do not consist confidence interval")
     se <- FALSE
-  }else if("qD.95.LCL" %in% names(z)) {
+  }else if("qD.LCL" %in% names(z)) {
     se <- TRUE
   }
   
@@ -235,8 +235,8 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$x <- z[,1]
     z$y <- z$qD
     if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
+      z$y.lwr <- z$qD.LCL
+      z$y.upr <- z$qD.UCL
     }
   }else if(type==2L){
     if(length(unique(z$order))>1){
@@ -245,15 +245,15 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$x <- z[,1]
     z$y <- z$SC
     if(se){
-      z$y.lwr <- z$SC.95.LCL
-      z$y.upr <- z$SC.95.UCL
+      z$y.lwr <- z$SC.LCL
+      z$y.upr <- z$SC.UCL
     }
   }else if(type==3L){
     z$x <- z$SC
     z$y <- z$qD
     if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
+      z$y.lwr <- z$qD.LCL
+      z$y.upr <- z$qD.UCL
     }
   }
   z$datatype <- datatype
