@@ -5,7 +5,7 @@
 \title{iNterpolation and EXTrapolation of Hill number}
 \usage{
 iNEXT(x, q = 0, datatype = "abundance", size = NULL, endpoint = NULL,
-  knots = 40, se = TRUE, nboot = 50, conf = 0.95)
+  knots = 40, se = TRUE, conf = 0.95, nboot = 50)
 }
 \arguments{
 \item{x}{a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list.}
@@ -26,7 +26,9 @@ each knot represents a particular sample size for which diversity estimate will 
 If the \code{endpoint} is smaller than the reference sample size, then \code{iNEXT()} computes only the rarefaction esimates for approximately K evenly spaced \code{knots}. 
 If the \code{endpoint} is larger than the reference sample size, then \code{iNEXT()} computes rarefaction estimates for approximately K/2 evenly spaced \code{knots} between sample size 1 and the reference sample size, and computes extrapolation estimates for approximately K/2 evenly spaced \code{knots} between the reference sample size and the \code{endpoint}.}
 
-\item{se}{a logical variable to calculate the bootstrap standard error and 95\% confidence interval.}
+\item{se}{a logical variable to calculate the bootstrap standard error and \code{conf} confidence interval.}
+
+\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95}
 
 \item{nboot}{an integer specifying the number of replications.}
 }
