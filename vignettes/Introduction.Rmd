@@ -6,7 +6,7 @@ output:
   rmarkdown::html_vignette:
     vignette: >
       %\VignetteIndexEntry{A Quick Introduction to iNEXT via Examples}
-      %\VignetteEngine{knitr::rmarkdown}
+      %\VignetteEngine{rmarkdown::render}
       %\VignetteEncoding{UTF-8}
 ---
 ```{r, include = FALSE}
