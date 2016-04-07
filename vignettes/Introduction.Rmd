@@ -6,7 +6,7 @@ output:
   rmarkdown::html_vignette:
     vignette: >
       %\VignetteIndexEntry{A Quick Introduction to iNEXT via Examples}
-      %\VignetteEngine{rmarkdown::render}
+      %\VignetteEngine{knitr::rmarkdown}
       %\VignetteEncoding{UTF-8}
 ---
 ```{r, include = FALSE}
@@ -21,7 +21,7 @@ data("spider")
 data("ant")
 data("plant")
 ```
-`iNEXT` (iNterpolation and EXTrapolation) is an R package modified from the original version which was supplied in the Supplement of Chao et al. (2014). In the latest updated version, we have added more user‐friendly features and refined the graphic displays. In this document, we provide a quick introduction demonstrating how to run `iNEXT`. Detailed information about `iNEXT` functions is provided in the iNEXT Manual, also available in [CRAN](https://cran.r-project.org/web/packages/iNEXT/index.html). See Chao & Jost (2012), Colwell et al. (2012) and Chao et al. (2014) for methodologies. A short review of the theoretical background and a brief description of methods are included in an application paper by Hsieh, Ma & Chao (2016). An online version of `iNEXT` (<https://chao.shinyapps.io/iNEXT/>) is also available for users without an R background.
+`iNEXT` (iNterpolation and EXTrapolation) is an R package modified from the original version which was supplied in the Supplement of Chao et al. (2014). In the latest updated version, we have added more user‐friendly features and refined the graphic displays. In this document, we provide a quick introduction demonstrating how to run `iNEXT`. Detailed information about `iNEXT` functions is provided in the iNEXT Manual, also available in [CRAN]( https://cran.r-project.org/package=iNEXT). See Chao & Jost (2012), Colwell et al. (2012) and Chao et al. (2014) for methodologies. A short review of the theoretical background and a brief description of methods are included in an application paper by Hsieh, Ma & Chao (2016). An online version of `iNEXT` (<http://chao.stat.nthu.edu.tw/wordpress/software_download/inext-online/>) is also available for users without an R background.
 
 `iNEXT` focuses on three measures of Hill numbers of order q: species richness (`q = 0`), Shannon diversity (`q = 1`, the exponential of Shannon entropy) and Simpson diversity 
 (`q = 2`, the inverse of Simpson concentration). For each diversity measure, `iNEXT` uses the observed sample of abundance or incidence data (called the “reference sample”) 
@@ -37,7 +37,7 @@ to compute diversity estimates and the associated 95% confidence intervals for t
 - Suggested: [RStudio IDE](https://www.rstudio.com/products/RStudio/#Desktop)
 
 ## HOW TO RUN INEXT:
-The `iNEXT` package is available on [CRAN](https://cran.r-project.org/web/packages/iNEXT/index.html) and can be downloaded with a standard R installation procedure using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be loaded. 
+The `iNEXT` package is available on [CRAN](https://cran.r-project.org/package=iNEXT) and can be downloaded with a standard R installation procedure using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be loaded. 
 
 
 ```{r eval=FALSE}
@@ -390,7 +390,7 @@ ggiNEXT(out, type=1, facet.var="site") +
 ```
 
 ## General customization
-The data visualization package [`ggplot2`](http://cran.fhcrc.org/web/packages/ggplot2/index.html) provides `scale_` function to customize  data which is mapped into an aesthetic property of a `geom_`. The following functions would help user to customize `ggiNEXT` output.
+The data visualization package [`ggplot2`](https://cran.r-project.org/package=ggplot2) provides `scale_` function to customize  data which is mapped into an aesthetic property of a `geom_`. The following functions would help user to customize `ggiNEXT` output.
 
 - change point shape: `scale_shape_manual`    
 - change line type : `scale_linetype_manual`    
@@ -454,7 +454,7 @@ grid.arrange(gt3, gt4, ncol=2)
 
 
 ## Customize theme
-A `ggplot` object can be themed by adding a theme. User could run `help(theme_grey)` to show the default themes in `ggplot2`. Further, some extra themes provided by  [`ggthemes`](http://cran.fhcrc.org/web/packages/ggthemes/index.html) package. Examples shown in the following:
+A `ggplot` object can be themed by adding a theme. User could run `help(theme_grey)` to show the default themes in `ggplot2`. Further, some extra themes provided by  [`ggthemes`](https://cran.r-project.org/package=ggthemes) package. Examples shown in the following:
 ```{r}
 g5 <- g + theme_bw() + theme(legend.position = "bottom")
 g6 <- g + theme_classic() + theme(legend.position = "bottom")
@@ -488,7 +488,7 @@ grid.arrange(g9, g10, ncol=2)
 ```
 
 ### Draw R/E curves by yourself
-In [`iNEXT`](http://cran.fhcrc.org/web/packages/iNEXT/index.html), we provide a S3 `ggplot2::fortify` method for class `iNEXT`. The function `fortify` offers a single plotting interface for rarefaction/extrapolation curves. Set  argument `type = 1, 2, 3` to plot the corresponding rarefaction/extrapolation curves.
+In [`iNEXT`]( https://cran.r-project.org/package=iNEXT), we provide a S3 `ggplot2::fortify` method for class `iNEXT`. The function `fortify` offers a single plotting interface for rarefaction/extrapolation curves. Set  argument `type = 1, 2, 3` to plot the corresponding rarefaction/extrapolation curves.
 ```{r}
 df <- fortify(out, type=1)
 head(df)

@@ -43,10 +43,10 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     z$site <- factor(z$site)
   }
   
-  if("qD.95.LCL" %in% names(z) == FALSE & se) {
+  if("qD.LCL" %in% names(z) == FALSE & se) {
     warning("invalid se setting, the iNEXT object do not consist confidence interval")
     se <- FALSE
-  }else if("qD.95.LCL" %in% names(z) & se) {
+  }else if("qD.LCL" %in% names(z) & se) {
     se <- TRUE
   }else{
     se <- FALSE
@@ -58,8 +58,8 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[2]=="n", "Number of individuals", "Number of sampling units")
     if(!is.null(ylab)) ylab <- "Species diversity"
     if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
+      z$y.lwr <- z$qD.LCL
+      z$y.upr <- z$qD.UCL
     }
   }else if(type==2L){
     if(length(unique(z$order))>1){
@@ -70,8 +70,8 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[2]=="n", "Number of individuals", "Number of sampling units")
     if(!is.null(ylab)) ylab <- "Sample coverage"
     if(se){
-      z$y.lwr <- z$SC.95.LCL
-      z$y.upr <- z$SC.95.UCL
+      z$y.lwr <- z$SC.LCL
+      z$y.upr <- z$SC.UCL
     }
   }else if(type==3L){
     z$x <- z$SC
@@ -79,8 +79,8 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     if(!is.null(xlab)) xlab <- "Sample coverage"
     if(!is.null(ylab)) ylab <- "Species diversity"
     if(se){
-      z$y.lwr <- z$qD.95.LCL
-      z$y.upr <- z$qD.95.UCL
+      z$y.lwr <- z$qD.LCL
+      z$y.upr <- z$qD.UCL
     }
   }
   
