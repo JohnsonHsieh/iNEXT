@@ -317,8 +317,8 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL){
 #' @param x a \code{data.frame} or \code{matirx} of species by sites presence-absence matrix.
 #' @return a \code{vector} of species incidence frequencies, the first entry of the input data must be total number of sampling units.
 #' @examples
-#' data(plant)
-#' lapply(plant, as.incfreq)
+#' data(ciliates)
+#' lapply(ciliates, as.incfreq)
 #' 
 #' @export
 #' 

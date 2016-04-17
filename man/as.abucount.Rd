@@ -16,8 +16,8 @@ a \code{vector} of species abundance row-sum counts.
 \code{as.abucount}: transform abundance raw data (a species by sites matrix) to abundance rwo-sum counts data (iNEXT input format).
 }
 \examples{
-data(plant)
-lapply(plant, as.abucount)
+data(ciliates)
+lapply(ciliates, as.abucount)
 
 }
 
