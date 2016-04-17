@@ -324,7 +324,7 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL){
 #' 
 as.incfreq <- function(x){
   if(class(x) == "data.frame" | class(x) == "matrix"){
-    a <- unique(c(unlist(x)))
+    a <- sort(as.numeric(unique(c(unlist(x)))))
     if(!identical(a, c(0,1))){
       warning("Invalid data type, the element of species by sites presence-absence matrix should be 0 or 1. Set nonzero elements as 1.")
       x <- (x > 0)
