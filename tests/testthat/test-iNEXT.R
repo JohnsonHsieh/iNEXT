@@ -46,16 +46,16 @@ test_that("iNEXT for sampling-unit-based incidence frequencies data", {
 
 test_that("iNEXT for species by sampling-units incidence matrix", {
   # Test input by a demo data
-  data(plant)
+  data(ciliates)
   options(warn=-1)
-  out <- iNEXT(plant, q=0, datatype="incidence_raw")
+  out <- iNEXT(ciliates, q=0, datatype="incidence_raw")
   expect_is(out, "iNEXT")
   expect_output(str(out), "List of 3")
   expect_equal(names(out$DataInfo)[2], "T")
-  expect_equal(nrow(out$DataInfo), length(plant))
+  expect_equal(nrow(out$DataInfo), length(ciliates))
   
   # Test input by a data.frame
-  x <- plant$Embryo
+  x <- ciliates$EtoshaPan
   expect_equal(class(x), "matrix")
   out <- iNEXT(x, q=0, datatype="incidence_raw")
   expect_is(out, "iNEXT")

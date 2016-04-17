@@ -349,8 +349,8 @@ as.incfreq <- function(x){
 #' @param x a \code{data.frame} or \code{matirx} of species by sites matrix.
 #' @return a \code{vector} of species abundance row-sum counts.
 #' @examples
-#' data(plant)
-#' lapply(plant, as.abucount)
+#' data(ciliates)
+#' lapply(ciliates, as.abucount)
 #' 
 #' @export
 #' 
