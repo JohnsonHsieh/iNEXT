@@ -8,7 +8,7 @@ library(iNEXT)
 library(ggplot2)
 data("spider")
 data("ant")
-data("plant")
+data("ciliates")
 
 ## ----eval=FALSE----------------------------------------------------------
 #  ## install iNEXT package from CRAN
@@ -114,11 +114,11 @@ estimateD(ant, datatype="incidence_freq",
           base="coverage", level=0.985)
 
 ## ------------------------------------------------------------------------
-data(plant)
-str(plant)
+data(ciliates)
+str(ciliates)
 
 ## ------------------------------------------------------------------------
-out.raw <- iNEXT(plant, datatype="incidence_raw", endpoint=150)
+out.raw <- iNEXT(ciliates, datatype="incidence_raw", endpoint=150)
 ggiNEXT(out.raw)
 
 ## ------------------------------------------------------------------------

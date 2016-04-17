@@ -19,7 +19,7 @@ library(iNEXT)
 library(ggplot2)
 data("spider")
 data("ant")
-data("plant")
+data("ciliates")
 ```
 `iNEXT` (iNterpolation and EXTrapolation) is an R package modified from the original version which was supplied in the Supplement of Chao et al. (2014). In the latest updated version, we have added more user‐friendly features and refined the graphic displays. In this document, we provide a quick introduction demonstrating how to run `iNEXT`. Detailed information about `iNEXT` functions is provided in the iNEXT Manual, also available in [CRAN]( https://cran.r-project.org/package=iNEXT). See Chao & Jost (2012), Colwell et al. (2012) and Chao et al. (2014) for methodologies. A short review of the theoretical background and a brief description of methods are included in an application paper by Hsieh, Ma & Chao (2016). An online version of `iNEXT` (<http://chao.stat.nthu.edu.tw/wordpress/software_download/inext-online/>) is also available for users without an R background.
 
@@ -342,14 +342,14 @@ estimateD(ant, datatype="incidence_freq",
 
 ## RAW INCIDENCE DATA FUNCTION: incidence_raw
 
-Note that `datatype="incidence_raw"` is a new feature in iNEXT version 2.0.6. We here demonstrate its use via the plant data from three coastal dune habitats. The data set (`plant`) included in the package is a list of three matrices; each matrix is a species by plots data.frame. Run the following commands to get the output graphics as shown below. 
+Note that `datatype="incidence_raw"` is a new feature in iNEXT version 2.0.6. We here demonstrate its use via the ciliates data from three coastal dune habitats. The data set (`ciliates`) included in the package is a list of three matrices; each matrix is a species by plots data.frame. Run the following commands to get the output graphics as shown below. 
 
 ```{r}
-data(plant)
-str(plant)
+data(ciliates)
+str(ciliates)
 ```
 ```{r}
-out.raw <- iNEXT(plant, datatype="incidence_raw", endpoint=150)
+out.raw <- iNEXT(ciliates, datatype="incidence_raw", endpoint=150)
 ggiNEXT(out.raw)
 ```
 
