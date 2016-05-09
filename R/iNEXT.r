@@ -646,6 +646,9 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     dimnames(arr)[[1]] <- c("Species richness", "Shannon diversity", "Simpson diversity")
     dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "Lower_CI", "Upper_CI")
     index <- ftable(arr, row.vars = c(3,1))
+    index <- dcast(as.data.frame(index), formula = Var1+Var2~Var3, value.var = "Freq")
+    colnames(index) <- c("Site", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
+
     
   }else if(class(x)=="list"){
     out <- lapply(x, function(x) {
@@ -662,6 +665,10 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     dimnames(arr)[[1]] <- c("Species richness", "Shannon diversity", "Simpson diversity")
     dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "Lower_CI", "Upper_CI")
     index <- ftable(arr, row.vars = c(3,1))
+    index <- dcast(as.data.frame(index), formula = Var1+Var2~Var3, value.var = "Freq")
+    colnames(index) <- c("Site", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
+    
+    
   }else{
     stop("invalid class of x, x should be a object of numeric, matrix, data.frame, or list")
   }

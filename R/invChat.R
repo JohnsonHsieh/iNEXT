@@ -293,9 +293,15 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL){
   base <- match.arg(base, BASE)
   
   if(base=="size"){
-    invSize(x, datatype, size=level)
+    tmp <- invSize(x, datatype, size=level)
+    tmp <- cbind(Site=rownames(tmp), tmp)
+    rownames(tmp) <- NULL
+    tmp
   }else if(base=="coverage"){
-    invChat(x, datatype, C=level)
+    tmp <- invChat(x, datatype, C=level)
+    tmp <- cbind(Site=rownames(tmp), tmp)
+    rownames(tmp) <- NULL
+    tmp
   }
 }
 

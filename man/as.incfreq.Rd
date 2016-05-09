@@ -18,5 +18,6 @@ a \code{vector} of species incidence frequencies, the first entry of the input d
 \examples{
 data(ciliates)
 lapply(ciliates, as.incfreq)
+
 }
 

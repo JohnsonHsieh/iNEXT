@@ -1,6 +1,7 @@
 import(stats)
 import(ggplot2)
 import(graphics)
+import(reshape2)
 importFrom("grDevices", "adjustcolor", "hcl")
 S3method(print,iNEXT)
 S3method(plot,iNEXT)
