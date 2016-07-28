@@ -337,7 +337,7 @@ For example, the following command returns the species diversity with a specifie
 
 ```{r}
 estimateD(ant, datatype="incidence_freq", 
-          base="coverage", level=0.985)
+          base="coverage", level=0.985, conf=0.95)
 ```
 
 ## RAW INCIDENCE DATA FUNCTION: incidence_raw
