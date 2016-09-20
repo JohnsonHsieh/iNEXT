@@ -267,7 +267,14 @@ BootstrapFun <- function(x, FunName, datatype, B){
     A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
     Chat <- 1 - f1/n*A
     f0 <- max(round(f0.hat), 1)
-    lambda <- (1 - Chat) / sum(x / n * (1 - x / n)^n)
+    
+    if(f0.hat==0){
+      lambda <- 0
+      warning("This site has only one species. Estimation is not robust.")
+    }else{
+      lambda <- (1 - Chat) / sum(x / n * (1 - x / n)^n)
+    }
+    
     pi <- x / n * (1 - lambda * (1 - x /n)^n)
     pi.star <- c(pi, rep((1 - Chat) / f0, f0))
     #   set.seed(1234)
@@ -287,7 +294,14 @@ BootstrapFun <- function(x, FunName, datatype, B){
     A <- ifelse(Q1>0, t*Q0.hat/(t*Q0.hat+Q1), 1)
     Chat <- 1 - Q1/U*A
     Q0 <- max(round(Q0.hat), 1)
-    tau <- U / t * (1 - Chat) / sum(y / t * (1 - y / t)^t)
+    
+    if(Q0.hat==0){
+      tau <- 0
+      warning("This site has only one species. Estimation is not robust.")
+    }else{
+      tau <- U / t * (1 - Chat) / sum(y / t * (1 - y / t)^t)
+    }
+    
     pi <- y / t * (1 - tau * (1 - y / t)^t)
     pi.star <- c(pi, rep(U / t * (1 - Chat) / Q0, Q0))
     #   set.seed(456)

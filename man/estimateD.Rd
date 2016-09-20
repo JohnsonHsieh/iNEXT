@@ -4,7 +4,8 @@
 \alias{estimateD}
 \title{Compute species diversity with a particular of sample size/coverage}
 \usage{
-estimateD(x, datatype = "abundance", base = "size", level = NULL)
+estimateD(x, datatype = "abundance", base = "size", level = NULL,
+  conf = 0.95)
 }
 \arguments{
 \item{x}{a \code{data.frame} or \code{list} of species abundances or incidence frequencies.\cr 
@@ -16,9 +17,11 @@ sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq
 
 \item{base}{comparison base: sample-size-based (\code{base="size"}) or coverage-based \cr (\code{base="coverage"}).}
 
-\item{level}{an integer specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage. 
+\item{level}{an value specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage. 
 If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites. 
 If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites.}
+
+\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95. Remove C.I. by setting conf=NULL.}
 }
 \value{
 a \code{data.frame} of species diversity table including the sample size, sample coverage,
@@ -29,10 +32,10 @@ method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, an
 }
 \examples{
 data(spider)
-estimateD(spider, "abundance", base="size", level=NULL)
-estimateD(spider, "abundance", base="coverage", level=NULL)
+estimateD(spider, "abundance", base="size", level=NULL, conf=0.95)
+estimateD(spider, "abundance", base="coverage", level=NULL, conf=0.95)
 
 data(ant)
-estimateD(ant, "incidence_freq", base="coverage", level=0.985)
+estimateD(ant, "incidence_freq", base="coverage", level=0.985, conf=NULL)
 }
 

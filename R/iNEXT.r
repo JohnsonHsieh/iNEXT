@@ -43,7 +43,12 @@ EstiBootComm.Ind <- function(Spec)
   A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
   a <- f1/n*A
   b <- sum(Spec / n * (1 - Spec / n) ^ n)
-  w <- a / b      	#adjusted factor for rare species in the sample
+  if(f0.hat==0){
+    w <- 0
+    warning("This site has only one species. Estimation is not robust.")
+  }else{
+    w <- a / b      	#adjusted factor for rare species in the sample
+  }
   Prob.hat <- Spec / n * (1 - w * (1 - Spec / n) ^ n)					#estimation of relative abundance of observed species in the sample
   Prob.hat.Unse <- rep(a/ceiling(f0.hat), ceiling(f0.hat))  	#estimation of relative abundance of unseen species in the sample
   return(sort(c(Prob.hat, Prob.hat.Unse), decreasing=TRUE))		  							#Output: a vector of estimated relative abundance
@@ -74,7 +79,14 @@ EstiBootComm.Sam <- function(Spec)
   A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
   a <- Q1/nT*A
   b <- sum(Spec / nT * (1 - Spec / nT) ^ nT)
-  w <- a / b  			#adjusted factor for rare species in the sample
+  
+  if(Q0.hat==0){
+    w <- 0
+    warning("This site has only one species. Estimation is not robust.")
+  }else{
+    w <- a / b      	#adjusted factor for rare species in the sample
+  }
+  
   Prob.hat <- Spec / nT * (1 - w * (1 - Spec / nT) ^ nT)					#estimation of detection probability of observed species in the sample
   Prob.hat.Unse <- rep(a/ceiling(Q0.hat), ceiling(Q0.hat))  	#estimation of detection probability of unseen species in the sample
   return(sort(c(Prob.hat, Prob.hat.Unse), decreasing=TRUE))									#Output: a vector of estimated detection probability
