@@ -7,7 +7,7 @@ iNEXT (R package)
 <h4 style="text-align: right;">
 Most recent update time: March 19, 2016
 
-A Quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by
+A quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by
 </h4>
 <h5>
 Hsieh, T. C., K. H. Ma, and Anne Chao
@@ -16,7 +16,7 @@ Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043
 </h5>
 iNEXT (iNterpolation and EXTrapolation) is an R package modified from the original version supplied in the Supplement of Chao et al. (2014). In this updated version, we have added more user-friendly features and refined the graphic displays. Please notice the updated time and replace your old version by the most recent one. In this document, we provide a quick introduction to show how to run iNEXT. Detailed information about iNEXT functions is provided in [iNEXT Manual](http://chao.stat.nthu.edu.tw/blog/wp-content/uploads/2014/01/iNEXT-manual.pdf) which is also available in [CRAN](cran.r-project.org/web/packages/iNEXT/index.html). Examples/details are also included in an application paper by Hsieh et al. (2015).
 
-To run iNEXT, the user supplies a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies (called reference sample). If datatype = â€œincidence", then the first entry of the input data must be total number of sampling units in each column or list. iNEXT focuses on three measures of Hill numbers of order q: species richness (q = 0), Shannon diversity (q = 1, exponential of Shannon entropy) and Simpson diversity (q = 2, inverse of Simpson concentration). For each diversity measure, iNEXT computes the following two types of rarefaction (interpolation) and extrapolation (prediction) and the associated 95% confidence intervals:
+To run iNEXT, the user supplies a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies (called reference sample). If datatype = ?€œincidence", then the first entry of the input data must be total number of sampling units in each column or list. iNEXT focuses on three measures of Hill numbers of order q: species richness (q = 0), Shannon diversity (q = 1, exponential of Shannon entropy) and Simpson diversity (q = 2, inverse of Simpson concentration). For each diversity measure, iNEXT computes the following two types of rarefaction (interpolation) and extrapolation (prediction) and the associated 95% confidence intervals:
 
 1.  Sample-size-based rarefaction and extrapolation: diversity estimates for rarefied and extrapolated samples up to a maximum size (double reference sample size by default or a user-specified endpoint); see below.
 2.  Coverage-based rarefaction and extrapolation: diversity estimates for rarefied and extrapolated samples for sample coverage up to a maximum coverage that is obtained from the double reference sample size by default or a user-specified endpoint; see below).
@@ -89,7 +89,7 @@ The argument `facet.var="site"` in ggiNEXT function creates a separate plot for 
 
 ![](README/README-ex1-1.png)<!-- -->
 
-The argument `facet.var="order"` and `color.var = â€œsite"` creates a separate plot for each diversity order site, and within each plot, different colors are used for two sites.
+The argument `facet.var="order"` and `color.var = ?€œsite"` creates a separate plot for each diversity order site, and within each plot, different colors are used for two sites.
 
 ``` r
 ggiNEXT(out, type=1, facet.var="order", color.var="site")
