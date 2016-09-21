@@ -7,7 +7,7 @@ iNEXT (R package)
 <h4 style="text-align: right;">
 Most recent update time: March 19, 2016
 
-A quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by
+A Quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by
 </h4>
 <h5>
 Hsieh, T. C., K. H. Ma, and Anne Chao
