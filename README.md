@@ -188,13 +188,13 @@ ggiNEXT(out, type=2)
 ggiNEXT(out, type=3, facet.var="site")
 ```
 
-![](README/README-ex3-1-1.png) <br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
+![](README/README-ex3-1.png) <br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
 
 ``` r
 ggiNEXT(out, type=3, facet.var="order")
 ```
 
-![](README/README-ex3-2-1.png) <br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
+![](README/README-ex3-2.png) <br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
 
 ``` r
 # Separating plots by "order", and display black-white plots
