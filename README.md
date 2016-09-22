@@ -127,7 +127,7 @@ a logical variable to calculate the bootstrap standard error and confidence inte
 conf
 </td>
 <td style="text-align: left;">
-a positive number \< 1 specifying the level of confidence interval;
+a positive number < 1 specifying the level of confidence interval;
 </td>
 </tr>
 <tr>
@@ -205,7 +205,7 @@ ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 
 ### How to cite
 
-<i>.If you publish your work based on results from iNEXT (R package), please make reference to Hsieh et al. (2016) and Chao et al. (2014) given in the following list. </i>
+<i>If you publish your work based on results from iNEXT (R package), please make reference to Hsieh et al. (2016) and Chao et al. (2014) given in the following list. </i>
 
 ### Referance
 
