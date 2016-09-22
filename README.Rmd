@@ -19,45 +19,23 @@ iNEXT (R package)
 [![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT)
 [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/iNEXT)](https://github.com/metacran/cranlogs.app)
 
+<h5 align="right">Latest version: Sept. 22, 2016</h5>
 
-<h4 style="text-align: right;">Most recent update time: March 19, 2016
-
-A Quick Introduction to iNEXT: An R Package for Interpolation and Extrapolation of Hill Numbers by </h4>
-
-<h5>Hsieh, T. C., K. H. Ma, and Anne Chao
-
-Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043   
+<font color="394CAE"><h3 color= 394CAE style = "font-weight: bold"> Introduction to iNEXT (R package): Excerpt from iNEXT User’s Guide </h3> </font>
+<br>
+<h5><b>Hsieh, T. C., K. H. Ma, and Anne Chao</b>
+<br><br>
+<i>Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043</i>  
 </h5>
+<br>
+iNEXT (iNterpolation and EXTrapolation) is an R package, available in [CRAN](https://cran.r-project.org/web/packages/iNEXT/index.html) and [Github](https://github.com/AnneChao), for rarefaction and extrapolation of species diversity (Hill numbers). Here we provide a quick introduction demonstrating how to run iNEXT, and showing three types of sampling curves. See Chao & Jost (2012), Colwell et al. (2012) and Chao et al. (2014) for methodologies. A short review of theoretical background and methods relevant to the package are included in an application paper by [Hsieh, Ma & Chao (2016)](http://chao.stat.nthu.edu.tw/wordpress/paper/120_pdf_appendix.pdf). An online version of iNEXT Online is also available for users without an R background. Detailed information about all functions in iNEXT is provided in the iNEXT Manual in CRAN and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf),both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
 
+iNEXT focuses on three measures of Hill numbers of order q: species richness (q=0), Shannon diversity (q=1, the exponential of Shannon entropy) and Simpson diversity (q=2, the inverse of Simpson concentration). For each diversity measure, iNEXT uses the observed sample of abundance or incidence data (called the “reference sample”) to compute diversity estimates for rarefied and extrapolated samples and the associated 95% (default) confidence intervals as well as plot the following two types of rarefaction and extrapolation (R/E) curves:
 
-iNEXT (iNterpolation and EXTrapolation) is an R package modified from the original version supplied in the Supplement of Chao et al. (2014). In this updated version, we have added more user-friendly features and refined the graphic displays. Please notice the updated time and replace your old version by the most recent one. In this document, we provide a quick introduction to show how to run iNEXT. Detailed information about iNEXT functions is provided in [iNEXT Manual](http://chao.stat.nthu.edu.tw/blog/wp-content/uploads/2014/01/iNEXT-manual.pdf) which is also available in [CRAN](cran.r-project.org/web/packages/iNEXT/index.html). Examples/details are also included in an application paper by Hsieh et al. (2015).
+1.	Sample-size-based R/E sampling curves: iNEXT computes diversity estimates for rarefied and extrapolated samples up to double the reference sample size (by default) or a user-specified size. This type of sampling curve plots the diversity estimates with respect to sample size. Sample size refers to the number of individuals in a sample for abundance data, whereas it refers to the number of sampling units for incidence data. 
 
-To run iNEXT, the user supplies a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies (called reference sample). If datatype = “incidence", then the first entry of the input data must be total number of sampling units in each column or list. iNEXT focuses on three measures of Hill numbers of order q: species richness (q = 0), Shannon diversity (q = 1, exponential of Shannon entropy) and Simpson diversity (q = 2, inverse of Simpson concentration). For each diversity measure, iNEXT computes the following two types of rarefaction (interpolation) and extrapolation (prediction) and the associated 95% confidence intervals:
-
-1. Sample-size-based rarefaction and extrapolation: diversity estimates for rarefied and extrapolated samples up to a maximum size (double reference sample size by default or a user-specified endpoint); see below.
-2. Coverage-based rarefaction and extrapolation: diversity estimates for rarefied and extrapolated samples for sample coverage up to a maximum coverage that is obtained from the double reference sample size by default or a user-specified endpoint; see below).
-
-iNEXT also plots the following three integrated sampling curves suggested in Chao et al. (2014) for species diversity analysis.
-
-- Sample-size-based rarefaction and extrapolation sampling curve: this curve plots the diversity estimates with respect to sample size up to a maximum size (described above) by the following commands:
-
-```{r eval=FALSE}
-plot(object.iNEXT, type=1) # S3 method
-ggiNEXT(object.iNEXT, type=1) # ggplot2 method
-```
-
-- Sample completeness curve: this curve plots the sample completeness (as measured by sample coverage) with respect to sample size up to a maximum size described above. The curve provides a bridge between sample-size- and coverage-based rarefaction and extrapolation using the following commands:
-```{r eval=FALSE}
-plot(object.iNEXT, type=2) # S3 method
-ggiNEXT(object.iNEXT, type=2) # ggplot2 method
-```
-
-- Coverage-based rarefaction and extrapolation sampling curve: this curve plots the diversity estimates with respect to sample coverage up to a maximum coverage described above using the following commands:
-
-```{r eval=FALSE}
-plot(object.iNEXT, type=3) # S3 method
-ggiNEXT(object.iNEXT, type=3) # ggplot2 method
-```
+2.	Coverage-based R/E sampling curves: iNEXT computes diversity estimates for rarefied and extrapolated samples with sample completeness (as measured by sample coverage) up to the coverage value of double the reference sample size (by default) or a user-specified coverage. This type of sampling curve plots the diversity estimates with respect to sample coverage. 
+In addition to the above two types of sampling curves, iNEXT also plots a sample completeness curve, which depicts how the sample coverage estimate varies as a function of sample size. The sample completeness curve can be thought of as a bridge connecting the afore-mentioned two types of curves. 
 
 ### SOFTWARE NEEDED TO RUN INEXT IN R
 
@@ -66,23 +44,82 @@ ggiNEXT(object.iNEXT, type=3) # ggplot2 method
 
 ### HOW TO RUN INEXT:
 
-Start R(Studio) and copy-and-paste the following commands into R Console:
+The iNEXT package is available on CRAN and can be downloaded with a standard installation procedure using the commands shown below. It can also be downloaded from the github. For a first-time installation, an additional visualization extension package (ggplot2) must be loaded. 
+
 ```{r install, eval=FALSE}
 ## install iNEXT package from CRAN
 install.packages("iNEXT")
 
-## install the latest version from github
+## install iNEXT from github
 install.packages('devtools')
 library(devtools)
-install_github('JohnsonHsieh/iNEXT')
+install_github('AnneChao/iNEXT')
+
+## import packages
 library(iNEXT)
+library(ggplot2)
 ```
 Remark: In order to install `devtools` package, you should update R to the last version. Further, to get `install_github` to work, you should install the `httr` package.
 
+### MAIN FUNCTION: iNEXT()
 
-### EXAMPLE
+The main function iNEXT() with default arguments is described below:
+<br><br>
+iNEXT(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, conf=0.95, nboot=50)
+<br><br>
+This main function computes diversity estimates of order q, the sample coverage estimates and related statistics for K (if knots=K) evenly-spaced knots (sample sizes) between size 1 and the endpoint, where the endpoint is as described below. Each knot represents a particular sample size for which diversity estimates will be calculated. By default, endpoint is set to be double the reference sample size. 
 
-Two data sets (spider for abundance data and ant for incidence data) are included in iNEXT package. See Chao et al. (2014) for analysis details and data interpretations. Here we just demonstrate the implementation of iNEXT to obtain plots. We first use the spider data for demonstration. The spider data consist of abundance data from two canopy manipulation treatments (Girdled and Logged) of hemlock trees (Ellison et al. 2010). To obtain plots, copy-and-paste the following commands into R Console:
+
+
+This function returns an "iNEXT" object which can be further used to make plots using the function ggiNEXT() to be described below.
+
+```{r, echo=FALSE,warning=FALSE}
+Des <- c("x","a matrix, data.frame, lists of species abundances/incidences, or lists of incidence frequencies (see data format/information below); ",
+"q","	a number or vector specifying the diversity order(s) of Hill numbers;",
+"datatype"	,"type of input data, “abundance”, “incidence_raw”, or “incidence_freq”;", 
+"size","an integer vector of sample sizes for which diversity estimates will be computed. If NULL, then diversity estimates will be calculated for those sample sizes determined by the specified/default endpoint and knots;",
+"endpoint","an integer specifying the sample size that is the endpoint for R/E calculation; If NULL, then endpoint=double the reference sample size;",
+"knots","	an integer specifying the number of equally-spaced knots  (40, by default) between size 1 and the endpoint; ",
+"se",	"a logical variable to calculate the bootstrap standard error and confidence interval of a level specified by conf;",
+"conf","	a positive number < 1 specifying the level of confidence interval; ",
+"nboot","an integer specifying the number of bootstrap replications."
+)
+output <- 
+  matrix(Des, 
+         ncol=2, byrow = TRUE)
+
+library(htmlTable)
+htmlTable(output,
+          header =  c("Argument","Description"),align = "l"
+          )
+```
+This function returns an "iNEXT" object which can be further used to make plots using the function ggiNEXT() to be described below.
+
+### DATA FORMAT/INFORMATION
+
+Three types of data are supported: ("abundance", "incidence_raw", or "incidence_freq"): 
+
+1.	Individual-based abundance data (datatype="abundance"): Input data for each assemblage/site include sample species abundances in an empirical sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances. 
+
+2.	Sampling-unit-based incidence data:  There are two kinds of input data. 
+
+(2a) Incidence-raw data (datatype="incidence_raw"): for each assemblage, input data for a reference sample consist of a species-by-sampling-unit matrix; when there are N assemblages, input data consist of N lists of matrices, and each matrix is a species-by-sampling-unit matrix. 
+
+(2b) Incidence-frequency data (datatype="incidence_freq"): input data for each assemblage consist of species sample incidence frequencies (row sums of each incidence matrix). When there are N assemblages, input data consist of an S+1 by N matrix, or N lists of species incidence frequencies. The first entry of each column/list must be the total number of sampling units, followed by the species incidence frequencies.
+
+Four data sets (spider and bird for abundance data, and ant and ciliates for incidence data) are included in the iNEXT package for illustrating the data input formats and running procedures. 
+
+### BASIC GRAPHIC DISPLAYS: FUNCTION ggiNEXT()
+The ggiNEXT() function, which extends ggplot2 to the "iNEXT" object, is described as follows with default arguments:
+<br><br>
+ggiNEXT(x, type=1, se=TRUE, facet.var="none", color.var="site", grey=FALSE) 
+<br><br>
+Here x is an "iNEXT" object. Three types of curves are allowed: (1) Sample-size-based R/E curve (type=1) with confidence intervals (if se=TRUE). (2) Sample completeness curve (type=2) with confidence intervals (if se=TRUE). (3) Coverage-based R/E curve (type=3) with confidence intervals (if se=TRUE). 
+<br><br>
+The argument facet.var ("none", "order", "site" or "both") is used to create a separate plot for each value of the specified variable.  When facet.var="both", we can further use the argument color.var ("none", "order", "site" or "both") to display curves in a different color for each of the values of the specified variable. The user may also use the argument grey=TRUE to plot black/white figures. 
+
+
+### RAREFACTION/EXTRAPOLATION FOR SPIDER DATA (ABUNDANCE DATA)
 
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(comment="", message=FALSE, warning=FALSE)
@@ -90,95 +127,62 @@ library(iNEXT)
 library(ggplot2)
 ```
 
-```{r eval=FALSE}
+
+```{r ex1}
 data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
-ggiNEXT(out, type=1, facet.var="site")
-ggiNEXT(out, type=1, facet.var="order", color.var="site")
-
-## Not run:
-# display black-white theme
-ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
-
-# S3 method for class 'iNEXT'
-plot(out, type=1)
-## End(Not run)
-```
-The argument `facet.var="site"` in ggiNEXT function creates a separate plot for each site   as shown below:
-
-```{r ex1, echo=FALSE}
-data(spider)
-out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
+# Sample-size-based R/E curves, separating plots by "site"
 ggiNEXT(out, type=1, facet.var="site")
 ```
 
-The argument `facet.var="order"`  and `color.var = “site"` creates a separate plot for each diversity order site, and within each plot, different colors are used for two sites. 
 
 ```{r ex1b}
-ggiNEXT(out, type=1, facet.var="order", color.var="site")
+# Sample-size-based R/E curves, separating plots by "order"
+ggiNEXT(out, type=1, facet.var="order")
 ```
-
-The following commands returns the sample completeness curve in which different colors are used for the two sites:
+<br>
+To link the sample-sized and coverage-based sampling curves, it would be informative to first examine the sample completeness curve using the following command:
+```{r ex1c}
+ggiNEXT(out, type=2)
+```
+<br>
+The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
 
 ```{r eval=FALSE}
-ggiNEXT(out, type=2, facet.var="none", color.var="site")
+ggiNEXT(out, type=3, facet.var="site")
 ```
 ```{r ex2, echo=FALSE}
-ggiNEXT(out, type=2, facet.var="none", color.var="site")
-```
-
-```{r eval=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
-ggiNEXT(out, type=3, facet.var="order", color.var="site")
+```
+<br>
+The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
+```{r eval=FALSE}
+ggiNEXT(out, type=3, facet.var="order")
 ```
 ```{r ex3, echo=FALSE}
-ggiNEXT(out, type=3, facet.var="site")
-ggiNEXT(out, type=3, facet.var="order", color.var="site")
-
+ggiNEXT(out, type=3, facet.var="order")
 ```
-
-
-
-### Hacking ggiNEXT
-```{r ex5}
-# display black-white theme
+<br>
+The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples.  More graphic display options are described below.
+```{r eval=FALSE}
+# Separating plots by "order", and display black-white plots
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
-# free the scale of axis
-ggiNEXT(out, type=1, facet.var="order") + 
-  facet_wrap(~order, scales="free")
-# change the shape of reference sample size
-ggiNEXT(out, type=1, facet.var="site") + 
-  scale_shape_manual(values=c(19,19,19))
 ```
+```{r ex4, echo=FALSE}
+ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
+```
+<br>
+More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/). 
 
 
 ### How to cite
 
-If you use iNEXT to obtain results for publication, you should cite at least one of the relevant papers (Chao and Jost 2012; Colwell et al. 2012; Chao et al. 2014) along with the following reference for iNEXT:
+<i>.If you publish your work based on results from iNEXT (R package), please make reference to Hsieh et al. (2016) and Chao et al. (2014) given in the following list. </i>
 
-> Hsieh, T. C., K. H. Ma, and A. Chao. 2016. iNEXT: An R package for rarefaction and extrapolation of species diversity (Hill numbers). http://chao.stat.nthu.edu.tw/blog/software-download Methods in Ecology and Evolution (in revision).
-
-### Vignettes
-- [A Quick Introduction to iNEXT via Examples](http://johnsonhsieh.github.io/iNEXT/inst/doc/Introduction.html)
-```{r eval=FALSE}
-vignette("introduction",package="iNEXT")
-```
-
-- [Customize Plots and Graphics](http://johnsonhsieh.github.io/iNEXT/inst/doc/graphics.html)
-```{r eval=FALSE}
-vignette("graphics",package="iNEXT")
-```
-
-### License
-
-The iNEXT package is licensed under the GPLv3. To help refine iNEXT, your comments or feedbacks would be welcome (please send them to [Anne Chao](chao@stat.nthu.edu.tw)).
 
 ### Referance
 
-1. Chao, A., N. J. Gotelli, T. C. Hsieh, E. L. Sander, K. H. Ma, R. K. Colwell, and A. M. Ellison 2014. Rarefaction and extrapolation with Hill numbers: a unified framework for sampling and estimation in biodiversity studies, Ecological Monographs 84:45-67.
-2. Chao, A., and L. Jost. 2012. Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology 93:2533-2547.
-3. Colwell, R. K., A. Chao, N. J. Gotelli, S. Y. Lin, C. X. Mao, R. L. Chazdon, and J. T. Longino. 2012. Models and estimators linking individual-based and sample-based rarefaction, extrapolation and comparison of assemblages. Journal of Plant Ecology 5:3-21.
-4. Ellison, A. M., A. A. Barker-Plotkin, D. R. Foster, and D. A. Orwig. 2010. Experimentally testing the role of foundation species in forests: the Harvard Forest Hemlock Removal Experiment. Methods in Ecology and Evolution 1:168-179.
-5. Hsieh, T. C., K. H. Ma, and A. Chao. 2013. iNEXT online: interpolation and extrapolation (Version 1.3.0) [Software]. Available from http://chao.stat.nthu.edu.tw/blog/software-download/.
-6. Hsieh T. C., K. H. Ma, and A. Chao. 2014. iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Submitted manuscript.
-7. Longino, J. T., and R. K. Colwell. 2011. Density compensation, species composition, and richness of ants on a neotropical elevational gradient. Ecosphere 2:art29.
+Chao, A., Gotelli, N.J., Hsieh, T.C., Sander, E.L., Ma, K.H., Colwell, R.K. & Ellison, A.M. (2014) Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. Ecological Monographs, 84, 45–67.
+Chao, A. & Jost, L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93, 2533–2547.
+Colwell, R.K., Chao, A., Gotelli, N.J., Lin, S.-Y., Mao, C.X., Chazdon, R.L. & Longino, J.T. (2012) Models and estimators linking individual-based and sample-based rarefaction, extrapolation and comparison of assemblages. Journal of Plant Ecology, 5, 3–21.
+Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). To appear in Methods in Ecology and Evolution.
