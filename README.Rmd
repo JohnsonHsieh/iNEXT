@@ -142,7 +142,7 @@ ggiNEXT(out, type=1, facet.var="order")
 ```
 <br>
 To link the sample-sized and coverage-based sampling curves, it would be informative to first examine the sample completeness curve using the following command:
-```{r ex1c}
+```{r ex2}
 ggiNEXT(out, type=2)
 ```
 <br>
@@ -151,7 +151,7 @@ The following commands return the coverage-based R/E sampling curves. The argume
 ```{r eval=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
 ```
-```{r ex2, echo=FALSE}
+```{r ex3, echo=FALSE}
 ggiNEXT(out, type=3, facet.var="site")
 ```
 <br>
@@ -159,7 +159,7 @@ The argument facet.var="order" creates a separate plot for each diversity order,
 ```{r eval=FALSE}
 ggiNEXT(out, type=3, facet.var="order")
 ```
-```{r ex3, echo=FALSE}
+```{r ex3-2, echo=FALSE}
 ggiNEXT(out, type=3, facet.var="order")
 ```
 <br>
@@ -168,7 +168,7 @@ The above graphical displays depict the typical color plots to standardize biodi
 # Separating plots by "order", and display black-white plots
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
-```{r ex4, echo=FALSE}
+```{r ex5, echo=FALSE}
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
 <br>
@@ -177,7 +177,7 @@ More details and examples/options are provided in the iNEXT Manual in CRAN, and 
 
 ### How to cite
 
-<i>.If you publish your work based on results from iNEXT (R package), please make reference to Hsieh et al. (2016) and Chao et al. (2014) given in the following list. </i>
+<i>If you publish your work based on results from iNEXT (R package), please make reference to Hsieh et al. (2016) and Chao et al. (2014) given in the following list. </i>
 
 
 ### Referance
