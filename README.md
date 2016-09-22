@@ -182,26 +182,26 @@ ggiNEXT(out, type=1, facet.var="order")
 ggiNEXT(out, type=2)
 ```
 
-![](README/README-ex1c-1.png) <br> The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
+![](README/README-ex2-1.png) <br> The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
 
 ``` r
 ggiNEXT(out, type=3, facet.var="site")
 ```
 
-![](README/README-ex2-1.png) <br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
+![](README/README-ex3-1-1.png) <br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
 
 ``` r
 ggiNEXT(out, type=3, facet.var="order")
 ```
 
-![](README/README-ex3-1.png) <br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
+![](README/README-ex3-2-1.png) <br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
 
 ``` r
 # Separating plots by "order", and display black-white plots
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
 
-![](README/README-ex4-1.png) <br> More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
+![](README/README-ex5-1.png) <br> More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
 
 ### How to cite
 
