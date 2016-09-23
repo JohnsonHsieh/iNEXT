@@ -87,7 +87,7 @@ a number or vector specifying the diversity order(s) of Hill numbers;
 datatype
 </td>
 <td style="text-align: left;">
-type of input data, “abundance”, “incidence\_raw”, or “incidence\_freq”;
+type of input data, “abundance”, “incidence_raw”, or “incidence_freq”;
 </td>
 </tr>
 <tr>
