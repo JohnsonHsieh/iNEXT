@@ -39,7 +39,7 @@ install.packages("iNEXT")
 ## install iNEXT from github
 install.packages('devtools')
 library(devtools)
-install_github('AnneChao/iNEXT')
+install_github('JohnsonHsieh/iNEXT')
 
 ## import packages
 library(iNEXT)
