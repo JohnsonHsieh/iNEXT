@@ -28,7 +28,7 @@ If the \code{endpoint} is larger than the reference sample size, then \code{iNEX
 
 \item{se}{a logical variable to calculate the bootstrap standard error and \code{conf} confidence interval.}
 
-\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95}
+\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.}
 
 \item{nboot}{an integer specifying the number of replications.}
 }
