@@ -1,0 +1,7 @@
+# iNEXT 2.0.12
+- Fixes vignettes error for `ggplot2` update.
+- Adds argument `conf` for `estimateD` function.
+- Fixes issue #12, 13
+
+# iNEXT 2.0.13
+- Fixes the plot display `NA` in the legend (After `ggplot2` was updated to version 2.2.0)

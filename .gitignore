@@ -4,4 +4,6 @@
 .DS_Store
 .Rbuildognore
 index.html
-iNEXT.Rproj
+*.Rproj
+inst/doc
+man/.Rapp.history
