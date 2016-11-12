@@ -1,5 +1,5 @@
-invChat.Ind <- function(x, C, conf=NULL)
-{
+invChat.Ind <- function(x, C, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
   n <- sum(x)
   refC <- Chat.Ind(x,n)
   f <- function(m, C) abs(Chat.Ind(x,m)-C)
@@ -50,8 +50,8 @@ invChat.Ind <- function(x, C, conf=NULL)
   out
 }
 
-invChat.Sam <- function(x, C, conf=NULL)
-{
+invChat.Sam <- function(x, C, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
   n <- max(x)
   refC <- Chat.Sam(x,n)
   f <- function(m, C) abs(Chat.Sam(x,m)-C)
@@ -99,6 +99,8 @@ invChat.Sam <- function(x, C, conf=NULL)
 
 
 invSize.Ind <- function(x, size, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
+  
   if(is.null(size)){
     size <- sum(x)
   }
@@ -122,6 +124,8 @@ invSize.Ind <- function(x, size, conf=NULL){
 }
 
 invSize.Sam <- function(x, size, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
+  
   if(is.null(size)){
     size <- max(x)
   }

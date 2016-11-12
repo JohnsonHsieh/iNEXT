@@ -5,7 +5,7 @@ iNEXT (R package)
 [![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT) [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/iNEXT)](https://github.com/metacran/cranlogs.app)
 
 <h5 align="right">
-Latest version: Sept. 22, 2016
+Latest version: 2016-11-12
 </h5>
 <font color="394CAE">
 <h3 color="394CAE" style="font-weight: bold">
@@ -87,7 +87,7 @@ a number or vector specifying the diversity order(s) of Hill numbers;
 datatype
 </td>
 <td style="text-align: left;">
-type of input data, “abundance”, “incidence_raw”, or “incidence_freq”;
+type of input data, “abundance”, “incidence\_raw”, or “incidence\_freq”;
 </td>
 </tr>
 <tr>
@@ -127,7 +127,7 @@ a logical variable to calculate the bootstrap standard error and confidence inte
 conf
 </td>
 <td style="text-align: left;">
-a positive number < 1 specifying the level of confidence interval;
+a positive number &lt; 1 specifying the level of confidence interval;
 </td>
 </tr>
 <tr>
@@ -176,32 +176,37 @@ ggiNEXT(out, type=1, facet.var="site")
 ggiNEXT(out, type=1, facet.var="order")
 ```
 
-![](README/README-ex1b-1.png) <br> To link the sample-sized and coverage-based sampling curves, it would be informative to first examine the sample completeness curve using the following command:
+![](README/README-ex1b-1.png)
+<br> To link the sample-sized and coverage-based sampling curves, it would be informative to first examine the sample completeness curve using the following command:
 
 ``` r
 ggiNEXT(out, type=2)
 ```
 
-![](README/README-ex2-1.png) <br> The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
+![](README/README-ex2-1.png)
+<br> The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
 
 ``` r
 ggiNEXT(out, type=3, facet.var="site")
 ```
 
-![](README/README-ex3-1.png) <br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
+![](README/README-ex3-1.png)
+<br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
 
 ``` r
 ggiNEXT(out, type=3, facet.var="order")
 ```
 
-![](README/README-ex3-2.png) <br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
+![](README/README-ex3-2-1.png)
+<br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
 
 ``` r
 # Separating plots by "order", and display black-white plots
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
 
-![](README/README-ex5-1.png) <br> More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
+![](README/README-ex5-1.png)
+<br> More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
 
 ### How to cite
 

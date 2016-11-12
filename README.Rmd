@@ -19,7 +19,7 @@ iNEXT (R package)
 [![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT)
 [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/iNEXT)](https://github.com/metacran/cranlogs.app)
 
-<h5 align="right">Latest version: Sept. 22, 2016</h5>
+<h5 align="right">Latest version: `r Sys.Date()`</h5>
 
 <font color="394CAE"><h3 color= 394CAE style = "font-weight: bold"> Introduction to iNEXT (R package): Excerpt from iNEXT User’s Guide </h3> </font>
 <br>
