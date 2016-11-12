@@ -13,8 +13,9 @@ output:
 knitr::opts_chunk$set(collapse = TRUE, comment = "", 
                       fig.retina=2,
                       fig.align='center',
-                      fig.width = 8, fig.height = 6,
-                      out.width = "100%")
+                      fig.width = 7, fig.height = 5,
+                      warning = FALSE, message = FALSE)
+options("width"=200)
 library(iNEXT)
 library(ggplot2)
 data("spider")
@@ -358,25 +359,28 @@ ggiNEXT(out.raw)
 
 The `ggiNEXT()` function is a wrapper around `ggplot2` package to create a R/E curve using a single line of code. The resulting object is of class `"ggplot"`, so can be manipulated using the `ggplot2` tools. The following are some useful examples for customizing graphs. 
 
-### remove legend
+
+### Remove legend
 ```{r}
 ggiNEXT(out, type=3, facet.var="site") + 
   theme(legend.position="none")
 ```
 
-### change to theme and legend.position
+
+### Change to theme and legend.position
 ```{r}
 ggiNEXT(out, type=1, facet.var="site") + 
   theme_bw(base_size = 18) +
   theme(legend.position="right")
 ```
 
-### display black‐white theme
+### Display black‐white theme
 ```{r}
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
 
-### free the scale of axis
+
+### Free the scale of axis
 ```{r}
 ggiNEXT(out, type=1, facet.var="order") + 
   facet_wrap(~order, scales="free")
@@ -463,9 +467,12 @@ grid.arrange(g5, g6, ncol=2)
 ```{r}
 library(ggthemes)
 g7 <- g + theme_hc(bgcolor = "darkunica") +
-          scale_colour_hc("darkunica")
+  theme(legend.box = "vertical") +
+  scale_colour_hc("darkunica")
 
-g8 <- g + theme_economist() + scale_colour_economist()
+g8 <- g + theme_economist() + 
+  theme(legend.box = "vertical") +
+  scale_colour_economist()
 grid.arrange(g7, g8, ncol=2)
 ```
 
@@ -477,13 +484,15 @@ g9 <- g + theme_bw(base_size = 18) +
       scale_fill_grey(start = 0, end = .4) +
       scale_colour_grey(start = .2, end = .2) +
       theme(legend.position="bottom",
-            legend.title=element_blank())
+            legend.title=element_blank(),
+            legend.box = "vertical")
 
 g10 <- g + theme_tufte(base_size = 12) +       
     scale_fill_grey(start = 0, end = .4) +
     scale_colour_grey(start = .2, end = .2) +
     theme(legend.position="bottom",
-          legend.title=element_blank())
+          legend.title=element_blank(),
+          legend.box = "vertical")
 grid.arrange(g9, g10, ncol=2)
 ```
 
@@ -507,7 +516,8 @@ ggplot(df, aes(x=x, y=y, colour=site)) +
   labs(x="Number of individuals", y="Species diversity") +
   theme(legend.position = "bottom", 
         legend.title=element_blank(),
-        text=element_text(size=18)) 
+        text=element_text(size=18),
+        legend.box = "vertical") 
 ```
 
 
