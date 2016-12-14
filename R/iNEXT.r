@@ -45,7 +45,9 @@ EstiBootComm.Ind <- function(Spec)
   b <- sum(Spec / n * (1 - Spec / n) ^ n)
   if(f0.hat==0){
     w <- 0
-    warning("This site has only one species. Estimation is not robust.")
+    if(sum(Spec>0)==1){
+      warning("This site has only one species. Estimation is not robust.")
+    }
   }else{
     w <- a / b      	#adjusted factor for rare species in the sample
   }
@@ -82,7 +84,9 @@ EstiBootComm.Sam <- function(Spec)
   
   if(Q0.hat==0){
     w <- 0
-    warning("This site has only one species. Estimation is not robust.")
+    if(sum(Spec>0)==1){
+      warning("This site has only one species. Estimation is not robust.")
+    }
   }else{
     w <- a / b      	#adjusted factor for rare species in the sample
   }

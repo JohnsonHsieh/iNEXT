@@ -5,3 +5,6 @@
 
 # iNEXT 2.0.13
 - Fixes the plot display `NA` in the legend (After `ggplot2` was updated to version 2.2.0)
+
+# iNEXT 2.0.14
+- Fixes the warning message for `EstiBootComm.Ind` and `EstiBootComm.Sam`.
