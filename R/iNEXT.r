@@ -45,7 +45,9 @@ EstiBootComm.Ind <- function(Spec)
   b <- sum(Spec / n * (1 - Spec / n) ^ n)
   if(f0.hat==0){
     w <- 0
-    warning("This site has only one species. Estimation is not robust.")
+    if(sum(Spec>0)==1){
+      warning("This site has only one species. Estimation is not robust.")
+    }
   }else{
     w <- a / b      	#adjusted factor for rare species in the sample
   }
@@ -82,7 +84,9 @@ EstiBootComm.Sam <- function(Spec)
   
   if(Q0.hat==0){
     w <- 0
-    warning("This site has only one species. Estimation is not robust.")
+    if(sum(Spec>0)==1){
+      warning("This site has only one species. Estimation is not robust.")
+    }
   }else{
     w <- a / b      	#adjusted factor for rare species in the sample
   }
@@ -268,7 +272,7 @@ Dqhat.Sam <- function(y, q, t){
         Q1 <- sum(y == 1)
         Q2 <- sum(y == 2)
         A <- 1 - ifelse(Q2 > 0, (nT-1)*Q1/((nT-1)*Q1+2*Q2), (nT-1)*Q1/((nT-1)*Q1+2))
-        B <- sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k})))
+        B <- ifelse(A<1,sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k}))),0)
         H.hat <- UE+B
         D.hat <- exp(nT/U*H.hat-log(nT/U))
         
@@ -543,7 +547,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' If the \code{endpoint} is smaller than the reference sample size, then \code{iNEXT()} computes only the rarefaction esimates for approximately K evenly spaced \code{knots}. 
 #' If the \code{endpoint} is larger than the reference sample size, then \code{iNEXT()} computes rarefaction estimates for approximately K/2 evenly spaced \code{knots} between sample size 1 and the reference sample size, and computes extrapolation estimates for approximately K/2 evenly spaced \code{knots} between the reference sample size and the \code{endpoint}.
 #' @param se a logical variable to calculate the bootstrap standard error and \code{conf} confidence interval.
-#' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95
+#' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.
 #' @param nboot an integer specifying the number of replications.
 #' @return a list of three objects: \code{$DataInfo} for summarizing data information; 
 #' \code{$iNextEst} for showing diversity estimates for rarefied and extrapolated samples along with related statistics;
@@ -577,7 +581,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-
+  
   if(datatype == "incidence"){
     stop('datatype="incidence" was no longer supported after v2.0.8, 
          please try datatype="incidence_freq".')  
@@ -660,7 +664,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     index <- ftable(arr, row.vars = c(3,1))
     index <- dcast(as.data.frame(index), formula = Var1+Var2~Var3, value.var = "Freq")
     colnames(index) <- c("Site", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
-
+    
     
   }else if(class(x)=="list"){
     out <- lapply(x, function(x) {
@@ -691,7 +695,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   z <- list("DataInfo"=info, "iNextEst"=out, "AsyEst"=index)
   class(z) <- c("iNEXT")
   return(z)
-}
+  }
 
 
 #

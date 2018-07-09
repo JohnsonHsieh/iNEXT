@@ -6,12 +6,17 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, echo = FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "",
-  fig.path = "README/README-"
+  fig.path = "README/README-",
+  fig.align = 'center',
+  fig.retina=2, fig.width = 7, fig.height = 5,
+  warning = FALSE,
+  message = FALSE
 )
+options("width"=200)
 ```
 
 iNEXT (R package)
@@ -19,7 +24,7 @@ iNEXT (R package)
 [![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT)
 [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/iNEXT)](https://github.com/metacran/cranlogs.app)
 
-<h5 align="right">Latest version: Sept. 22, 2016</h5>
+<h5 align="right">Latest version: `r Sys.Date()`</h5>
 
 <font color="394CAE"><h3 color= 394CAE style = "font-weight: bold"> Introduction to iNEXT (R package): Excerpt from iNEXT User’s Guide </h3> </font>
 <br>
@@ -44,7 +49,7 @@ In addition to the above two types of sampling curves, iNEXT also plots a sample
 
 ### HOW TO RUN INEXT:
 
-The iNEXT package is available on CRAN and can be downloaded with a standard installation procedure using the commands shown below. It can also be downloaded from the github. For a first-time installation, an additional visualization extension package (ggplot2) must be loaded. 
+The iNEXT package is available on CRAN and can be downloaded with a standard installation procedure using the commands shown below. It can also be downloaded from the github. For a first-time installation, an additional visualization extension package (ggplot2) must be loaded.  
 
 ```{r install, eval=FALSE}
 ## install iNEXT package from CRAN
@@ -188,4 +193,4 @@ Chao, A. & Jost, L. (2012) Coverage-based rarefaction and extrapolation: standar
 
 Colwell, R.K., Chao, A., Gotelli, N.J., Lin, S.-Y., Mao, C.X., Chazdon, R.L. & Longino, J.T. (2012) Models and estimators linking individual-based and sample-based rarefaction, extrapolation and comparison of assemblages. Journal of Plant Ecology, 5, 3–21.
 
-Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). To appear in Methods in Ecology and Evolution.
+Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Methods Ecol Evol, 7: 1451-1456. doi:10.1111/2041-210X.12613.

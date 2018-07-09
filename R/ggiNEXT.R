@@ -104,7 +104,7 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     z$col <- z$shape <- paste(z$site, z$order, sep="-")
   }
   
-  z$lty <- factor(z$method, c("interpolated", "extrapolated"), c("interpolation", "extrapolation"))
+  z$lty <- factor(z$method, c("interpolated", "observed", "extrapolated"), c("interpolation", "interpolation", "extrapolation"))
   z$col <- factor(z$col)
   data.sub <- z[which(z$method=="observed"),]
   
@@ -184,6 +184,7 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
       theme(legend.position="bottom",
             legend.title=element_blank())
   }
+  g <- g + theme(legend.box = "vertical")
   return(g)
   
 }
@@ -224,10 +225,10 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$site <- ""
   }
   
-  if("qD.LCL" %in% names(z) == FALSE) {
+  if(ncol(z)==7) {
     warning("invalid se setting, the iNEXT object do not consist confidence interval")
     se <- FALSE
-  }else if("qD.LCL" %in% names(z)) {
+  }else if(ncol(z)>7) {
     se <- TRUE
   }
   
@@ -235,8 +236,8 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$x <- z[,1]
     z$y <- z$qD
     if(se){
-      z$y.lwr <- z$qD.LCL
-      z$y.upr <- z$qD.UCL
+      z$y.lwr <- z[,5]
+      z$y.upr <- z[,6]
     }
   }else if(type==2L){
     if(length(unique(z$order))>1){
@@ -245,15 +246,15 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$x <- z[,1]
     z$y <- z$SC
     if(se){
-      z$y.lwr <- z$SC.LCL
-      z$y.upr <- z$SC.UCL
+      z$y.lwr <- z[,8]
+      z$y.upr <- z[,9]
     }
   }else if(type==3L){
     z$x <- z$SC
     z$y <- z$qD
     if(se){
-      z$y.lwr <- z$qD.LCL
-      z$y.upr <- z$qD.UCL
+      z$y.lwr <- z[,5]
+      z$y.upr <- z[,6]
     }
   }
   z$datatype <- datatype

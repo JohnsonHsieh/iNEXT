@@ -1,5 +1,5 @@
-invChat.Ind <- function(x, C, conf=NULL)
-{
+invChat.Ind <- function(x, C, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
   n <- sum(x)
   refC <- Chat.Ind(x,n)
   f <- function(m, C) abs(Chat.Ind(x,m)-C)
@@ -50,8 +50,8 @@ invChat.Ind <- function(x, C, conf=NULL)
   out
 }
 
-invChat.Sam <- function(x, C, conf=NULL)
-{
+invChat.Sam <- function(x, C, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
   n <- max(x)
   refC <- Chat.Sam(x,n)
   f <- function(m, C) abs(Chat.Sam(x,m)-C)
@@ -99,6 +99,8 @@ invChat.Sam <- function(x, C, conf=NULL)
 
 
 invSize.Ind <- function(x, size, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
+  
   if(is.null(size)){
     size <- sum(x)
   }
@@ -122,6 +124,8 @@ invSize.Ind <- function(x, size, conf=NULL){
 }
 
 invSize.Sam <- function(x, size, conf=NULL){
+  m <- NULL # no visible binding for global variable 'm'
+  
   if(is.null(size)){
     size <- max(x)
   }
@@ -307,6 +311,11 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
   }
   if(datatype=="incidence_freq") datatype <- "incidence"
   
+  if(datatype=="incidence_raw"){
+    if(class(x)=="data.frame" | class(x)=="matrix") x <- as.incfreq(x)
+    else if(class(x)=="list") x <- lapply(x, as.incfreq)
+    datatype <- "incidence"
+  }
     
   BASE <- c("size", "coverage")
   if(is.na(pmatch(base, BASE)))
@@ -320,6 +329,9 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
   }else if(base=="coverage"){
     tmp <- invChat(x, datatype, C=level, conf=conf)
   }
+  
+  tmp <- tmp[!duplicated(tmp),]
+  
   nam <- names(x)
   if(is.null(nam)){
     tmp
