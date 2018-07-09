@@ -272,7 +272,7 @@ Dqhat.Sam <- function(y, q, t){
         Q1 <- sum(y == 1)
         Q2 <- sum(y == 2)
         A <- 1 - ifelse(Q2 > 0, (nT-1)*Q1/((nT-1)*Q1+2*Q2), (nT-1)*Q1/((nT-1)*Q1+2))
-        B <- sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k})))
+        B <- ifelse(A<1,sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k}))),0)
         H.hat <- UE+B
         D.hat <- exp(nT/U*H.hat-log(nT/U))
         
@@ -581,7 +581,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-
+  
   if(datatype == "incidence"){
     stop('datatype="incidence" was no longer supported after v2.0.8, 
          please try datatype="incidence_freq".')  
@@ -664,7 +664,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     index <- ftable(arr, row.vars = c(3,1))
     index <- dcast(as.data.frame(index), formula = Var1+Var2~Var3, value.var = "Freq")
     colnames(index) <- c("Site", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
-
+    
     
   }else if(class(x)=="list"){
     out <- lapply(x, function(x) {
@@ -695,7 +695,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   z <- list("DataInfo"=info, "iNextEst"=out, "AsyEst"=index)
   class(z) <- c("iNEXT")
   return(z)
-}
+  }
 
 
 #

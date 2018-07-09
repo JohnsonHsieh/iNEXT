@@ -5,7 +5,7 @@ iNEXT (R package)
 [![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT) [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/iNEXT)](https://github.com/metacran/cranlogs.app)
 
 <h5 align="right">
-Latest version: 2016-11-12
+Latest version: 2018-07-09
 </h5>
 <font color="394CAE">
 <h3 color="394CAE" style="font-weight: bold">
@@ -169,39 +169,39 @@ out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
 ggiNEXT(out, type=1, facet.var="site")
 ```
 
-<img src="README/README-ex1-1.png" title="" alt="" width="672" style="display: block; margin: auto;" />
+<img src="README/README-ex1-1.png" width="672" style="display: block; margin: auto;" />
 
 ``` r
 # Sample-size-based R/E curves, separating plots by "order"
 ggiNEXT(out, type=1, facet.var="order")
 ```
 
-<img src="README/README-ex1b-1.png" title="" alt="" width="672" style="display: block; margin: auto;" /> <br> To link the sample-sized and coverage-based sampling curves, it would be informative to first examine the sample completeness curve using the following command:
+<img src="README/README-ex1b-1.png" width="672" style="display: block; margin: auto;" /> <br> To link the sample-sized and coverage-based sampling curves, it would be informative to first examine the sample completeness curve using the following command:
 
 ``` r
 ggiNEXT(out, type=2)
 ```
 
-<img src="README/README-ex2-1.png" title="" alt="" width="672" style="display: block; margin: auto;" /> <br> The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
+<img src="README/README-ex2-1.png" width="672" style="display: block; margin: auto;" /> <br> The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
 
 ``` r
 ggiNEXT(out, type=3, facet.var="site")
 ```
 
-<img src="README/README-ex3-1.png" title="" alt="" width="672" style="display: block; margin: auto;" /> <br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
+<img src="README/README-ex3-1.png" width="672" style="display: block; margin: auto;" /> <br> The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
 
 ``` r
 ggiNEXT(out, type=3, facet.var="order")
 ```
 
-<img src="README/README-ex3-2-1.png" title="" alt="" width="672" style="display: block; margin: auto;" /> <br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
+<img src="README/README-ex3-2-1.png" width="672" style="display: block; margin: auto;" /> <br> The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples. More graphic display options are described below.
 
 ``` r
 # Separating plots by "order", and display black-white plots
 ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
 ```
 
-<img src="README/README-ex5-1.png" title="" alt="" width="672" style="display: block; margin: auto;" /> <br> More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
+<img src="README/README-ex5-1.png" width="672" style="display: block; margin: auto;" /> <br> More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
 
 ### How to cite
 
@@ -215,4 +215,4 @@ Chao, A. & Jost, L. (2012) Coverage-based rarefaction and extrapolation: standar
 
 Colwell, R.K., Chao, A., Gotelli, N.J., Lin, S.-Y., Mao, C.X., Chazdon, R.L. & Longino, J.T. (2012) Models and estimators linking individual-based and sample-based rarefaction, extrapolation and comparison of assemblages. Journal of Plant Ecology, 5, 3–21.
 
-Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). To appear in Methods in Ecology and Evolution.
+Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Methods Ecol Evol, 7: 1451-1456. <doi:10.1111/2041-210X.12613>.

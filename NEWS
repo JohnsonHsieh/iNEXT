@@ -8,3 +8,9 @@
 
 # iNEXT 2.0.14
 - Fixes the warning message for `EstiBootComm.Ind` and `EstiBootComm.Sam`.
+
+# iNEXT 2.0.15
+- Modify the incidence case to make  it consistent with abundance case.
+
+# iNEXT 2.0.16
+- Modify the BootstrapFun for oddly warning message (issue #31).
