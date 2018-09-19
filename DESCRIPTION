@@ -11,7 +11,7 @@ License: GPL (>= 3)
 URL: http://chao.stat.nthu.edu.tw/blog/software-download/
 Maintainer: T. C. Hsieh <euler96@gmail.com>
 Depends:
-    R (>= 3.4.4)
+    R (>= 3.4)
 Imports:
     stats,
     graphics,
