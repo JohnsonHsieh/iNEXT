@@ -23,4 +23,3 @@ a data.frame of basic data information including sample size, observed species r
 data(spider)
 DataInfo(spider, datatype="abundance")
 }
-

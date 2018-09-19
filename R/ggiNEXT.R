@@ -104,7 +104,8 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     z$col <- z$shape <- paste(z$site, z$order, sep="-")
   }
   
-  z$lty <- factor(z$method, c("interpolated", "observed", "extrapolated"), c("interpolation", "interpolation", "extrapolation"))
+  z$lty <- z$lty <- factor(z$method, levels=unique(c("interpolated", "observed", "extrapolated"),
+                                                   c("interpolation", "interpolation", "extrapolation")))
   z$col <- factor(z$col)
   data.sub <- z[which(z$method=="observed"),]
   

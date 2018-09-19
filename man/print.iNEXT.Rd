@@ -14,4 +14,3 @@
 \description{
 \code{print.iNEXT}: Print method for objects inheriting from class "iNEXT"
 }
-

@@ -16,6 +16,8 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "",
                       fig.width = 7, fig.height = 5,
                       warning = FALSE, message = FALSE)
 options("width"=200)
+if("ggthemes" %in% rownames(installed.packages()) == FALSE) {install.packages("ggthemes")}
+if("gridExtra" %in% rownames(installed.packages()) == FALSE) {install.packages("gridExtra")}
 library(iNEXT)
 library(ggplot2)
 data("spider")
@@ -525,10 +527,9 @@ ggplot(df, aes(x=x, y=y, colour=site)) +
 The iNEXT package is licensed under the GPLv3. To help refine `iNEXT`, your comments or feedbacks would be welcome (please send them to Anne Chao or report an issue on iNEXT github [reop](https://github.com/JohnsonHsieh/iNEXT)). 
 
 ## References
-- Chao, A., Gotelli, N.J., Hsieh, T.C., Sander, E.L., Ma, K.H., Colwell, R.K. & Ellison, A.M. (2014) Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. Ecological Monographs, 84, 
-45–67. 
+- Chao, A., Gotelli, N.J., Hsieh, T.C., Sander, E.L., Ma, K.H., Colwell, R.K. & Ellison, A.M. (2014) Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. Ecological Monographs, 84, 45–67. 
 - Chao, A. & Jost, L. (2012) Coverage‐based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93, 2533–2547. 
 - Colwell, R.K., Chao, A., Gotelli, N.J., Lin, S.‐Y., Mao, C.X., Chazdon, R.L. & Longino, J.T. (2012) Models and estimators linking individual‐based and sample‐based  rarefaction, extrapolation and comparison of assemblages. Journal of Plant Ecology, 5, 3–21. 
 - Ellison, A.M., Barker?Plotkin, A.A., Foster, D.R. & Orwig, D.A. (2010) Experimentally testing the role of foundation species in forests: the Harvard Forest Hemlock Removal Experiment. Methods in Ecology and Evolution, 1, 168–179. 
-- Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Under revision, Methods in Ecology and Evolution. 
+- Hsieh, T.C., Ma, K.H. & Chao, A. (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). Methods in Ecology and Evolution, 7, 1451-1456.
 - Longino, J.T. & Colwell, R.K. (2011) Density compensation, species composition, and richness of ants on a neotropical elevational gradient. Ecosphere, 2:art29. 

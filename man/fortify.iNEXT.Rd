@@ -25,4 +25,3 @@ data(spider)
 out1 <- iNEXT(spider$Girdled, q=0, datatype="abundance")
 ggplot2::fortify(out1, type=1)
 }
-

@@ -2,12 +2,12 @@
 % Please edit documentation in R/ggiNEXT.R
 \name{ggiNEXT}
 \alias{ggiNEXT}
-\alias{ggiNEXT.default}
 \alias{ggiNEXT.iNEXT}
+\alias{ggiNEXT.default}
 \title{ggplot2 extension for an iNEXT object}
 \usage{
-ggiNEXT(x, type = 1, se = TRUE, facet.var = "none", color.var = "site",
-  grey = FALSE)
+ggiNEXT(x, type = 1, se = TRUE, facet.var = "none",
+  color.var = "site", grey = FALSE)
 
 \method{ggiNEXT}{iNEXT}(x, type = 1, se = TRUE, facet.var = "none",
   color.var = "site", grey = FALSE)
@@ -65,4 +65,3 @@ ggiNEXT(z, facet.var="site", color.var="order")
 ggiNEXT(z, facet.var="both", color.var="both")
 }
 }
-

@@ -38,4 +38,3 @@ estimateD(spider, "abundance", base="coverage", level=NULL, conf=0.95)
 data(ant)
 estimateD(ant, "incidence_freq", base="coverage", level=0.985, conf=NULL)
 }
-

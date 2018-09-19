@@ -1,7 +1,7 @@
 Package: iNEXT
 Type: Package
 Title: Interpolation and Extrapolation for Species Diversity
-Version: 2.0.16
+Version: 2.0.17
 Author: T. C. Hsieh, K. H. Ma and Anne Chao
 Description: Provides simple functions to compute and plot two
     types (sample-size- and coverage-based) rarefaction and extrapolation of species
@@ -11,7 +11,7 @@ License: GPL (>= 3)
 URL: http://chao.stat.nthu.edu.tw/blog/software-download/
 Maintainer: T. C. Hsieh <euler96@gmail.com>
 Depends:
-    R (>= 3.3.3)
+    R (>= 3.4.4)
 Imports:
     stats,
     graphics,
@@ -19,7 +19,7 @@ Imports:
     reshape2
 BugReports: https://github.com/JohnsonHsieh/iNEXT/issues
 LazyLoad: yes
-RoxygenNote: 5.0.1
+RoxygenNote: 6.1.0
 Suggests: testthat,
     knitr,
     rmarkdown,

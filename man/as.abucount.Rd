@@ -20,4 +20,3 @@ data(ciliates)
 lapply(ciliates, as.abucount)
 
 }
-

@@ -5,8 +5,8 @@
 \alias{EstSimpson}
 \title{Estimation of Gini-Simpson index or Simpson diversity}
 \usage{
-ChaoSimpson(x, datatype = "abundance", transform = FALSE, conf = 0.95,
-  B = 200)
+ChaoSimpson(x, datatype = "abundance", transform = FALSE,
+  conf = 0.95, B = 200)
 
 EstSimpson(x, datatype = "abundance", transform = FALSE, conf = 0.95,
   B = 200)
@@ -41,4 +41,3 @@ Good, I.J. (1953) The population frequencies of species and the estimation of po
 \seealso{
 \code{\link{ChaoRichness}, \link{ChaoShannon}}
 }
-
