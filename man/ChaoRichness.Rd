@@ -35,4 +35,3 @@ Chao, A. (1987) Estimating the population size for capture-recapture data with u
 \seealso{
 \code{\link{ChaoShannon}, \link{ChaoSimpson}}
 }
-

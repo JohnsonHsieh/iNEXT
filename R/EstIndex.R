@@ -270,7 +270,9 @@ BootstrapFun <- function(x, FunName, datatype, B){
     
     if(f0.hat==0){
       lambda <- 0
-      warning("This site has only one species. Estimation is not robust.")
+      if(sum(x>0)==1){
+        warning("The Bootstrap community has only one species. Estimation is not robust.")
+      }
     }else{
       lambda <- (1 - Chat) / sum(x / n * (1 - x / n)^n)
     }
@@ -297,7 +299,9 @@ BootstrapFun <- function(x, FunName, datatype, B){
     
     if(Q0.hat==0){
       tau <- 0
-      warning("This site has only one species. Estimation is not robust.")
+      if(sum(y>0)==1){
+        warning("The Bootstrap community has only one species. Estimation is not robust.")
+      }
     }else{
       tau <- U / t * (1 - Chat) / sum(y / t * (1 - y / t)^t)
     }

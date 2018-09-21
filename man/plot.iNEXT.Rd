@@ -35,4 +35,3 @@ plot(x=out1, type=2)
 plot(x=out1, type=3)
 
 }
-

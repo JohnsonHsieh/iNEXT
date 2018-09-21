@@ -11,3 +11,9 @@
 
 # iNEXT 2.0.15
 - Modify the incidence case to make  it consistent with abundance case.
+
+# iNEXT 2.0.16
+- Modify the BootstrapFun for oddly warning message (issue #31).
+
+# iNEXT 2.0.17
+- Modify Error in duplicated levels/labels (issue #25).
