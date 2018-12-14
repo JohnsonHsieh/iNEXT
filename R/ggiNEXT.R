@@ -103,11 +103,12 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     }
     z$col <- z$shape <- paste(z$site, z$order, sep="-")
   }
-  
-  z$lty <- z$lty <- factor(z$method, levels=unique(c("interpolated", "observed", "extrapolated"),
+  zz=z
+  z$method[z$method=="observed"]="interpolated"
+  z$lty <- z$lty <- factor(z$method, levels=unique(c("interpolated", "extrapolated"),
                                                    c("interpolation", "interpolation", "extrapolation")))
   z$col <- factor(z$col)
-  data.sub <- z[which(z$method=="observed"),]
+  data.sub <- zz[which(zz$method=="observed"),]
   
   g <- ggplot(z, aes_string(x="x", y="y", colour="col")) + 
     geom_point(aes_string(shape="shape"), size=5, data=data.sub)
@@ -120,7 +121,8 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
            shape=guide_legend(title="Guides")) +
     theme(legend.position = "bottom", 
           legend.title=element_blank(),
-          text=element_text(size=18)) 
+          text=element_text(size=18),
+          legend.key.width = unit(1.2,"cm")) 
   
   if(type==2L) {
     g <- g + labs(x="Number of sampling units", y="Sample coverage")
@@ -199,7 +201,6 @@ ggiNEXT.default <- function(x, ...){
     call. = FALSE
   )
 }
-
 
 #' Fortify method for classes from the iNEXT package.
 #'
