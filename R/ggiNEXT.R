@@ -192,6 +192,15 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   
 }
 
+#' @export
+#' @rdname ggiNEXT
+ggiNEXT.default <- function(x, ...){
+  stop(
+    "iNEXT doesn't know how to deal with data of class ",
+    paste(class(x), collapse = "/"),
+    call. = FALSE
+  )
+}
 
 #' Fortify method for classes from the iNEXT package.
 #'
