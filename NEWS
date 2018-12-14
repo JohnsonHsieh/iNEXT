@@ -17,3 +17,6 @@
 
 # iNEXT 2.0.17
 - Modify Error in duplicated levels/labels (issue #25).
+
+# iNEXT 2.0.18
+- Update ggiNEXT.R (Fix legend problem of ggiNEXT).
