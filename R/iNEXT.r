@@ -109,8 +109,7 @@ EstiBootComm.Sam <- function(Spec)
 # @param m a integer vector of rarefaction/extrapolation sample size
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 # @export
-Dqhat.Ind <- function (x, q, m) 
-{
+Dqhat.Ind <- function (x, q, m) {
   x <- x[x > 0]
   n <- sum(x)
   fk.hat <- function(x, m) {
@@ -156,11 +155,9 @@ Dqhat.Ind <- function (x, q, m)
         Sobs <- sum(x > 0)
         f1 <- sum(x == 1)
         f2 <- sum(x == 2)
-        f0.hat <- ifelse(f2 == 0, (n - 1)/n * f1 * (f1 - 
-                                                      1)/2, (n - 1)/n * f1^2/2/f2)
+        f0.hat <- ifelse(f2 == 0, (n - 1)/n * f1 * (f1 - 1)/2, (n - 1)/n * f1^2/2/f2)
         A <- n * f0.hat/(n * f0.hat + f1)
-        ifelse(f1 == 0, Sobs, Sobs + f0.hat * (1 - A^(m - 
-                                                        n)))
+        ifelse(f1 == 0, Sobs, Sobs + f0.hat * (1 - A^(m - n)))
       }
     }
     sapply(m, Sub)
@@ -172,13 +169,9 @@ Dqhat.Ind <- function (x, q, m)
       f1 <- sum(x == 1)
       f2 <- sum(x == 2)
       A <- 1 - ifelse(f2 > 0, (n - 1) * f1/((n - 1) * 
-                                              f1 + 2 * f2), (n - 1) * f1/((n - 1) * f1 + 
-                                                                            2))
+                                              f1 + 2 * f2), (n - 1) * f1/((n - 1) * f1 + 2))
       UE <- sum(x/n * (digamma(n) - digamma(x)))
-      B <- ifelse(A < 1, sum(x == 1)/n * (1 - A)^(-n + 
-                                                    1) * (-log(A) - sum(sapply(1:(n - 1), function(k) {
-                                                      1/k * (1 - A)^k
-                                                    }))), 0)
+      B <- ifelse(A < 1, sum(x == 1)/n * (1 - A)^(-n + 1) * (-log(A) - sum(sapply(1:(n - 1), function(k) { 1/k * (1 - A)^k }))), 0)
       D.hat <- exp(UE + B)
       
       Dn <- exp(-sum(x/n * log(x/n)))
@@ -189,10 +182,8 @@ Dqhat.Ind <- function (x, q, m)
       # 20181227
       Db <- exp(-sum(b/(n - 2) * log(b/(n - 2)) *
                        fk.hat(x, (n - 2))))
-      Dn1 <- ifelse(Da != Db, Dn + (Dn - Da)^2/(Da -
-                                                  Db), Dn)
-      b <- ifelse(D.hat > Dn, (Dn1 - Dn)/(D.hat -
-                                            Dn), 0)
+      Dn1 <- ifelse(Da != Db, Dn + (Dn - Da)^2/(Da - Db), Dn)
+      b <- ifelse(D.hat > Dn, (Dn1 - Dn)/(D.hat - Dn), 0)
       # b <- ifelse(D.hat > Dn, (Dn - Da)/(D.hat -  Da), 0)
       # print(b)
     }
@@ -208,8 +199,7 @@ Dqhat.Ind <- function (x, q, m)
     sapply(m, Sub)
   }
   D2.hat <- function(x, m) {
-    Sub <- function(m) 1/(1/m + (1 - 1/m) * sum(x * (x - 
-                                                       1)/n/(n - 1)))
+    Sub <- function(m) 1/(1/m + (1 - 1/m) * sum(x * (x - 1)/n/(n - 1)))
     sapply(m, Sub)
   }
   Dq.hat <- function(x, m) {
@@ -269,9 +259,7 @@ Dqhat.Sam <- function(y, q, t){
       if (t <= nT) {
         Fun <- function(y) {
           if (y <= (nT - t)) 
-            exp(lgamma(nT - y + 1) + lgamma(nT - t + 
-                                              1) - lgamma(nT - y - t + 1) - lgamma(nT + 
-                                                                                     1))
+            exp(lgamma(nT - y + 1) + lgamma(nT - t + 1) - lgamma(nT - y - t + 1) - lgamma(nT + 1))
           else 0
         }
         sum(1 - sapply(y, Fun))
