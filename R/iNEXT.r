@@ -109,36 +109,45 @@ EstiBootComm.Sam <- function(Spec)
 # @param m a integer vector of rarefaction/extrapolation sample size
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 # @export
-Dqhat.Ind <- function(x, q, m){
+Dqhat.Ind <- function (x, q, m) 
+{
   x <- x[x > 0]
   n <- sum(x)
-  
-  fk.hat <- function(x, m){
+  fk.hat <- function(x, m) {
     x <- x[x > 0]
     n <- sum(x)
-    if(m <= n){
-      Sub <- function(k)	sum(exp(lchoose(x, k) + lchoose(n - x, m -k) - lchoose(n, m)))
+    fj <- table(x)
+    js <- as.numeric(names(fj))
+    if (m <= n) {
+      Sub <- function(k) {
+        fj_k <- fj[js>=k]
+        js_k <- js[js>=k]
+        ifelse(length(js_k) == 0, 0, sum(exp(lchoose(js_k, k) + lchoose(n - js_k, m - k) - lchoose(n, m)) * fj_k) )
+      }
       sapply(1:m, Sub)
     }
-    
     else {
-      f1 <- sum(x == 1)
-      f2 <- sum(x == 2)
-      A <- ifelse(f2 > 0, (n-1)*f1/((n-1)*f1+2*f2), (n-1)*f1/((n-1)*f1+2))
-      C.hat <- 1 - f1 / n * A
-      p.hat <- x / n * C.hat			
-      Sub <- function(k)	sum((choose(m, k) * p.hat^k * (1 - p.hat)^(m - k)) / (1 - (1 - p.hat)^n))
+      # f1 <- sum(x == 1)
+      # f2 <- sum(x == 2)
+      # A <- ifelse(f2 > 0, (n - 1) * f1/((n - 1) * f1 + 
+      #                                     2 * f2), (n - 1) * f1/((n - 1) * f1 + 2))
+      # C.hat <- 1 - f1/n * A
+      # p.hat <- x/n * C.hat
+      p.hat = DetAbu(x)
+      Sub <- function(k) sum((choose(m, k) * p.hat^k * 
+                                (1 - p.hat)^(m - k))/(1 - (1 - p.hat)^n))
       sapply(1:m, Sub)
     }
   }
-  
-  D0.hat <- function(x, m){
+  D0.hat <- function(x, m) {
     x <- x[x > 0]
     n <- sum(x)
-    Sub <- function(m){
-      if(m <= n){
-        Fun <- function(x){
-          if(x <= (n - m)) exp(lgamma(n - x + 1) + lgamma(n - m + 1) - lgamma(n - x - m + 1) - lgamma(n + 1))
+    Sub <- function(m) {
+      if (m <= n) {
+        Fun <- function(x) {
+          if (x <= (n - m)) 
+            exp(lgamma(n - x + 1) + lgamma(n - m + 1) - 
+                  lgamma(n - x - m + 1) - lgamma(n + 1))
           else 0
         }
         sum(1 - sapply(x, Fun))
@@ -147,64 +156,77 @@ Dqhat.Ind <- function(x, q, m){
         Sobs <- sum(x > 0)
         f1 <- sum(x == 1)
         f2 <- sum(x == 2)
-        f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)	#estimation of unseen species via Chao1
-        A <- n*f0.hat/(n*f0.hat+f1)
-        ifelse(f1 ==0, Sobs ,Sobs + f0.hat * (1 - A ^ (m - n)))	
+        f0.hat <- ifelse(f2 == 0, (n - 1)/n * f1 * (f1 - 
+                                                      1)/2, (n - 1)/n * f1^2/2/f2)
+        A <- n * f0.hat/(n * f0.hat + f1)
+        ifelse(f1 == 0, Sobs, Sobs + f0.hat * (1 - A^(m - 
+                                                        n)))
       }
     }
     sapply(m, Sub)
   }
-  
-  D1.hat <- function(x, m){
+  D1.hat <- function(x, m) {
     x <- x[x > 0]
     n <- sum(x)
-    Sub <- function(m){
-      if(m < n){
+    if ( sum(m >= n) > 0){
+      f1 <- sum(x == 1)
+      f2 <- sum(x == 2)
+      A <- 1 - ifelse(f2 > 0, (n - 1) * f1/((n - 1) * 
+                                              f1 + 2 * f2), (n - 1) * f1/((n - 1) * f1 + 
+                                                                            2))
+      UE <- sum(x/n * (digamma(n) - digamma(x)))
+      B <- ifelse(A < 1, sum(x == 1)/n * (1 - A)^(-n + 
+                                                    1) * (-log(A) - sum(sapply(1:(n - 1), function(k) {
+                                                      1/k * (1 - A)^k
+                                                    }))), 0)
+      D.hat <- exp(UE + B)
+      
+      Dn <- exp(-sum(x/n * log(x/n)))
+      a <- 1:(n - 1)
+      b <- 1:(n - 2)
+      Da <- exp(-sum(a/(n - 1) * log(a/(n - 1)) * 
+                       fk.hat(x, (n - 1))))
+      # 20181227
+      Db <- exp(-sum(b/(n - 2) * log(b/(n - 2)) *
+                       fk.hat(x, (n - 2))))
+      Dn1 <- ifelse(Da != Db, Dn + (Dn - Da)^2/(Da -
+                                                  Db), Dn)
+      b <- ifelse(D.hat > Dn, (Dn1 - Dn)/(D.hat -
+                                            Dn), 0)
+      # b <- ifelse(D.hat > Dn, (Dn - Da)/(D.hat -  Da), 0)
+      # print(b)
+    }
+    Sub <- function(m) {
+      if (m < n) {
         k <- 1:m
-        exp(-sum(k / m * log(k / m) * fk.hat(x, m)))
+        exp(-sum(k/m * log(k/m) * fk.hat(x, m)))
       }
-      else{
-        #UE=sum(sapply(1:(n-1),function(k){sum(1/k*x/n*exp(lchoose(n-x,k)-lchoose(n-1,k)))}))
-        UE <- sum(x/n*(digamma(n)-digamma(x)))
-        f1 <- sum(x == 1)
-        f2 <- sum(x == 2)
-        A <- 1 - ifelse(f2 > 0, (n-1)*f1/((n-1)*f1+2*f2), (n-1)*f1/((n-1)*f1+2))
-        #A=2*sum(x==2)/((n-1)*sum(x==1)+2*sum(x==2))
-        B <- ifelse(A<1, sum(x==1)/n*(1-A)^(-n+1)*(-log(A)-sum(sapply(1:(n-1),function(k){1/k*(1-A)^k}))), 0)
-        D.hat <- exp(UE+B)
-        Dn <- exp(-sum(x / n * log(x / n)))
-        
-        a <- 1:(n-1)
-        b <- 1:(n-2)
-        Da <-  exp(-sum(a / (n-1) * log(a / (n-1)) * fk.hat(x, (n-1))))
-        Db <-  exp(-sum(b / (n-2) * log(b / (n-2)) * fk.hat(x, (n-2))))
-        Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
-        b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
-        # b <- A
-        ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(m-n)), Dn)
+      else {
+        ifelse(b != 0, Dn + (D.hat - Dn) * (1 - (1 - b)^(m - n)), Dn)
       }
     }
     sapply(m, Sub)
   }
-  
-  D2.hat <- function(x, m){
-    Sub <- function(m) 1 / (1 / m + (1 - 1 / m) * sum(x * (x - 1) / n / (n - 1)))
+  D2.hat <- function(x, m) {
+    Sub <- function(m) 1/(1/m + (1 - 1/m) * sum(x * (x - 
+                                                       1)/n/(n - 1)))
     sapply(m, Sub)
   }
-  
-  Dq.hat <- function(x, m){
-    Sub <- function(m){
+  Dq.hat <- function(x, m) {
+    Sub <- function(m) {
       k <- 1:m
-      sum( (k / m)^q * fk.hat(x, m))^(1 / (1 - q))
+      sum((k/m)^q * fk.hat(x, m))^(1/(1 - q))
     }
     sapply(m, Sub)
   }
-  if(q == 0) D0.hat(x, m)
-  else if(q == 1) D1.hat(x, m)
-  else if(q == 2) D2.hat(x, m)
+  if (q == 0) 
+    D0.hat(x, m)
+  else if (q == 1) 
+    D1.hat(x, m)
+  else if (q == 2) 
+    D2.hat(x, m)
   else Dq.hat(x, m)
 }
-
 
 #
 #
@@ -219,101 +241,108 @@ Dqhat.Ind <- function(x, q, m){
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 # @export
 Dqhat.Sam <- function(y, q, t){
-  
   nT <- y[1]
   y <- y[-1]
   y <- y[y > 0]
   U <- sum(y)
-  
-  Qk.hat <- function(y, nT, t){
-    if(t <= nT){
-      Sub <- function(k)	sum(exp(lchoose(y, k) + lchoose(nT - y, t - k) - lchoose(nT, t)))
+  Qk.hat <- function(y, nT, t) {
+    y <- y[y > 0]
+    Qj <- table(y)
+    js <- as.numeric(names(Qj))
+    if (t <= nT) {
+      Sub <- function(k) {
+        Qj_k <- Qj[js>=k]
+        js_k <- js[js>=k]
+        ifelse(length(js_k) == 0, 0, sum(exp(lchoose(js_k, k) + lchoose(nT - js_k, t - k) - lchoose(nT, t)) * Qj_k) )
+      }
       sapply(1:t, Sub)
     }
-    
     else {
       p.hat <- EstiBootComm.Sam(c(nT, y))
-      Sub <- function(k)	sum((choose(t, k) * p.hat^k * (1 - p.hat)^(t - k)) / (1 - (1 - p.hat)^T))
+      Sub <- function(k) sum((choose(t, k) * p.hat^k * 
+                                (1 - p.hat)^(t - k))/(1 - (1 - p.hat)^T))
       sapply(1:t, Sub)
     }
   }
-  
-  D0.hat <- function(y, nT, t){
-    Sub <- function(t){
-      if(t <= nT){
-        Fun <- function(y){
-          if(y <= (nT - t)) exp(lgamma(nT - y + 1) + lgamma(nT - t + 1) - lgamma(nT - y - t + 1) - lgamma(nT + 1))
+  D0.hat <- function(y, nT, t) {
+    Sub <- function(t) {
+      if (t <= nT) {
+        Fun <- function(y) {
+          if (y <= (nT - t)) 
+            exp(lgamma(nT - y + 1) + lgamma(nT - t + 
+                                              1) - lgamma(nT - y - t + 1) - lgamma(nT + 
+                                                                                     1))
           else 0
         }
         sum(1 - sapply(y, Fun))
       }
       else {
         Sobs <- sum(y > 0)
-        Q1 <- sum(y==1)
-        Q2 <- sum(y==2)
-        Q0.hat <- ifelse(Q2 == 0,  (nT-1)/nT* Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)	#estimation of unseen species via Chao2
-        A <- nT*Q0.hat/(nT*Q0.hat+Q1)
-        ifelse(Q1 ==0, Sobs ,Sobs + Q0.hat * (1 - A ^ (t - nT)))	
-      }
-    }
-    sapply(t, Sub)
-  }
-  
-  D1.hat <- function(y, nT, t){
-    U <- sum(y)
-    Sub <- function(t){
-      if(t < nT){
-        k <- 1:t	
-        Ut.hat <- t / nT * U
-        exp(-sum(k / Ut.hat * log(k / Ut.hat) * Qk.hat(y, nT, t)))
-      }
-      else {
-        UE <- sum(y / nT * (digamma(nT) - digamma(y)))
         Q1 <- sum(y == 1)
         Q2 <- sum(y == 2)
-        A <- 1 - ifelse(Q2 > 0, (nT-1)*Q1/((nT-1)*Q1+2*Q2), (nT-1)*Q1/((nT-1)*Q1+2))
-        B <- ifelse(A<1,sum(y==1)/nT*(1-A)^(-nT+1)*(-log(A)-sum(sapply(1:(nT-1),function(k){1/k*(1-A)^k}))),0)
-        H.hat <- UE+B
-        D.hat <- exp(nT/U*H.hat-log(nT/U))
-        
-        a <- 1:(nT-1)
-        b <- 1:(nT-2)
-        Ua <- (nT-1) / nT * U
-        Ub <- (nT-2) / nT * U
-        Da <- exp(-sum(a / Ua * log(a / Ua) * Qk.hat(y, nT, nT-1)))
-        Db <- exp(-sum(b / Ub * log(b / Ub) * Qk.hat(y, nT, nT-2)))
-        Dn <- exp(-sum(y / U * log(y / U)))
-        
-        Dn1 <- ifelse(Da!=Db, Dn + (Dn-Da)^2/(Da-Db), Dn)
-        b <- ifelse(D.hat>Dn, (Dn1-Dn)/(D.hat-Dn), 0)
-        #b <- A
-        ifelse(b!=0, Dn + (D.hat-Dn)*(1-(1-b)^(t-nT)), Dn)
+        Q0.hat <- ifelse(Q2 == 0, (nT - 1)/nT * Q1 * 
+                           (Q1 - 1)/2, (nT - 1)/nT * Q1^2/2/Q2)
+        A <- nT * Q0.hat/(nT * Q0.hat + Q1)
+        ifelse(Q1 == 0, Sobs, Sobs + Q0.hat * (1 - A^(t - 
+                                                        nT)))
       }
     }
     sapply(t, Sub)
   }
-  
-  D2.hat <- function(y, nT, t){
+  D1.hat <- function(y, nT, t) {
     U <- sum(y)
-    Sub <- function(t) 1 / (1 / t * nT / U + (1 - 1 / t) * sum(y * (y - 1) / U^2 / (1 - 1 / nT)))
-    sapply(t, Sub)
-  }
-  
-  Dq.hat <- function(y, nT, t){
-    U <- sum(y)
-    Sub <- function(t){
-      k <- 1:t
-      Ut.hat <- U * t / nT
-      sum( (k / Ut.hat)^q * Qk.hat(y, nT, t))^(1 / (1 - q))
+    if(sum(t>nT) >= 0){
+      UE <- sum(y/nT * (digamma(nT) - digamma(y)))
+      Q1 <- sum(y == 1)
+      Q2 <- sum(y == 2)
+      A <- 1 - ifelse(Q2 > 0, (nT - 1) * Q1/((nT - 1) * Q1 + 2 * Q2), (nT - 1) * Q1/((nT - 1) * Q1 + 2))
+      B <- ifelse(A < 1, sum(y == 1)/nT * (1 - A)^(-nT + 1) * (-log(A) - sum(sapply(1:(nT - 1), function(k) {1/k * (1 - A)^k }))), 0)
+      H.hat <- UE + B
+      D.hat <- exp(nT/U * H.hat - log(nT/U))
+      a <- 1:(nT - 1)
+      b <- 1:(nT - 2)
+      Ua <- (nT - 1)/nT * U
+      Ub <- (nT - 2)/nT * U
+      Da <- exp(-sum(a/Ua * log(a/Ua) * Qk.hat(y, nT, nT - 1)))
+      Db <- exp(-sum(b/Ub * log(b/Ub) * Qk.hat(y, nT, nT - 2)))
+      Dn <- exp(-sum(y/U * log(y/U)))
+      Dn1 <- ifelse(Da != Db, Dn + (Dn - Da)^2/(Da - Db), Dn)
+      b <- ifelse(D.hat > Dn, (Dn1 - Dn)/(D.hat - Dn), 0)
+    }
+    Sub <- function(t) {
+      if (t < nT) {
+        k <- 1:t
+        Ut.hat <- t/nT * U
+        exp(-sum(k/Ut.hat * log(k/Ut.hat) * Qk.hat(y, nT, t)))
+      }
+      else {
+        ifelse(b != 0, Dn + (D.hat - Dn) * (1 - (1 - b)^(t - nT)), Dn)
+      }
     }
     sapply(t, Sub)
   }
-  if(q == 0) D0.hat(y, nT, t)
-  else if(q == 1) D1.hat(y, nT, t)
-  else if(q == 2) D2.hat(y, nT, t)
+  D2.hat <- function(y, nT, t) {
+    U <- sum(y)
+    Sub <- function(t) 1/(1/t * nT/U + (1 - 1/t) * sum(y * (y - 1)/U^2/(1 - 1/nT)))
+    sapply(t, Sub)
+  }
+  Dq.hat <- function(y, nT, t) {
+    U <- sum(y)
+    Sub <- function(t) {
+      k <- 1:t
+      Ut.hat <- U * t/nT
+      sum((k/Ut.hat)^q * Qk.hat(y, nT, t))^(1/(1 - q))
+    }
+    sapply(t, Sub)
+  }
+  if (q == 0) 
+    D0.hat(y, nT, t)
+  else if (q == 1) 
+    D1.hat(y, nT, t)
+  else if (q == 2) 
+    D2.hat(y, nT, t)
   else Dq.hat(y, nT, t)
 }
-
 
 #
 #
