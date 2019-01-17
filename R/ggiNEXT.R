@@ -227,10 +227,10 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$site <- ""
   }
   
-  if(ncol(z)==7) {
+  if(ncol(z)==5) {
     warning("invalid se setting, the iNEXT object do not consist confidence interval")
     se <- FALSE
-  }else if(ncol(z)>7) {
+  }else if(ncol(z)>5) {
     se <- TRUE
   }
   
