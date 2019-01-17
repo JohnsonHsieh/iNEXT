@@ -69,7 +69,7 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   options(warn = -1)
   z <- fortify(x, type=type)
   options(warn = 0)
-  if(ncol(z) ==5) {se <- FALSE}
+  if(ncol(z) ==7) {se <- FALSE}
   datatype <- unique(z$datatype)
   if(color.var=="none"){
     if(levels(factor(z$order))>1 & "site"%in%names(z)){
@@ -227,10 +227,10 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     z$site <- ""
   }
   
-  if(ncol(z)==5) {
+  if(ncol(z)==6) {
     warning("invalid se setting, the iNEXT object do not consist confidence interval")
     se <- FALSE
-  }else if(ncol(z)>5) {
+  }else if(ncol(z)>6) {
     se <- TRUE
   }
   
