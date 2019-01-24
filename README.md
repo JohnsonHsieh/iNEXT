@@ -5,7 +5,7 @@ iNEXT (R package)
 [![Build Status](https://travis-ci.org/JohnsonHsieh/iNEXT.svg?branch=master)](https://travis-ci.org/JohnsonHsieh/iNEXT) [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/iNEXT)](https://github.com/metacran/cranlogs.app)
 
 <h5 align="right">
-Latest version: 2018-12-14
+Latest version: 2019-01-24
 </h5>
 <font color="394CAE">
 <h3 color="394CAE" style="font-weight: bold">
