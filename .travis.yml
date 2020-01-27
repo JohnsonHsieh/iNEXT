@@ -4,7 +4,11 @@ cache: packages
 r_check_args: --as-cran
 matrix:
   include:
+    - os: linux
+      r: release
     - os: osx
+      r: release
+    - os: linux
       r: devel
       env:
         - R_KEEP_PKG_SOURCE=yes
