@@ -172,38 +172,38 @@ invChat <- function(x, datatype="abundance", C=NULL, conf=NULL){
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  
+  class_x <- class(x)[1]
   if(datatype=="abundance"){
-    if(class(x)=="numeric" | class(x)=="integer"){
+    if(class_x=="numeric" | class_x=="integer"){
       if(is.null(C)){
         C <- Chat.Ind(x, 2*sum(x))
       }
       out <- invChat.Ind(x, C, conf)
     }
-    else if(class(x)=="list"){
+    else if(class_x=="list"){
       if(is.null(C)){
         C <- min(unlist(lapply(x, function(x) Chat.Ind(x, sum(x)))))
       }
       out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, C, conf)))
-    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
+    }else if(class_x=="data.frame" | class_x=="matrix"){
       if(is.null(C)){
         C <- min(unlist(apply(x, 2, function(x) Chat.Ind(x, sum(x)))))
       }
       out <- do.call(rbind, apply(x, 2, function(x) invChat.Ind(x, C, conf)))
     }
   }else if(datatype=="incidence"){
-    if(class(x)=="numeric" | class(x)=="integer"){
+    if(class_x=="numeric" | class_x=="integer"){
       if(is.null(C)){
         C <- Chat.Sam(x, 2*max(x))
       }
       out <- invChat.Sam(x, C, conf)
     }
-    else if(class(x)=="list"){
+    else if(class_x=="list"){
       if(is.null(C)){
         C <- min(unlist(lapply(x, function(x) Chat.Sam(x, max(x)))))
       }
       out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x, C, conf)))
-    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
+    }else if(class_x=="data.frame" | class_x=="matrix"){
       if(is.null(C)){
         C <- min(unlist(apply(x, 2, function(x) Chat.Sam(x, max(x)))))
       }
@@ -221,19 +221,20 @@ invSize <- function(x, datatype="abundance", size=NULL, conf=NULL){
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
+  class_x <- class(x)[1]
   if(datatype=="abundance"){
-    if(class(x)=="numeric" | class(x)=="integer"){
+    if(class_x=="numeric" | class_x=="integer"){
       if(is.null(size)){
         size <- sum(x)
       }
       out <- invSize.Ind(x, size, conf)
     }
-    else if(class(x)=="list"){
+    else if(class_x=="list"){
       if(is.null(size)){
         size <- min(unlist(lapply(x, function(x) sum(x))))
       }
       out <- do.call(rbind, lapply(x, function(x) invSize.Ind(x, size, conf)))
-    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
+    }else if(class_x=="data.frame" | class_x=="matrix"){
       if(is.null(size)){
         size <- min(unlist(apply(x, 2, function(x) sum(x))))
       }
@@ -241,18 +242,18 @@ invSize <- function(x, datatype="abundance", size=NULL, conf=NULL){
     }
   }else if(datatype=="incidence"){
     
-    if(class(x)=="numeric" | class(x)=="integer"){
+    if(class_x=="numeric" | class_x=="integer"){
       if(is.null(size)){
         size <- max(x)
       }
       out <- invSize.Sam(x, size, conf)
     }
-    else if(class(x)=="list"){
+    else if(class_x=="list"){
       if(is.null(size)){
         size <- min(unlist(lapply(x, function(x) max(x))))
         }
       out <- do.call(rbind, lapply(x, function(x) invSize.Sam(x, size, conf)))
-    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
+    }else if(class_x=="data.frame" | class_x=="matrix"){
       if(is.null(size)){
         size <- min(unlist(apply(x, 2, function(x) max(x))))
       }
@@ -304,7 +305,7 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  
+  class_x <- class(x)[1]
   if(datatype == "incidence"){
     stop('datatype="incidence" was no longer supported after v2.0.8, 
          please try datatype="incidence_freq".')  
@@ -312,8 +313,8 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="data.frame" | class(x)[1]=="matrix") x <- as.incfreq(x)
-    else if(class(x)=="list") x <- lapply(x, as.incfreq)
+    if(class_x=="data.frame" | class_x=="matrix") x <- as.incfreq(x)
+    else if(class_x=="list") x <- lapply(x, as.incfreq)
     datatype <- "incidence"
   }
     
@@ -364,7 +365,8 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
 #' @export
 #' 
 as.incfreq <- function(x){
-  if(class(x) == "data.frame" | class(x)[1] == "matrix"){
+  class_x <- class(x)[1]
+  if(class_x == "data.frame" | class_x == "matrix"){
     a <- sort(as.numeric(unique(c(unlist(x)))))
     if(!identical(a, c(0,1))){
       warning("Invalid data type, the element of species by sites presence-absence matrix should be 0 or 1. Set nonzero elements as 1.")
@@ -375,7 +377,7 @@ as.incfreq <- function(x){
     y <- c(nT, y)
     # names(y) <- c("nT", rownames(x))
     y
-  }else if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){
+  }else if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
     warnings("Ambiguous data type, the input object is a vector. Set total number of sampling units as 1.")
     c(1, x) 
   }else{
@@ -396,10 +398,11 @@ as.incfreq <- function(x){
 #' @export
 #' 
 as.abucount <- function(x){
-  if(class(x) == "data.frame" | class(x)[1] == "matrix"){
+  class_x <- class(x)[1]
+  if(class_x == "data.frame" | class_x == "matrix"){
     y <- rowSums(x)
     y
-  }else if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){
+  }else if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
     warnings("Ambiguous data type, the input object is a vector. Set total number of sampling units as 1.")
     x 
   }else{

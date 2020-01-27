@@ -598,6 +598,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
+  class_x <- class(x)[1]
   
   if(datatype == "incidence"){
     stop('datatype="incidence" was no longer supported after v2.0.8, 
@@ -608,7 +609,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(class_x=="list"){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -617,13 +618,13 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   }
   #   if(rowsum==FALSE){
   #     if(datatype=="abundance"){
-  #       if(class(x) =="list"){
+  #       if(class_x =="list"){
   #         x <- lapply(x, as.abucount)
   #       }else{
   #         x <- as.abucount(x)
   #       }
   #     }else if(datatype=="incidence"){
-  #       if(class(x) =="list"){
+  #       if(class_x =="list"){
   #         x <- lapply(x, as.incfreq)
   #       }else{
   #         x <- as.incfreq(x)
@@ -657,7 +658,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     q <- q[q >= 0]
   }
   
-  if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){
+  if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
     out <- do.call("rbind", lapply(q, function(q) Fun(x, q)))
     out[,-(1:3)] <- round(out[,-(1:3)],3)
     index <- rbind(as.matrix(ChaoSpecies(x, datatype, conf)), 
@@ -665,7 +666,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
                    as.matrix(EstSimpson(x, datatype, transform=TRUE, conf)))
     rownames(index) <- c("Species Richness", "Shannon diversity", "Simpson diversity")
     
-  }else if(class(x)[1]=="matrix" | class(x)=="data.frame"){
+  }else if(class_x=="matrix" | class_x=="data.frame"){
     out <- apply(as.matrix(x), 2, function(x){
       tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
       tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
@@ -683,7 +684,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     colnames(index) <- c("Site", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
     
     
-  }else if(class(x)=="list"){
+  }else if(class_x=="list"){
     out <- lapply(x, function(x) {
       tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
       tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
