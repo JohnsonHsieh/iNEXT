@@ -23,3 +23,6 @@
 
 # iNEXT 2.0.19
 - Modified `Dqhat.Ind` and `Dqhat.Sam` to make them more efficient.
+
+# iNEXT 2.0.20
+- Modify Error in R 4.0.0 (issue #46).

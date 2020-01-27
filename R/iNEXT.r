@@ -665,7 +665,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
                    as.matrix(EstSimpson(x, datatype, transform=TRUE, conf)))
     rownames(index) <- c("Species Richness", "Shannon diversity", "Simpson diversity")
     
-  }else if(class(x)=="matrix" | class(x)=="data.frame"){
+  }else if(class(x)[1]=="matrix" | class(x)=="data.frame"){
     out <- apply(as.matrix(x), 2, function(x){
       tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
       tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)

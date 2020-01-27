@@ -185,7 +185,7 @@ invChat <- function(x, datatype="abundance", C=NULL, conf=NULL){
         C <- min(unlist(lapply(x, function(x) Chat.Ind(x, sum(x)))))
       }
       out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, C, conf)))
-    }else if(class(x)=="data.frame" | class(x)=="matrix"){
+    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
       if(is.null(C)){
         C <- min(unlist(apply(x, 2, function(x) Chat.Ind(x, sum(x)))))
       }
@@ -203,7 +203,7 @@ invChat <- function(x, datatype="abundance", C=NULL, conf=NULL){
         C <- min(unlist(lapply(x, function(x) Chat.Sam(x, max(x)))))
       }
       out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x, C, conf)))
-    }else if(class(x)=="data.frame" | class(x)=="matrix"){
+    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
       if(is.null(C)){
         C <- min(unlist(apply(x, 2, function(x) Chat.Sam(x, max(x)))))
       }
@@ -233,7 +233,7 @@ invSize <- function(x, datatype="abundance", size=NULL, conf=NULL){
         size <- min(unlist(lapply(x, function(x) sum(x))))
       }
       out <- do.call(rbind, lapply(x, function(x) invSize.Ind(x, size, conf)))
-    }else if(class(x)=="data.frame" | class(x)=="matrix"){
+    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
       if(is.null(size)){
         size <- min(unlist(apply(x, 2, function(x) sum(x))))
       }
@@ -252,7 +252,7 @@ invSize <- function(x, datatype="abundance", size=NULL, conf=NULL){
         size <- min(unlist(lapply(x, function(x) max(x))))
         }
       out <- do.call(rbind, lapply(x, function(x) invSize.Sam(x, size, conf)))
-    }else if(class(x)=="data.frame" | class(x)=="matrix"){
+    }else if(class(x)=="data.frame" | class(x)[1]=="matrix"){
       if(is.null(size)){
         size <- min(unlist(apply(x, 2, function(x) max(x))))
       }
@@ -312,7 +312,7 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="data.frame" | class(x)=="matrix") x <- as.incfreq(x)
+    if(class(x)=="data.frame" | class(x)[1]=="matrix") x <- as.incfreq(x)
     else if(class(x)=="list") x <- lapply(x, as.incfreq)
     datatype <- "incidence"
   }
@@ -364,7 +364,7 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
 #' @export
 #' 
 as.incfreq <- function(x){
-  if(class(x) == "data.frame" | class(x) == "matrix"){
+  if(class(x) == "data.frame" | class(x)[1] == "matrix"){
     a <- sort(as.numeric(unique(c(unlist(x)))))
     if(!identical(a, c(0,1))){
       warning("Invalid data type, the element of species by sites presence-absence matrix should be 0 or 1. Set nonzero elements as 1.")
@@ -396,7 +396,7 @@ as.incfreq <- function(x){
 #' @export
 #' 
 as.abucount <- function(x){
-  if(class(x) == "data.frame" | class(x) == "matrix"){
+  if(class(x) == "data.frame" | class(x)[1] == "matrix"){
     y <- rowSums(x)
     y
   }else if(class(x)=="numeric" | class(x)=="integer" | class(x)=="double"){

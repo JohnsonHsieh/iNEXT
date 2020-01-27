@@ -64,7 +64,7 @@ DataInfo <- function(x, datatype="abundance"){
       out <- matrix(Fun.abun(x), nrow=1)
     }else if(class(x) == "list"){
       out <- do.call("rbind", lapply(x, Fun.abun))
-    } else if(class(x) == "matrix" | class(x) == "data.frame"){
+    } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
       out <- t(apply(as.matrix(x), 2, Fun.abun))  
     }
     if(nrow(out) > 1){
@@ -81,7 +81,7 @@ DataInfo <- function(x, datatype="abundance"){
       out <- matrix(Fun.ince(x), nrow=1)
     }else if(class(x) == "list"){
       out <- do.call("rbind", lapply(x, Fun.ince))
-    } else if(class(x) == "matrix" | class(x) == "data.frame"){
+    } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
       out <- t(apply(as.matrix(x), 2, Fun.ince))  
     }
     if(nrow(out) > 1){
@@ -212,7 +212,7 @@ ChaoRichness=function(x, datatype="abundance", conf=0.95){
 	out <- myFun(x)
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x) == "matrix" | class(x) == "data.frame"){
+  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
     out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
@@ -469,7 +469,7 @@ ChaoShannon <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 	out <- myFun(x)
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x) == "matrix" | class(x) == "data.frame"){
+  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
     out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
@@ -602,7 +602,7 @@ ChaoSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 	out <- myFun(x)
   }else if(class(x) == "list"){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x) == "matrix" | class(x) == "data.frame"){
+  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
     out <-do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
