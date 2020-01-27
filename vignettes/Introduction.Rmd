@@ -353,7 +353,8 @@ str(ciliates)
 ```
 ```{r}
 out.raw <- iNEXT(ciliates, datatype="incidence_raw", endpoint=150)
-ggiNEXT(out.raw)
+out.raw
+# ggiNEXT(out.raw)
 ```
 
 
