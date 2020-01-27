@@ -8,6 +8,8 @@ matrix:
       r: release
     - os: osx
       r: release
+    - os: windows
+      r: release
     - os: linux
       r: devel
       env:
