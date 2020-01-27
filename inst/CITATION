@@ -11,8 +11,8 @@ citEntry(
     	                     as.person("Anne Chao")),
 		 year = year,
 		 note = note,
-		 url = "http://chao.stat.nthu.edu.tw/blog/software-download/",
-		 textVersion = paste("T. C. Hsieh, K. H. Ma and Anne Chao.", year, "iNEXT: iNterpolation and EXTrapolation for species diversity.", note, "URL: http://chao.stat.nthu.edu.tw/blog/software-download/.")
+		 url = "http://chao.stat.nthu.edu.tw/wordpress/software_download/",
+		 textVersion = paste("T. C. Hsieh, K. H. Ma and Anne Chao.", year, "iNEXT: iNterpolation and EXTrapolation for species diversity.", note, "URL: http://chao.stat.nthu.edu.tw/wordpress/software-download/.")
 )
 
 citEntry(
