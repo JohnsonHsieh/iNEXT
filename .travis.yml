@@ -1,5 +1,14 @@
 language: r
 sudo: false
 cache: packages
+r_check_args: --as-cran
+matrix:
+  include:
+    - os: linux
+      r: devel
+      env:
+        - R_KEEP_PKG_SOURCE=yes
+        - _R_CLASS_MATRIX_ARRAY_=true
+        - _R_CHECK_LENGTH_1_CONDITION_=true
 before_install:
   - tlmgr install index
