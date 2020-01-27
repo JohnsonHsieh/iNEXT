@@ -13,4 +13,4 @@ matrix:
       env:
         - R_KEEP_PKG_SOURCE=yes
         - _R_CLASS_MATRIX_ARRAY_=true
-        - _R_CHECK_LENGTH_1_CONDITION_=true
+        - _R_CHECK_LENGTH_1_CONDITION_="package:_R_CHECK_PACKAGE_NAME_,verbose"
