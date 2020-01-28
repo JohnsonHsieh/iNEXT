@@ -290,10 +290,11 @@ invSize <- function(x, datatype="abundance", size=NULL, conf=NULL){
 #' @return a \code{data.frame} of species diversity table including the sample size, sample coverage,
 #' method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, and 2 for the user-specified sample size or sample coverage.
 #' @examples
+#' \dontrun{
 #' data(spider)
 #' estimateD(spider, "abundance", base="size", level=NULL, conf=0.95)
 #' estimateD(spider, "abundance", base="coverage", level=NULL, conf=0.95)
-#' 
+#' }
 #' data(ant)
 #' estimateD(ant, "incidence_freq", base="coverage", level=0.985, conf=NULL)
 #' @export

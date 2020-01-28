@@ -21,7 +21,9 @@ Foissner, W., Agatha, S., & Berger, H. (2002) Soil Ciliates (Protozoa, Ciliophor
 }
 \examples{
 data(ciliates)
+\dontrun{
 out <- iNEXT(ciliates, datatype="incidence_raw")
 ggiNEXT(out)
+}
 }
 \keyword{datasets}
