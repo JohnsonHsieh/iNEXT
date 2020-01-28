@@ -8,7 +8,7 @@ Description: Provides simple functions to compute and plot two
     diversity (Hill numbers) for individual-based (abundance) data or sampling-unit-
     based (incidence) data. (Hsieh, Ma and Chao 2014) <doi: 10.1111/2041-210X.12613>.
 License: GPL (>= 3)
-URL: http://chao.stat.nthu.edu.tw/wordpress/software-download/
+URL: http://chao.stat.nthu.edu.tw/wordpress/software_download/
 Maintainer: T. C. Hsieh <euler96@gmail.com>
 Depends:
     R (>= 3.4)
@@ -19,7 +19,7 @@ Imports:
     reshape2
 BugReports: https://github.com/JohnsonHsieh/iNEXT/issues
 LazyLoad: yes
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: testthat,
     knitr,
     rmarkdown,

@@ -582,12 +582,13 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' out2 <- iNEXT(bird, q=0, datatype="abundance")
 #' ggiNEXT(out2)
 #' 
+#' \dontrun{
 #' ## example for incidence frequencies based data (list of data.frame)
 #' data(ant)
 #' t <- round(seq(10, 500, length.out=20))
 #' out3 <- iNEXT(ant$h500m, q=1, datatype="incidence_freq", size=t, se=FALSE)
 #' out3$iNextEst
-#' 
+#' }
 #' @export
 #' 
 iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=40, se=TRUE, conf=0.95, nboot=50)

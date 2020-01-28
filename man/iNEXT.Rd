@@ -54,10 +54,11 @@ data(bird)
 out2 <- iNEXT(bird, q=0, datatype="abundance")
 ggiNEXT(out2)
 
+\dontrun{
 ## example for incidence frequencies based data (list of data.frame)
 data(ant)
 t <- round(seq(10, 500, length.out=20))
 out3 <- iNEXT(ant$h500m, q=1, datatype="incidence_freq", size=t, se=FALSE)
 out3$iNextEst
-
+}
 }
