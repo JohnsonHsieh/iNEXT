@@ -13,9 +13,10 @@ This data set describes 41 birds as reported by Jetz et al. (2012). It gives the
 Jetz, W., Thomas, G.H., Joy, J.B., Hartmann, K. & Mooers A.O. (2012). The global diversity of birds in space and time. Nature, 491, 444-448.
 }
 \examples{
-library(ggplot2)
 data(bird)
+\dontrun{
 out <- iNEXT(bird, datatype="abundance")
 ggiNEXT(out)
+}
 }
 \keyword{datasets}
