@@ -8,6 +8,7 @@ matrix:
       r: release
     - os: osx
       r: release
+      r_check_args: --no-build-vignettes --no-codoc --no-manual --ignore-vignettes
     - os: linux
       r: devel
       env:
