@@ -4,13 +4,15 @@
 \alias{estimateD}
 \title{Compute species diversity with a particular of sample size/coverage}
 \usage{
-estimateD(x, datatype = "abundance", base = "size", level = NULL,
-  conf = 0.95)
+estimateD(x, q = c(0, 1, 2), datatype = "abundance", base = "size",
+  level = NULL, nboot = 50, conf = NULL)
 }
 \arguments{
 \item{x}{a \code{data.frame} or \code{list} of species abundances or incidence frequencies.\cr 
 If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units, followed 
 by species incidence frequencies in each column or list.}
+
+\item{q}{a numerical vector of the order of Hill number.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).}
@@ -21,7 +23,9 @@ sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq
 If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites. 
 If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites.}
 
-\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95. Remove C.I. by setting conf=NULL.}
+\item{nboot}{the number of bootstrap times to obtain confidence interval. If confidence interval is not desired, use 0 to skip this time-consuming step.}
+
+\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.}
 }
 \value{
 a \code{data.frame} of species diversity table including the sample size, sample coverage,
@@ -33,9 +37,9 @@ method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, an
 \examples{
 \dontrun{
 data(spider)
-estimateD(spider, "abundance", base="size", level=NULL, conf=0.95)
-estimateD(spider, "abundance", base="coverage", level=NULL, conf=0.95)
+estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size", level=NULL, conf=0.95)
+estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage", level=NULL, conf=0.95)
 }
 data(ant)
-estimateD(ant, "incidence_freq", base="coverage", level=0.985, conf=NULL)
+estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=NULL)
 }

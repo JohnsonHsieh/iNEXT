@@ -180,7 +180,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=50, conf = NUL
   if (datatype == "abundance") {
     if (class(x) == "list") {
       if (is.null(C)) {
-        C <- min(unlist(lapply(x, function(x) iChat.Ind(x,2*sum(x)))))
+        C <- min(unlist(lapply(x, function(x) Chat.Ind(x,2*sum(x)))))
       }
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, q, C,nboot, conf)))
@@ -285,11 +285,11 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=50, conf=NULL){
 #' @examples
 #' \dontrun{
 #' data(spider)
-#' estimateD(spider, "abundance", base="size", level=NULL, conf=0.95)
-#' estimateD(spider, "abundance", base="coverage", level=NULL, conf=0.95)
+#' estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size", level=NULL, conf=0.95)
+#' estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage", level=NULL, conf=0.95)
 #' }
 #' data(ant)
-#' estimateD(ant, "incidence_freq", base="coverage", level=0.985, conf=NULL)
+#' estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=NULL)
 #' @export
 estimateD <- function (x, q = c(0,1,2), datatype = "abundance", base = "size", level = NULL, nboot=50,
                        conf = NULL) 

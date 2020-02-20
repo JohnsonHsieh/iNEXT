@@ -657,7 +657,7 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 # 
 # ant <- list(h50m=y50, h500m=y500, h1070m=y1070, h1500m=y1500, h2000m=y2000)
 
-## usethis namespace: start
+
 #' @useDynLib iNEXT, .registration = TRUE
-## usethis namespace: end
+#' @importFrom Rcpp sourceCpp
 NULL

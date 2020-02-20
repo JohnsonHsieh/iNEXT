@@ -11,7 +11,7 @@ iNEXT(x, q = 0, datatype = "abundance", size = NULL,
 \arguments{
 \item{x}{a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list.}
 
-\item{q}{a numeric value specifying the diversity order of Hill number .}
+\item{q}{a numerical vector of the order of Hill number.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).}
