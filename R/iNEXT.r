@@ -102,7 +102,7 @@ EstiBootComm.Sam <- function(Spec)
 ###########################################
 # iNterpolation and EXTrapolation of abundance-based Hill number
 # 
-# \code{Dqhat.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
+# \code{TD.m.est} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
 # 
 # @param x a vector of species abundances
 # @param m a integer vector of rarefaction/extrapolation sample size
@@ -145,7 +145,7 @@ TD.m.est = function(x, m, qs){ ## here q is allowed to be a vector containing no
       ETD(m,qs)
     }
   }
-  sapply(m, Sub) %>% t() %>% as.vector()
+  as.vector(t(sapply(m, Sub))) 
 }
 
 #
@@ -153,7 +153,7 @@ TD.m.est = function(x, m, qs){ ## here q is allowed to be a vector containing no
 ###########################################
 # iNterpolation and EXTrapolation of incidence-based Hill number
 # 
-# \code{Dqhat.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number
+# \code{TD.m.est_inc} Estimation of interpolation and extrapolation of incidence-based Hill number
 # 
 # @param y a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
 # @param t_ a integer vector of rarefaction/extrapolation sample size
@@ -196,7 +196,7 @@ TD.m.est_inc <- function(y, t_, qs){
       ETD(m,qs)
     }
   }
-  sapply(t_, Sub) %>% t() %>% as.vector()
+  as.vector(t(sapply(t_, Sub)))
 }
 
 #
@@ -273,7 +273,7 @@ Chat.Sam <- function(x, t){
 # \code{iNEXT.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
 # 
 # @param Spec a vector of species abundances
-# @param q a numeric vector, the order of Hill number 
+# @param q a numerical vector of the order of Hill number
 # @param m a integer vector of rarefaction/extrapolation sample size, default is NULL. If m is not be specified, then the program will compute sample units due to endpoint and knots.
 # @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double the original sample size.
 # @param knots a number of knots of computation, default is 40
@@ -340,7 +340,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 # \code{iNEXT.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number with order q
 # 
 # @param Spec a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
-# @param q a numeric value, the order of Hill number 
+# @param q a numerical vector of the order of Hill number
 # @param t a integer vector of rarefaction/extrapolation sample size, default is NULL. If m is not be specified, then the program will compute sample units due to endpoint and knots.
 # @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double the original sample size.
 # @param knots a number of knots of computation, default is 40
@@ -420,7 +420,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' \code{iNEXT}: Interpolation and extrapolation of Hill number with order q
 #' 
 #' @param x a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list. 
-#' @param q a numeric value specifying the diversity order of Hill number .
+#' @param q a numerical vector of the order of Hill number.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 # @param rowsum a logical variable to check if the input object is raw data (species by sites matrix, \code{rowsum=FALSE}) or iNEXT default input (abundance counts or incidence frequencies, \code{rowsum=TRUE}).
