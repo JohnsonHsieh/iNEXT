@@ -16,7 +16,8 @@ Imports:
     stats,
     graphics,
     ggplot2,
-    reshape2
+    reshape2,
+    Rcpp
 BugReports: https://github.com/JohnsonHsieh/iNEXT/issues
 LazyLoad: yes
 RoxygenNote: 6.1.1
@@ -27,3 +28,5 @@ Suggests: testthat,
     ggthemes
 VignetteBuilder: knitr
 ByteCompile: true
+LinkingTo: 
+    Rcpp

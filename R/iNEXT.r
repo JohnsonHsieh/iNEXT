@@ -105,117 +105,47 @@ EstiBootComm.Sam <- function(Spec)
 # \code{Dqhat.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
 # 
 # @param x a vector of species abundances
-# @param q a numerical value of the order of Hill number
 # @param m a integer vector of rarefaction/extrapolation sample size
+# @param qs a numerical vector of the order of Hill number
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 # @export
-Dqhat.Ind <- function (x, q, m) {
-  x <- x[x > 0]
+TD.m.est = function(x, m, qs){ ## here q is allowed to be a vector containing non-integer values.
   n <- sum(x)
-  fk.hat <- function(x, m) {
-    x <- x[x > 0]
-    n <- sum(x)
-    fj <- table(x)
-    js <- as.numeric(names(fj))
-    if (m <= n) {
-      Sub <- function(k) {
-        fj_k <- fj[js>=k]
-        js_k <- js[js>=k]
-        ifelse(length(js_k) == 0, 0, sum(exp(lchoose(js_k, k) + lchoose(n - js_k, m - k) - lchoose(n, m)) * fj_k) )
-      }
-      sapply(1:m, Sub)
-    }
-    else {
-      # f1 <- sum(x == 1)
-      # f2 <- sum(x == 2)
-      # A <- ifelse(f2 > 0, (n - 1) * f1/((n - 1) * f1 + 
-      #                                     2 * f2), (n - 1) * f1/((n - 1) * f1 + 2))
-      # C.hat <- 1 - f1/n * A
-      # p.hat <- x/n * C.hat
-      p.hat = DetAbu(x)
-      Sub <- function(k) sum((choose(m, k) * p.hat^k * 
-                                (1 - p.hat)^(m - k))/(1 - (1 - p.hat)^n))
-      sapply(1:m, Sub)
+  #xv_matrix = as.matrix(xv)
+  ifi <- table(x);ifi <- cbind(i = as.numeric(names(ifi)),fi = ifi)
+  obs <- Diversity_profile_MLE(x,qs)
+  RFD_m <- RTD(ifi, n, n-1, qs)
+  RFD_m2 <- RTD(ifi, n, n-2, qs)
+  whincr <- which(RFD_m != RFD_m2)
+  Dn1 <- obs; Dn1[whincr] <- obs + (obs - RFD_m)^2/(RFD_m - RFD_m2)
+  #asymptotic value
+  asy <- Diversity_profile(x,qs)
+  #beta
+  beta <- rep(0,length(qs))
+  beta0plus <- which(asy != obs)
+  beta[beta0plus] <- (Dn1[beta0plus]-obs[beta0plus])/(asy[beta0plus]-obs[beta0plus])
+  #Extrapolation, 
+  ETD = function(m,qs){
+    m = m-n
+    out <- sapply(1:length(qs), function(i){
+      if( qs[i] != 2) {
+        obs[i]+(asy[i]-obs[i])*(1-(1-beta[i])^m)
+      }else if( qs[i] == 2 ){
+        1/ ((1/(n+m))+(1-1/(n+m))*sum(ifi[,2]*ifi[,1]/n*(ifi[,1]-1)/(n-1)) )
+      } 
+    })
+    return(out)
+  }
+  Sub = function(m){
+    if(m<n){
+      RTD(ifi,n,m,qs) 
+    }else if(m==n){
+      obs
+    }else{
+      ETD(m,qs)
     }
   }
-  D0.hat <- function(x, m) {
-    x <- x[x > 0]
-    n <- sum(x)
-    Sub <- function(m) {
-      if (m <= n) {
-        Fun <- function(x) {
-          if (x <= (n - m)) 
-            exp(lgamma(n - x + 1) + lgamma(n - m + 1) - 
-                  lgamma(n - x - m + 1) - lgamma(n + 1))
-          else 0
-        }
-        sum(1 - sapply(x, Fun))
-      }
-      else {
-        Sobs <- sum(x > 0)
-        f1 <- sum(x == 1)
-        f2 <- sum(x == 2)
-        f0.hat <- ifelse(f2 == 0, (n - 1)/n * f1 * (f1 - 1)/2, (n - 1)/n * f1^2/2/f2)
-        A <- n * f0.hat/(n * f0.hat + f1)
-        ifelse(f1 == 0, Sobs, Sobs + f0.hat * (1 - A^(m - n)))
-      }
-    }
-    sapply(m, Sub)
-  }
-  D1.hat <- function(x, m) {
-    x <- x[x > 0]
-    n <- sum(x)
-    if ( sum(m >= n) > 0){
-      f1 <- sum(x == 1)
-      f2 <- sum(x == 2)
-      A <- 1 - ifelse(f2 > 0, (n - 1) * f1/((n - 1) * 
-                                              f1 + 2 * f2), (n - 1) * f1/((n - 1) * f1 + 2))
-      UE <- sum(x/n * (digamma(n) - digamma(x)))
-      B <- ifelse(A < 1, sum(x == 1)/n * (1 - A)^(-n + 1) * (-log(A) - sum(sapply(1:(n - 1), function(k) { 1/k * (1 - A)^k }))), 0)
-      D.hat <- exp(UE + B)
-      
-      Dn <- exp(-sum(x/n * log(x/n)))
-      a <- 1:(n - 1)
-      b <- 1:(n - 2)
-      Da <- exp(-sum(a/(n - 1) * log(a/(n - 1)) * 
-                       fk.hat(x, (n - 1))))
-      # 20181227
-      Db <- exp(-sum(b/(n - 2) * log(b/(n - 2)) *
-                       fk.hat(x, (n - 2))))
-      Dn1 <- ifelse(Da != Db, Dn + (Dn - Da)^2/(Da - Db), Dn)
-      b <- ifelse(D.hat > Dn, (Dn1 - Dn)/(D.hat - Dn), 0)
-      # b <- ifelse(D.hat > Dn, (Dn - Da)/(D.hat -  Da), 0)
-      # print(b)
-    }
-    Sub <- function(m) {
-      if (m < n) {
-        k <- 1:m
-        exp(-sum(k/m * log(k/m) * fk.hat(x, m)))
-      }
-      else {
-        ifelse(b != 0, Dn + (D.hat - Dn) * (1 - (1 - b)^(m - n)), Dn)
-      }
-    }
-    sapply(m, Sub)
-  }
-  D2.hat <- function(x, m) {
-    Sub <- function(m) 1/(1/m + (1 - 1/m) * sum(x * (x - 1)/n/(n - 1)))
-    sapply(m, Sub)
-  }
-  Dq.hat <- function(x, m) {
-    Sub <- function(m) {
-      k <- 1:m
-      sum((k/m)^q * fk.hat(x, m))^(1/(1 - q))
-    }
-    sapply(m, Sub)
-  }
-  if (q == 0) 
-    D0.hat(x, m)
-  else if (q == 1) 
-    D1.hat(x, m)
-  else if (q == 2) 
-    D2.hat(x, m)
-  else Dq.hat(x, m)
+  sapply(m, Sub) %>% t() %>% as.vector()
 }
 
 #
@@ -226,110 +156,47 @@ Dqhat.Ind <- function (x, q, m) {
 # \code{Dqhat.Sam} Estimation of interpolation and extrapolation of incidence-based Hill number
 # 
 # @param y a vector of species incidence-based frequency, the first entry is the total number of sampling units, followed by the speceis incidences abundances.
-# @param q a numerical value of the order of Hill number
-# @param t a integer vector of rarefaction/extrapolation sample size
+# @param t_ a integer vector of rarefaction/extrapolation sample size
+# @param qs a numerical vector of the order of Hill number
 # @return a vector of estimated interpolation and extrapolation function of Hill number with order q
 # @export
-Dqhat.Sam <- function(y, q, t){
+TD.m.est_inc <- function(y, t_, qs){
   nT <- y[1]
   y <- y[-1]
   y <- y[y > 0]
   U <- sum(y)
-  Qk.hat <- function(y, nT, t) {
-    y <- y[y > 0]
-    Qj <- table(y)
-    js <- as.numeric(names(Qj))
-    if (t <= nT) {
-      Sub <- function(k) {
-        Qj_k <- Qj[js>=k]
-        js_k <- js[js>=k]
-        ifelse(length(js_k) == 0, 0, sum(exp(lchoose(js_k, k) + lchoose(nT - js_k, t - k) - lchoose(nT, t)) * Qj_k) )
-      }
-      sapply(1:t, Sub)
-    }
-    else {
-      p.hat <- EstiBootComm.Sam(c(nT, y))
-      Sub <- function(k) sum((choose(t, k) * p.hat^k * 
-                                (1 - p.hat)^(t - k))/(1 - (1 - p.hat)^T))
-      sapply(1:t, Sub)
+  #xv_matrix = as.matrix(xv)
+  iQi <- table(y);iQi <- cbind(i = as.numeric(names(iQi)),Qi = iQi)
+  obs <- Diversity_profile_MLE.inc(c(nT,y),qs)
+  RFD_m <- RTD_inc(iQi, nT, nT-1, qs)
+  RFD_m2 <- RTD(iQi, nT, nT-2, qs)
+  whincr <- which(RFD_m != RFD_m2)
+  Dn1 <- obs; Dn1[whincr] <- obs + (obs - RFD_m)^2/(RFD_m - RFD_m2)
+  asy <- Diversity_profile.inc(c(nT,y),qs)
+  beta <- rep(0,length(qs))
+  beta0plus <- which(asy != obs)
+  beta[beta0plus] <- (Dn1[beta0plus]-obs[beta0plus])/(asy[beta0plus]-obs[beta0plus])
+  ETD = function(m,qs){
+    m = m-nT
+    out <- sapply(1:length(qs), function(i){
+      if( qs[i] != 2) {
+        obs[i]+(asy[i]-obs[i])*(1-(1-beta[i])^m)
+      }else if( qs[i] == 2 ){
+        1/ ((1/(nT+m))*(nT/U)+(1-1/(nT+m))*sum(iQi[,2]*iQi[,1]/(U^2)*(iQi[,1]-1)/(1-1/nT)) )
+      } 
+    })
+    return(out)
+  }
+  Sub = function(m){
+    if(m<nT){
+      RTD_inc(iQi,nT,m,qs) 
+    }else if(m==nT){
+      obs
+    }else{
+      ETD(m,qs)
     }
   }
-  D0.hat <- function(y, nT, t) {
-    Sub <- function(t) {
-      if (t <= nT) {
-        Fun <- function(y) {
-          if (y <= (nT - t)) 
-            exp(lgamma(nT - y + 1) + lgamma(nT - t + 1) - lgamma(nT - y - t + 1) - lgamma(nT + 1))
-          else 0
-        }
-        sum(1 - sapply(y, Fun))
-      }
-      else {
-        Sobs <- sum(y > 0)
-        Q1 <- sum(y == 1)
-        Q2 <- sum(y == 2)
-        Q0.hat <- ifelse(Q2 == 0, (nT - 1)/nT * Q1 * 
-                           (Q1 - 1)/2, (nT - 1)/nT * Q1^2/2/Q2)
-        A <- nT * Q0.hat/(nT * Q0.hat + Q1)
-        ifelse(Q1 == 0, Sobs, Sobs + Q0.hat * (1 - A^(t - 
-                                                        nT)))
-      }
-    }
-    sapply(t, Sub)
-  }
-  D1.hat <- function(y, nT, t) {
-    U <- sum(y)
-    if(sum(t>nT) >= 0){
-      UE <- sum(y/nT * (digamma(nT) - digamma(y)))
-      Q1 <- sum(y == 1)
-      Q2 <- sum(y == 2)
-      A <- 1 - ifelse(Q2 > 0, (nT - 1) * Q1/((nT - 1) * Q1 + 2 * Q2), (nT - 1) * Q1/((nT - 1) * Q1 + 2))
-      B <- ifelse(A < 1, sum(y == 1)/nT * (1 - A)^(-nT + 1) * (-log(A) - sum(sapply(1:(nT - 1), function(k) {1/k * (1 - A)^k }))), 0)
-      H.hat <- UE + B
-      D.hat <- exp(nT/U * H.hat - log(nT/U))
-      a <- 1:(nT - 1)
-      b <- 1:(nT - 2)
-      Ua <- (nT - 1)/nT * U
-      Ub <- (nT - 2)/nT * U
-      Da <- exp(-sum(a/Ua * log(a/Ua) * Qk.hat(y, nT, nT - 1)))
-      Db <- exp(-sum(b/Ub * log(b/Ub) * Qk.hat(y, nT, nT - 2)))
-      Dn <- exp(-sum(y/U * log(y/U)))
-      Dn1 <- ifelse(Da != Db, Dn + (Dn - Da)^2/(Da - Db), Dn)
-      b <- ifelse(D.hat > Dn, (Dn1 - Dn)/(D.hat - Dn), 0)
-    }
-    Sub <- function(t) {
-      if (t < nT) {
-        k <- 1:t
-        Ut.hat <- t/nT * U
-        exp(-sum(k/Ut.hat * log(k/Ut.hat) * Qk.hat(y, nT, t)))
-      }
-      else {
-        ifelse(b != 0, Dn + (D.hat - Dn) * (1 - (1 - b)^(t - nT)), Dn)
-      }
-    }
-    sapply(t, Sub)
-  }
-  D2.hat <- function(y, nT, t) {
-    U <- sum(y)
-    Sub <- function(t) 1/(1/t * nT/U + (1 - 1/t) * sum(y * (y - 1)/U^2/(1 - 1/nT)))
-    sapply(t, Sub)
-  }
-  Dq.hat <- function(y, nT, t) {
-    U <- sum(y)
-    Sub <- function(t) {
-      k <- 1:t
-      Ut.hat <- U * t/nT
-      sum((k/Ut.hat)^q * Qk.hat(y, nT, t))^(1/(1 - q))
-    }
-    sapply(t, Sub)
-  }
-  if (q == 0) 
-    D0.hat(y, nT, t)
-  else if (q == 1) 
-    D1.hat(y, nT, t)
-  else if (q == 2) 
-    D2.hat(y, nT, t)
-  else Dq.hat(y, nT, t)
+  sapply(t_, Sub) %>% t() %>% as.vector()
 }
 
 #
@@ -406,7 +273,7 @@ Chat.Sam <- function(x, t){
 # \code{iNEXT.Ind} Estimation of interpolation and extrapolation of abundance-based Hill number with order q
 # 
 # @param Spec a vector of species abundances
-# @param q a numeric value, the order of Hill number 
+# @param q a numeric vector, the order of Hill number 
 # @param m a integer vector of rarefaction/extrapolation sample size, default is NULL. If m is not be specified, then the program will compute sample units due to endpoint and knots.
 # @param endpoint a integer of sample size that is the endpoint for rarefaction/extrapolation. Default is double the original sample size.
 # @param knots a number of knots of computation, default is 40
@@ -436,27 +303,28 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
     m <- sort(m)
   }
   
-  Dq.hat <- Dqhat.Ind(Spec, q, m)
+  Dq.hat <- TD.m.est(Spec,m,q)
   C.hat <- Chat.Ind(Spec, m)
   
   if(se==TRUE & nboot > 0 & length(Spec) > 1) {
     Prob.hat <- EstiBootComm.Ind(Spec)
     Abun.Mat <- rmultinom(nboot, n, Prob.hat)
     
-    error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(x) Dqhat.Ind(x, q, m)), 1, sd, na.rm=TRUE)
+    error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(x) TD.m.est(x, m, q)), 1, sd, na.rm=TRUE)
     left  <- Dq.hat - error
     right <- Dq.hat + error
     
     error.C <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)), 1, sd, na.rm=TRUE)
     left.C  <- C.hat - error.C
     right.C <- C.hat + error.C
-    out <- cbind("m"=m, "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, "SC"=C.hat, "SC.LCL"=left.C, "SC.UCL"=right.C)
+    out <- cbind("m"=rep(m,length(q)), "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, 
+                 "SC"=rep(C.hat,length(q)), "SC.LCL"=left.C, "SC.UCL"=right.C)
   } else {
-    out <- cbind("m"=m, "qD"=Dq.hat, "SC"=C.hat)
+    out <- cbind("m"=rep(m,length(q)), "qD"=Dq.hat, "SC"=rep(C.hat,length(q)))
   }
   out <- data.frame(out)
   out$method <- ifelse(out$m<n, "interpolated", ifelse(out$m==n, "observed", "extrapolated"))
-  out$order <- q
+  out$order <- rep(q,each = length(m))
   id <- match(c("m", "method", "order", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out), nomatch = 0)
   out <- out[, id]
   return(out)
@@ -505,7 +373,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
     t <- sort(t)
   }
   
-  Dq.hat <- Dqhat.Sam(Spec, q, t)
+  Dq.hat <- TD.m.est_inc(Spec,t,q)
   C.hat <- Chat.Sam(Spec, t)
   
   if(se==TRUE & nboot > 0 & length(Spec) > 2){
@@ -518,7 +386,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
       out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
       warning("Insufficient data to compute bootstrap s.e.")
     }else{		
-      error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(y) Dqhat.Sam(y, q, t)), 1, sd, na.rm=TRUE)
+      error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(y) TD.m.est_inc(y,t,q)), 1, sd, na.rm=TRUE)
       left  <- Dq.hat - error
       right <- Dq.hat + error
       left[left<=0] <- 0
@@ -529,14 +397,15 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
       left.C[left.C<=0] <- 0
       right.C[right.C>=1] <- 1
       
-      out <- cbind("t"=t, "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, "SC"=C.hat, "SC.LCL"=left.C, "SC.UCL"=right.C)
+      out <- cbind("t"=rep(t,length(q)), "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, 
+                   "SC"=rep(C.hat,length(q)), "SC.LCL"=left.C, "SC.UCL"=right.C)
     }
   }else {
-    out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
+    out <- cbind("t"=rep(t,length(q)), "qD"=Dq.hat, "SC"=rep(C.hat,length(q)))
   }
   out <- data.frame(out)
   out$method <- ifelse(out$t<nT, "interpolated", ifelse(out$t==nT, "observed", "extrapolated"))
-  out$order <- q
+  out$order <- rep(q,each = length(t))
   id <- match(c("t", "method", "order", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out), nomatch = 0)
   out <- out[, id]
   return(out)
@@ -660,8 +529,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   }
   
   if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
-    out <- do.call("rbind", lapply(q, function(q) Fun(x, q)))
-    out[,-(1:3)] <- round(out[,-(1:3)],3)
+    out <- Fun(x,q)
     index <- rbind(as.matrix(ChaoSpecies(x, datatype, conf)), 
                    as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)),
                    as.matrix(EstSimpson(x, datatype, transform=TRUE, conf)))
@@ -669,8 +537,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     
   }else if(class_x=="matrix" | class_x=="data.frame"){
     out <- apply(as.matrix(x), 2, function(x){
-      tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
-      tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
+      tmp <- Fun(x,q)
       tmp
     })
     arr <- array(0, dim = c(3, 5, ncol(x)))
@@ -687,8 +554,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     
   }else if(class_x=="list"){
     out <- lapply(x, function(x) {
-      tmp <- do.call("rbind", lapply(q, function(q) Fun(x,q)))
-      tmp[,-(1:3)] <- round(tmp[,-(1:3)],3)
+      tmp <- Fun(x,q)
       tmp
     })
     
@@ -790,3 +656,8 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 # y2000=c(200,1,2,2,3,4,8,8,13,15,19,23,34,59,80)
 # 
 # ant <- list(h50m=y50, h500m=y500, h1070m=y1070, h1500m=y1500, h2000m=y2000)
+
+## usethis namespace: start
+#' @useDynLib iNEXT, .registration = TRUE
+## usethis namespace: end
+NULL
