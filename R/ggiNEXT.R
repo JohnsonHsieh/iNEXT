@@ -51,6 +51,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey
 #' @export
 #' @rdname ggiNEXT
 ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site", grey=FALSE){
+  cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#330066", "#CC79A7",  "#0072B2", "#D55E00"))
   TYPE <-  c(1, 2, 3)
   SPLIT <- c("none", "order", "site", "both")
   if(is.na(pmatch(type, TYPE)) | pmatch(type, TYPE) == -1)
@@ -111,7 +112,8 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   data.sub <- zz[which(zz$method=="observed"),]
   
   g <- ggplot(z, aes_string(x="x", y="y", colour="col")) + 
-    geom_point(aes_string(shape="shape"), size=5, data=data.sub)
+    geom_point(aes_string(shape="shape"), size=5, data=data.sub)+
+    scale_colour_manual(values=cbPalette)
   
   
   g <- g + geom_line(aes_string(linetype="lty"), lwd=1.5) +
@@ -137,14 +139,16 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
   }
   
   if(se)
-    g <- g + geom_ribbon(aes_string(ymin="y.lwr", ymax="y.upr", fill="factor(col)", colour="NULL"), alpha=0.2)
+    g <- g + geom_ribbon(aes_string(ymin="y.lwr", ymax="y.upr", fill="factor(col)", colour="NULL"), alpha=0.2)+
+    scale_fill_manual(values=cbPalette)
   
   
   if(facet.var=="order"){
     if(length(levels(factor(z$order))) == 1 & type!=2){
       warning("invalid facet.var setting, the iNEXT object do not consist multiple orders.")      
     }else{
-      g <- g + facet_wrap(~order, nrow=1)
+      odr_grp <- as_labeller(c(`0` = "q = 0", `1` = "q = 1",`2` = "q = 2")) 
+      g <- g + facet_wrap(~order, nrow=1, labeller = odr_grp)
       if(color.var=="both"){
         g <- g + guides(colour=guide_legend(title="Guides", ncol=length(levels(factor(z$order))), byrow=TRUE),
                         fill=guide_legend(title="Guides"))
@@ -168,7 +172,8 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="none", color.var="site"
     if(length(levels(factor(z$order))) == 1 | !"site"%in%names(z)){
       warning("invalid facet.var setting, the iNEXT object do not consist multiple sites or orders.")
     }else{
-      g <- g + facet_wrap(site~order) 
+      odr_grp <- as_labeller(c(`0` = "q = 0", `1` = "q = 1",`2` = "q = 2")) 
+      g <- g + facet_wrap(site~order,labeller = labeller(order = odr_grp)) 
       if(color.var=="both"){
         g <- g +  guides(colour=guide_legend(title="Guides", nrow=length(levels(factor(z$site))), byrow=TRUE),
                          fill=guide_legend(title="Guides"))
