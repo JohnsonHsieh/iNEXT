@@ -193,7 +193,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
   }else if (datatype == "incidence") {
     if (class(x) == "list") {
       if (is.null(C)) {
-        C <- min(unlist(lapply(x, function(x) Chat.Sam(x,2*sum(x)))))
+        C <- min(unlist(lapply(x, function(x) Chat.Sam(x,2*max(x)))))
       }
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x,q,C,nboot, conf)))
@@ -227,7 +227,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
   if(datatype=="abundance"){
     if (class(x) == "list") {
       if (is.null(size)) {
-        size <- min(unlist(lapply(x, function(x) sum(x))))
+        size <- min(unlist(lapply(x, function(x) 2*sum(x))))
       } 
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invSize.Ind(x,q,size,nboot,conf)))
@@ -240,7 +240,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
   }else if (datatype == "incidence") {
     if (class(x) == "list") {
       if (is.null(size)) {
-        size <- min(unlist(lapply(x, function(x) max(x))))
+        size <- min(unlist(lapply(x, function(x) 2*max(x))))
       }
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invSize.Sam(x,q,size,nboot,conf)))
@@ -277,8 +277,8 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
 #' @param base comparison base: sample-size-based (\code{base="size"}) or coverage-based \cr (\code{base="coverage"}).
 #' @param nboot the number of bootstrap times to obtain confidence interval. If confidence interval is not desired, use 0 to skip this time-consuming step.
 #' @param level an value specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage. 
-#' If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites. 
-#' If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites. 
+#' If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites extrapolated to double reference sizes. 
+#' If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites extrapolated to double reference sizes. 
 #' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.
 #' @return a \code{data.frame} of species diversity table including the sample size, sample coverage,
 #' method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, and 2 for the user-specified sample size or sample coverage.

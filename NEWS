@@ -32,3 +32,10 @@
 - Change the facet label of diversity order in ggiNEXT from `0`, `1`, `2` to `q = 0`,`q = 1`, `q = 2`, respectively.
 - Change the default colors of ggiNEXT to make them color-blind friendly.
 - Improve the efficiency of `Dqhat.Ind` and rename it as `TD.m.est`. (Similarly, `Dqhat.Sam` is renamed as `TD.m.est_inc`)
+
+# iNEXT 2.1.1
+- Change default value of `level` of `estimateD` if it is not specified by users.
+- Correct version number in description file.
+
+
+
