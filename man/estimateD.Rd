@@ -5,7 +5,7 @@
 \title{Compute species diversity with a particular of sample size/coverage}
 \usage{
 estimateD(x, q = c(0, 1, 2), datatype = "abundance", base = "size",
-  level = NULL, nboot = 50, conf = NULL)
+  level = NULL, nboot = 50, conf = 0.95)
 }
 \arguments{
 \item{x}{a \code{data.frame} or \code{list} of species abundances or incidence frequencies.\cr 

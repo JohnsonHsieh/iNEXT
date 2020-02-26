@@ -1,4 +1,4 @@
-invChat.Ind <- function (x, q, C, nboot=50, conf = NULL) {
+invChat.Ind <- function (x, q, C, nboot=0, conf = NULL) {
   x <- x[x>0] ####added by yhc
   m <- NULL
   n <- sum(x)
@@ -32,7 +32,7 @@ invChat.Ind <- function (x, q, C, nboot=50, conf = NULL) {
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   method <- ifelse(mm < n, "interpolated", ifelse(mm == 
                                                     n, "observed", "extrapolated"))
-  if (nboot==0) {
+  if (nboot==0|is.null(conf)) {
     # SamCov = Chat.Ind(x, mm)
     # qD_coverage <- TD.m.est(x,mm,q)
     # out <- tibble(m=mm, Coverage = SamCov, q = q, Diversity = qD_coverage)
@@ -44,7 +44,7 @@ invChat.Ind <- function (x, q, C, nboot=50, conf = NULL) {
   }
   out
 }
-invChat.Sam <- function (x, q, C, nboot=50, conf = NULL) {
+invChat.Sam <- function (x, q, C, nboot=0, conf = NULL) {
   x <- x[x>0] ####added by yhc
   m <- NULL
   n <- max(x)
@@ -77,7 +77,7 @@ invChat.Sam <- function (x, q, C, nboot=50, conf = NULL) {
   }
   if (mm > 2 * n) 
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
-  if (is.null(conf)) {
+  if (nboot==0|is.null(conf)) {
     # SamCov = Chat.Sam(x, mm)
     # qD_coverage <- TD.m.est_inc(x,mm,q)
     # out <- tibble(t_=mm, Coverage = SamCov, q = q, Diversity = qD_coverage)
@@ -91,13 +91,13 @@ invChat.Sam <- function (x, q, C, nboot=50, conf = NULL) {
 }
 
 
-invSize.Ind <- function(x, q, size, nboot=50, conf=NULL){
+invSize.Ind <- function(x, q, size, nboot=0, conf=NULL){
   m <- NULL # no visible binding for global variable 'm'
   
   if(is.null(size)){
     size <- sum(x)
   }
-  if(nboot==0){
+  if(nboot==0|is.null(conf)){
     method <- ifelse(size<sum(x), "interpolated", ifelse(size==sum(x), "observed", "extrapolated"))
     out <- subset(iNEXT.Ind(x,q,m = c(1,size),se = FALSE), m==size)
     out <- out[,c(1,2,3,5,4)]
@@ -114,13 +114,13 @@ invSize.Ind <- function(x, q, size, nboot=50, conf=NULL){
   out
 }
 
-invSize.Sam <- function(x, q, size, nboot=50, conf=NULL){
+invSize.Sam <- function(x, q, size, nboot=0, conf=NULL){
   m <- NULL # no visible binding for global variable 'm'
   
   if(is.null(size)){
     size <- max(x)
   }
-  if(nboot==0){
+  if(nboot==0|is.null(conf)){
     method <- ifelse(size<max(x), "interpolated", ifelse(size==max(x), "observed", "extrapolated"))
     out <- subset(iNEXT.Sam(x,q,t = c(1,size),se = FALSE), t==size)
     out <- out[,c(1,2,3,5,4)]
@@ -162,7 +162,7 @@ invSize.Sam <- function(x, q, size, nboot=50, conf=NULL){
 # 
 # @export
 
-invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=50, conf = NULL) {
+invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL) {
   TYPE <- c("abundance", "incidence")
   if (is.na(pmatch(datatype, TYPE))) 
     stop("invalid datatype")
@@ -184,7 +184,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=50, conf = NUL
       }
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, q, C,nboot, conf)))
-      out$Community <- Community
+      out$site <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
     }else {
@@ -197,7 +197,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=50, conf = NUL
       }
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x,q,C,nboot, conf)))
-      out$Community <- Community
+      out$site <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
     }else {
@@ -208,7 +208,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=50, conf = NUL
 }
 
 
-invSize <- function(x, q, datatype="abundance", size=NULL, nboot=50, conf=NULL){
+invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
   TYPE <- c("abundance", "incidence")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid datatype")
@@ -231,7 +231,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=50, conf=NULL){
       } 
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invSize.Ind(x,q,size,nboot,conf)))
-      out$Community <- Community
+      out$site <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
     }else {
@@ -244,7 +244,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=50, conf=NULL){
       }
       Community = rep(names(x),each = length(q))
       out <- do.call(rbind, lapply(x, function(x) invSize.Sam(x,q,size,nboot,conf)))
-      out$Community <- Community
+      out$site <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
     }else {
@@ -292,7 +292,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=50, conf=NULL){
 #' estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=NULL)
 #' @export
 estimateD <- function (x, q = c(0,1,2), datatype = "abundance", base = "size", level = NULL, nboot=50,
-                       conf = NULL) 
+                       conf = 0.95) 
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE))) 

@@ -179,14 +179,13 @@ NOTE: Only show five estimates, call iNEXT.objext$iNextEst. to show complete out
 
 ```
 $AsyEst: asymptotic diversity estimates along with related statistics.
-                           Observed Estimator Est_s.e. Lower_CI Upper_CI
-                                                                        
-Girdled Species richness     26.000    43.893   14.306   30.511   96.971
-        Shannon diversity    12.060    13.826    1.531   12.060   16.827
-        Simpson diversity     7.840     8.175    0.879    7.840    9.897
-Logged  Species richness     37.000    61.403   18.532   43.502  128.583
-        Shannon diversity    14.421    16.337    1.629   14.421   19.531
-        Simpson diversity     6.761     6.920    0.802    6.761    8.492
+   Site         Diversity  Observed Estimator     s.e.      LCL      UCL             
+Girdled  Species richness    26.000    43.893   14.306   30.511   96.971
+Girdled Shannon diversity    12.060    13.826    1.531   12.060   16.827
+Girdled Simpson diversity     7.840     8.175    0.879    7.840    9.897
+Logged   Species richness    37.000    61.403   18.532   43.502  128.583
+Logged  Shannon diversity    14.421    16.337    1.629   14.421   19.531
+Logged  Simpson diversity     6.761     6.920    0.802    6.761    8.492
 ```
 
 The user may specify an integer sample size for the argument endpoint to designate the maximum sample size of R/E calculation. For species richness, the extrapolation method is reliable up to the double reference sample size; beyond that, the prediction bias may be large. However, for measures of q = 1 and 2, the extrapolation can usually be safely extended to the asymptote if data are not sparse; thus there is no limit for the value of endpoint for these two measures. 
@@ -312,7 +311,7 @@ ggiNEXT(out.inc, type=1, color.var="site") +
 ```{r}
 # Sample completeness curves
 ggiNEXT(out.inc, type=2, color.var="site") +
-  ylim(c(0.9,1)) +
+  coord_cartesian(ylim = c(0.9,1)) +
   theme_bw(base_size = 18) + 
   theme(legend.position="none")
 ```
@@ -321,7 +320,7 @@ ggiNEXT(out.inc, type=2, color.var="site") +
 ```{r}
 # Coverage‐based R/E curves
 ggiNEXT(out.inc, type=3, color.var ="site") + 
-  xlim(c(0.9,1)) +
+  coord_cartesian(xlim = c(0.9,1)) +
   theme_bw(base_size = 18) +
   theme(legend.position="bottom",
         legend.title=element_blank())
@@ -331,10 +330,10 @@ ggiNEXT(out.inc, type=3, color.var ="site") +
 ## POINT ESTIMATION FUNCTION: estimateD()
 We also supply the function  
 ```{r eval=FALSE}
-estimateD(x, datatype="abundance", base="size", level=NULL) 
+estimateD(x, q = c(0,1,2), datatype="abundance", base="size", level=NULL) 
 ```
 
-to compute diversity estimates with q = 0, 1, 2 for any particular level of sample size (`base="size"`) or any specified level of sample coverage (`base="coverage"`) for either abundance data (`datatype="abundance"`) or incidence data (`datatype="incidence_freq" or "incidence_raw"`). If `level=NULL`, this function computes the diversity estimates for the minimum sample size/coverage among all sites. 
+to compute diversity estimates with specified diversity orders `q` for any particular level of sample size (`base="size"`) or any specified level of sample coverage (`base="coverage"`) for either abundance data (`datatype="abundance"`) or incidence data (`datatype="incidence_freq" or "incidence_raw"`). If `level=NULL`, this function computes the diversity estimates for the minimum sample size/coverage among all sites. 
 
 For example, the following command returns the species diversity with a specified level of sample coverage of 98.5% for the ant data. For some sites, this coverage value corresponds to the rarefaction part whereas the others correspond to extrapolation, as indicated in the method of the output. 
 
@@ -354,7 +353,6 @@ str(ciliates)
 ```{r}
 out.raw <- iNEXT(ciliates, datatype="incidence_raw", endpoint=150)
 out.raw
-# ggiNEXT(out.raw)
 ```
 
 
@@ -419,7 +417,7 @@ g
 ```
 
 ### Change shapes, line types and colors
-```{r eval=FALSE}
+```{r}
 g1 <- g + scale_shape_manual(values=c(11, 12)) + 
           scale_linetype_manual(values=c(1,2))
 g2 <- g + scale_colour_manual(values=c("red", "blue")) +
@@ -469,7 +467,7 @@ grid.arrange(g5, g6, ncol=2)
 ```
 ```{r}
 library(ggthemes)
-g7 <- g + theme_hc(bgcolor = "darkunica") +
+g7 <- g + theme_hc(style = "darkunica") +
   theme(legend.box = "vertical") +
   scale_colour_hc("darkunica")
 
