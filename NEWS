@@ -37,5 +37,9 @@
 - Change default value of `level` of `estimateD` if it is not specified by users.
 - Correct version number in description file.
 
+# iNEXT 2.1.2
+- Correct the facet label when `type = 2` in `ggiNEXT`, which is supposed not to appear.
+- Slighty modification on the confidence interval method for asymptotic estimates.
+
 
 
