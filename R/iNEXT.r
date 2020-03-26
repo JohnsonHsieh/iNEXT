@@ -169,7 +169,7 @@ TD.m.est_inc <- function(y, t_, qs){
   iQi <- table(y);iQi <- cbind(i = as.numeric(names(iQi)),Qi = iQi)
   obs <- Diversity_profile_MLE.inc(c(nT,y),qs)
   RFD_m <- RTD_inc(iQi, nT, nT-1, qs)
-  RFD_m2 <- RTD(iQi, nT, nT-2, qs)
+  RFD_m2 <- RTD_inc(iQi, nT, nT-2, qs)
   whincr <- which(RFD_m != RFD_m2)
   Dn1 <- obs; Dn1[whincr] <- obs + (obs - RFD_m)^2/(RFD_m - RFD_m2)
   asy <- Diversity_profile.inc(c(nT,y),qs)
