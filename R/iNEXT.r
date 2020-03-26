@@ -550,7 +550,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       tmp <- Fun(x,q)
       tmp
     })
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = Site+order~method,value.var = 'qD')
@@ -574,7 +574,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       tmp <- Fun(x,q)
       tmp
     })
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = Site+order~method,value.var = 'qD')
