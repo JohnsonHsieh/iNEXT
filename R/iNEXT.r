@@ -531,7 +531,8 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   z <- qnorm(1-(1-0.95)/2)
   if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
     out <- Fun(x,q)
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = datatype,nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq')
+                     ,nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = order~method,value.var = 'qD')
@@ -549,7 +550,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       tmp <- Fun(x,q)
       tmp
     })
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = datatype,nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsymDiv(x = x,q = c(0,1,2),datatype = datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = Site+order~method,value.var = 'qD')
@@ -573,7 +574,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       tmp <- Fun(x,q)
       tmp
     })
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = datatype,nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsymDiv(x = x,q = c(0,1,2),datatype = datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = Site+order~method,value.var = 'qD')
@@ -675,7 +676,7 @@ AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,
         out
       })
       out <- do.call(rbind,out)
-    }else if(datatype=="incidence"){
+    }else if(datatype=="incidence_freq"){
       out <- lapply(1:length(x),function(i){
         dq <- c(Diversity_profile.inc(x[[i]],q),Diversity_profile_MLE.inc(x[[i]],q))
         if(nboot>1){
@@ -718,7 +719,7 @@ AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,
         out
       })
       out <- do.call(rbind,out)
-    }else if(datatype=="incidence"){
+    }else if(datatype=="incidence_freq"){
       out <- lapply(1:length(x),function(i){
         dq <- Diversity_profile_MLE.inc(x[[i]],q)
         if(nboot>1){
@@ -761,7 +762,7 @@ AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,
         out
       })
       out <- do.call(rbind,out)
-    }else if(datatype=="incidence"){
+    }else if(datatype=="incidence_freq"){
       out <- lapply(1:length(x),function(i){
         dq <- Diversity_profile.inc(x[[i]],q)
         if(nboot>1){
