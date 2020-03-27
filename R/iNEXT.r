@@ -710,7 +710,7 @@ AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,
           Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
           
           error <- qnorm(1-(1-conf)/2) * 
-            apply(apply(Abun.Mat, 2, function(xb) Diversity_profile_MLE(xb,q)), 1, sd, na.rm=TRUE)
+            apply(matrix(apply(Abun.Mat, 2, function(xb) Diversity_profile_MLE(xb,q)),nrow = length(q)), 1, sd, na.rm=TRUE)
           
         }else{error = 0}
         out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
@@ -734,7 +734,7 @@ AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,
             warning("Insufficient data to compute bootstrap s.e.")
           }else{		
             error <- qnorm(1-(1-conf)/2) * 
-              apply(apply(Abun.Mat, 2, function(yb) Diversity_profile_MLE.inc(yb,q)), 1, sd, na.rm=TRUE)
+              apply(matrix(apply(Abun.Mat, 2, function(yb) Diversity_profile_MLE.inc(yb,q)),nrow = length(q)), 1, sd, na.rm=TRUE)
           }
         }else{error = 0}
         out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
@@ -753,7 +753,7 @@ AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,
           Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
           
           error <- qnorm(1-(1-conf)/2) * 
-            apply(apply(Abun.Mat, 2, function(xb) Diversity_profile(xb, q)), 1, sd, na.rm=TRUE)
+            apply(matrix(apply(Abun.Mat, 2, function(xb) Diversity_profile(xb, q)),nrow = length(q)), 1, sd, na.rm=TRUE)
           
         }else{error = 0}
         out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
@@ -777,7 +777,7 @@ AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,
             warning("Insufficient data to compute bootstrap s.e.")
           }else{		
             error <- qnorm(1-(1-conf)/2) * 
-              apply(apply(Abun.Mat, 2, function(yb) Diversity_profile.inc(yb, q)), 1, sd, na.rm=TRUE)
+              apply(matrix(apply(Abun.Mat, 2, function(yb) Diversity_profile.inc(yb, q)),nrow = length(q)), 1, sd, na.rm=TRUE)
           }
         }else{error = 0}
         out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,

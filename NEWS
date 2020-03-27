@@ -41,5 +41,6 @@
 - Correct the facet label when `type = 2` in `ggiNEXT`, which is supposed not to appear.
 - Slighty modification on the confidence interval method for asymptotic estimates.
 - Fix a bug in the incidence extrapolation 
+- Fix a bug in the asymptotic profile
 
 
