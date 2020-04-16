@@ -43,4 +43,7 @@
 - Fix a bug in the incidence extrapolation 
 - Fix a bug in the asymptotic profile
 
+# iNEXT 2.1.3
+- Fix a bug in estimateD when the necessary size for a small coverage is 1
+
 

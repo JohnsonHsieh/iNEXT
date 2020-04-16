@@ -42,6 +42,7 @@ invChat.Ind <- function (x, q, C, nboot=0, conf = NULL) {
     out <- subset(iNEXT.Ind(x,q,m = c(1,mm),se = TRUE,conf = conf,nboot = nboot), m==mm)
     out <- out[,c(1, 2, 3, 7, 4, 5, 6)]
   }
+  out <- out[!duplicated(out), ]
   out
 }
 invChat.Sam <- function (x, q, C, nboot=0, conf = NULL) {
@@ -87,6 +88,7 @@ invChat.Sam <- function (x, q, C, nboot=0, conf = NULL) {
     out <- subset(iNEXT.Sam(x,q,t = c(1,mm),se = TRUE,conf = conf,nboot = nboot), t==mm)
     out <- out[, c(1, 2, 3, 7, 4, 5, 6)]
   }
+  out <- out[!duplicated(out), ]
   out
 }
 
@@ -111,6 +113,7 @@ invSize.Ind <- function(x, q, size, nboot=0, conf=NULL){
     out <- subset(iNEXT.Ind(x,q,m = c(1,size),se = TRUE,conf = conf,nboot = nboot), m==size)
     out <- out[,c(1, 2, 3, 7, 4, 5, 6)]
   }
+  out <- out[!duplicated(out), ]
   out
 }
 
@@ -140,6 +143,7 @@ invSize.Sam <- function(x, q, size, nboot=0, conf=NULL){
     # out <- tmp[,c(1,2,3,7,4,5,6)]
     # out[,4:7] <- round(out[,4:7],3)
   }
+  out <- out[!duplicated(out), ]
   out
 }
 #
