@@ -40,10 +40,12 @@
 # iNEXT 2.1.2
 - Correct the facet label when `type = 2` in `ggiNEXT`, which is supposed not to appear.
 - Slighty modification on the confidence interval method for asymptotic estimates.
-- Fix a bug in the incidence extrapolation 
-- Fix a bug in the asymptotic profile
+- Fix a bug in the incidence extrapolation.
+- Fix a bug in the asymptotic profile.
 
 # iNEXT 2.1.3
-- Fix a bug in estimateD when the necessary size for a small coverage is 1
+- Fix a bug in estimateD when the necessary size for a small coverage is 1.
 
-
+# iNEXT 2.1.4
+- Now the parameter "level" in estimateD can be a vector.
+- Slightly modify the bootstrap method in estimateD when base="coverage".

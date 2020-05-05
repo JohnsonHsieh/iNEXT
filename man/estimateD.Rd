@@ -19,7 +19,7 @@ sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq
 
 \item{base}{comparison base: sample-size-based (\code{base="size"}) or coverage-based \cr (\code{base="coverage"}).}
 
-\item{level}{an value specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage. 
+\item{level}{a sequence specifying the particular sample sizes or sample coverages(between 0 and 1). 
 If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites extrapolated to double reference sizes. 
 If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites extrapolated to double reference sizes.}
 
@@ -37,9 +37,9 @@ method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, an
 \examples{
 \dontrun{
 data(spider)
-estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size", level=NULL, conf=0.95)
-estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage", level=NULL, conf=0.95)
+out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size", level=NULL, conf=0.95)
+out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage", level=NULL, conf=0.95)
 }
 data(ant)
-estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=NULL)
+out <- estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=0.95)
 }

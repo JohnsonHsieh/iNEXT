@@ -1,150 +1,175 @@
-invChat.Ind <- function (x, q, C, nboot=0, conf = NULL) {
+invChat.Ind <- function (x, q, C) {
   x <- x[x>0] ####added by yhc
   m <- NULL
   n <- sum(x)
   refC <- Chat.Ind(x, n)
   f <- function(m, C) abs(Chat.Ind(x, m) - C)
-  if (refC > C) {
-    opt <- optimize(f, C = C, lower = 0, upper = sum(x))
-    mm <- opt$minimum
-    mm <- round(mm)
-  }
-  if (refC <= C) {
-    f1 <- sum(x == 1)
-    f2 <- sum(x == 2)
-    if (f1 > 0 & f2 > 0) {
-      A <- (n - 1) * f1/((n - 1) * f1 + 2 * f2)
+  mm <- sapply(C, function(cvrg){
+    if (refC > cvrg) {
+      opt <- optimize(f, C = cvrg, lower = 0, upper = sum(x))
+      mm <- opt$minimum
+      mm <- round(mm)
+    }else if (refC <= cvrg) {
+      f1 <- sum(x == 1)
+      f2 <- sum(x == 2)
+      if (f1 > 0 & f2 > 0) {
+        A <- (n - 1) * f1/((n - 1) * f1 + 2 * f2)
+      }
+      if (f1 > 1 & f2 == 0) {
+        A <- (n - 1) * (f1 - 1)/((n - 1) * (f1 - 1) + 2)
+      }
+      if (f1 == 1 & f2 == 0) {
+        A <- 1
+      }
+      if (f1 == 0 & f2 == 0) {
+        A <- 1
+      }
+      mm <- (log(n/f1) + log(1 - cvrg))/log(A) - 1
+      mm <- n + mm
+      mm <- round(mm)
     }
-    if (f1 > 1 & f2 == 0) {
-      A <- (n - 1) * (f1 - 1)/((n - 1) * (f1 - 1) + 2)
-    }
-    if (f1 == 1 & f2 == 0) {
-      A <- 1
-    }
-    if (f1 == 0 & f2 == 0) {
-      A <- 1
-    }
-    mm <- (log(n/f1) + log(1 - C))/log(A) - 1
-    mm <- n + mm
-    mm <- round(mm)
-  }
-  if (mm > 2 * n) 
+    mm
+  })
+  mm[mm==0] <- 1
+  SC <- Chat.Ind(x,mm)
+  if (sum(mm > 2 * n)>0) 
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
-  method <- ifelse(mm < n, "interpolated", ifelse(mm == 
-                                                    n, "observed", "extrapolated"))
-  if (nboot==0|is.null(conf)) {
-    # SamCov = Chat.Ind(x, mm)
-    # qD_coverage <- TD.m.est(x,mm,q)
-    # out <- tibble(m=mm, Coverage = SamCov, q = q, Diversity = qD_coverage)
-    out <- subset(iNEXT.Ind(x,q,m = c(1,mm),se = FALSE),m==mm)
-    out <- out[,c(1,2,3,5,4)]
-  }else {
-    out <- subset(iNEXT.Ind(x,q,m = c(1,mm),se = TRUE,conf = conf,nboot = nboot), m==mm)
-    out <- out[,c(1, 2, 3, 7, 4, 5, 6)]
-  }
-  out <- out[!duplicated(out), ]
-  out
+  
+  out <- TD.m.est(x = x,m = mm,qs = q)
+  method <- ifelse(mm>n,'extrapolated',ifelse(mm<n,'interpolated','observed'))
+  method <- rep(method,length(q))
+  m <- rep(mm,length(q))
+  order <- rep(q,each = length(mm))
+  SC <- rep(SC,length(q))
+  data.frame(m = m,method = method,order = order,
+         SC=SC,qD = out,goalSC = rep(C,length(q)))
+  # if (nboot==0|is.null(conf)) {
+  #   out <- TD.m.est(x = x,m = mm,qs = q)
+  #   out <- subset(iNEXT.Ind(x,q,m = c(1,mm),se = FALSE),m==mm)
+  #   out <- out[,c(1,2,3,5,4)]
+  # }else {
+  #   out <- subset(iNEXT.Ind(x,q,m = c(1,mm),se = TRUE,conf = conf,nboot = nboot), m==mm)
+  #   out <- out[,c(1, 2, 3, 7, 4, 5, 6)]
+  # }
+  # out <- out[!duplicated(out), ]
+  # out
 }
-invChat.Sam <- function (x, q, C, nboot=0, conf = NULL) {
+invChat.Sam <- function (x, q, C) {
   x <- x[x>0] ####added by yhc
   m <- NULL
   n <- max(x)
   refC <- Chat.Sam(x, n)
   f <- function(m, C) abs(Chat.Sam(x, m) - C)
-  if (refC > C) {
-    opt <- optimize(f, C = C, lower = 0, upper = max(x))
-    mm <- opt$minimum
-    mm <- round(mm)
-  }
-  if (refC <= C) {
-    f1 <- sum(x == 1)
-    f2 <- sum(x == 2)
-    U <- sum(x) - max(x)
-    if (f1 > 0 & f2 > 0) {
-      A <- (n - 1) * f1/((n - 1) * f1 + 2 * f2)
+  mm <- sapply(C, function(cvrg){
+    if (refC > cvrg) {
+      opt <- optimize(f, C = cvrg, lower = 0, upper = max(x))
+      mm <- opt$minimum
+      mm <- round(mm)
+    }else if (refC <= cvrg) {
+      f1 <- sum(x == 1)
+      f2 <- sum(x == 2)
+      U <- sum(x) - max(x)
+      if (f1 > 0 & f2 > 0) {
+        A <- (n - 1) * f1/((n - 1) * f1 + 2 * f2)
+      }
+      if (f1 > 1 & f2 == 0) {
+        A <- (n - 1) * (f1 - 1)/((n - 1) * (f1 - 1) + 2)
+      }
+      if (f1 == 1 & f2 == 0) {
+        A <- 1
+      }
+      if (f1 == 0 & f2 == 0) {
+        A <- 1
+      }
+      mm <- (log(U/f1) + log(1 - cvrg))/log(A) - 1
+      mm <- n + mm
+      mm <- round(mm)
     }
-    if (f1 > 1 & f2 == 0) {
-      A <- (n - 1) * (f1 - 1)/((n - 1) * (f1 - 1) + 2)
-    }
-    if (f1 == 1 & f2 == 0) {
-      A <- 1
-    }
-    if (f1 == 0 & f2 == 0) {
-      A <- 1
-    }
-    mm <- (log(U/f1) + log(1 - C))/log(A) - 1
-    mm <- n + mm
-    mm <- round(mm)
-  }
-  if (mm > 2 * n) 
+    mm
+  })
+  mm[mm==0] <- 1
+  SC <- Chat.Sam(x,mm)
+  if (sum(mm > 2 * n)>0) 
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
-  if (nboot==0|is.null(conf)) {
-    # SamCov = Chat.Sam(x, mm)
-    # qD_coverage <- TD.m.est_inc(x,mm,q)
-    # out <- tibble(t_=mm, Coverage = SamCov, q = q, Diversity = qD_coverage)
-    out <- subset(iNEXT.Sam(x,q,t = c(1,mm),se = FALSE), t==mm)
-    out <- out[,c(1,2,3,5,4)]
-  }else {
-    out <- subset(iNEXT.Sam(x,q,t = c(1,mm),se = TRUE,conf = conf,nboot = nboot), t==mm)
-    out <- out[, c(1, 2, 3, 7, 4, 5, 6)]
-  }
-  out <- out[!duplicated(out), ]
-  out
+  out <- TD.m.est_inc(y = x,t_ = mm,qs = q)
+  method <- ifelse(mm>n,'extrapolated',ifelse(mm<n,'interpolated','observed'))
+  method <- rep(method,length(q))
+  m <- rep(mm,length(q))
+  order <- rep(q,each = length(mm))
+  SC <- rep(SC,length(q))
+  data.frame(t = m,method = method,order = order,
+             SC=SC,qD = out,goalSC = rep(C,length(q)))
+  
+  # if (nboot==0|is.null(conf)) {
+  #   out <- subset(iNEXT.Sam(x,q,t = c(1,mm),se = FALSE), t==mm)
+  #   out <- out[,c(1,2,3,5,4)]
+  # }else {
+  #   out <- subset(iNEXT.Sam(x,q,t = c(1,mm),se = TRUE,conf = conf,nboot = nboot), t==mm)
+  #   out <- out[, c(1, 2, 3, 7, 4, 5, 6)]
+  # }
+  # out <- out[!duplicated(out), ]
+  # out
 }
 
 
-invSize.Ind <- function(x, q, size, nboot=0, conf=NULL){
+invSize.Ind <- function(x, q, size){
   m <- NULL # no visible binding for global variable 'm'
   
+  n <- sum(x)
   if(is.null(size)){
     size <- sum(x)
   }
-  if(nboot==0|is.null(conf)){
-    method <- ifelse(size<sum(x), "interpolated", ifelse(size==sum(x), "observed", "extrapolated"))
-    out <- subset(iNEXT.Ind(x,q,m = c(1,size),se = FALSE), m==size)
-    out <- out[,c(1,2,3,5,4)]
-    # out <- data.frame(m=size, method=method, 
-    #                   SamCov=round(Chat.Ind(x,size),3),
-    #                   SpeRic=round(Dqhat.Ind(x,0,size),3),
-    #                   ShaDiv=round(Dqhat.Ind(x,1,size),3),
-    #                   SimDiv=round(Dqhat.Ind(x,2,size),3))
-    # colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
-  }else{
-    out <- subset(iNEXT.Ind(x,q,m = c(1,size),se = TRUE,conf = conf,nboot = nboot), m==size)
-    out <- out[,c(1, 2, 3, 7, 4, 5, 6)]
-  }
-  out <- out[!duplicated(out), ]
-  out
+  out <- TD.m.est(x = x,m = size,qs = q)
+  SC <- Chat.Ind(x,size)
+  method <- ifelse(size>n,'extrapolated',ifelse(size<n,'interpolated','observed'))
+  method <- rep(method,length(q))
+  m <- rep(size,length(q))
+  order <- rep(q,each = length(size))
+  SC <- rep(SC,length(q))
+  data.frame(m = m,method = method,order = order,SC=SC,qD = out)
+  # if(nboot==0|is.null(conf)){
+  #   method <- ifelse(size<sum(x), "interpolated", ifelse(size==sum(x), "observed", "extrapolated"))
+  #   out <- subset(iNEXT.Ind(x,q,m = c(1,size),se = FALSE), m==size)
+  #   out <- out[,c(1,2,3,5,4)]
+  #   # out <- data.frame(m=size, method=method, 
+  #   #                   SamCov=round(Chat.Ind(x,size),3),
+  #   #                   SpeRic=round(Dqhat.Ind(x,0,size),3),
+  #   #                   ShaDiv=round(Dqhat.Ind(x,1,size),3),
+  #   #                   SimDiv=round(Dqhat.Ind(x,2,size),3))
+  #   # colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
+  # }else{
+  #   out <- subset(iNEXT.Ind(x,q,m = c(1,size),se = TRUE,conf = conf,nboot = nboot), m==size)
+  #   out <- out[,c(1, 2, 3, 7, 4, 5, 6)]
+  # }
+  # out <- out[!duplicated(out), ]
+  # out
 }
 
-invSize.Sam <- function(x, q, size, nboot=0, conf=NULL){
+invSize.Sam <- function(x, q, size){
   m <- NULL # no visible binding for global variable 'm'
   
+  n <- max(x)
   if(is.null(size)){
     size <- max(x)
   }
-  if(nboot==0|is.null(conf)){
-    method <- ifelse(size<max(x), "interpolated", ifelse(size==max(x), "observed", "extrapolated"))
-    out <- subset(iNEXT.Sam(x,q,t = c(1,size),se = FALSE), t==size)
-    out <- out[,c(1,2,3,5,4)]
-    # out <- data.frame(t=size, method=method, 
-    #                   SamCov=round(Chat.Sam(x,size),3),
-    #                   SpeRic=round(Dqhat.Sam(x,0,size),3),
-    #                   ShaDiv=round(Dqhat.Sam(x,1,size),3),
-    #                   SimDiv=round(Dqhat.Sam(x,2,size),3))
-    # colnames(out) <- c("m", "method", "SC", "q = 0", "q = 1", "q = 2")
-  }else{
-    out <- subset(iNEXT.Sam(x,q,t = c(1,size),se = TRUE,conf = conf,nboot = nboot), t==size)
-    out <- out[, c(1, 2, 3, 7, 4, 5, 6)]
-    # tmp0 <- iNEXT.Sam(x, q=0, t=c(1,size), se = TRUE, conf = conf)
-    # tmp1 <- iNEXT.Sam(x, q=1, t=c(1,size), se = TRUE, conf = conf)
-    # tmp2 <- iNEXT.Sam(x, q=2, t=c(1,size), se = TRUE, conf = conf)
-    # tmp <- subset(rbind(tmp0,tmp1,tmp2), t==size)
-    # out <- tmp[,c(1,2,3,7,4,5,6)]
-    # out[,4:7] <- round(out[,4:7],3)
-  }
-  out <- out[!duplicated(out), ]
-  out
+  out <- TD.m.est_inc(y = x,t_ = size,qs = q)
+  SC <- Chat.Sam(x,size)
+  method <- ifelse(size>n,'extrapolated',ifelse(size<n,'interpolated','observed'))
+  method <- rep(method,length(q))
+  m <- rep(size,length(q))
+  order <- rep(q,each = length(size))
+  SC <- rep(SC,length(q))
+  data.frame(t = m,method = method,order = order,SC=SC,qD = out)
+  # if(nboot==0|is.null(conf)){
+  #   method <- ifelse(size<max(x), "interpolated", ifelse(size==max(x), "observed", "extrapolated"))
+  #   out <- subset(iNEXT.Sam(x,q,t = c(1,size),se = FALSE), t==size)
+  #   out <- out[,c(1,2,3,5,4)]
+  # }else{
+  #   out <- subset(iNEXT.Sam(x,q,t = c(1,size),se = TRUE,conf = conf,nboot = nboot), t==size)
+  #   out <- out[, c(1, 2, 3, 7, 4, 5, 6)]
+  # }
+  # out <- out[!duplicated(out), ]
+  # out
 }
 #
 #
@@ -167,6 +192,7 @@ invSize.Sam <- function(x, q, size, nboot=0, conf=NULL){
 # @export
 
 invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL) {
+  qtile <- qnorm(1-(1-conf)/2)
   TYPE <- c("abundance", "incidence")
   if (is.na(pmatch(datatype, TYPE))) 
     stop("invalid datatype")
@@ -186,10 +212,25 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       if (is.null(C)) {
         C <- min(unlist(lapply(x, function(x) Chat.Ind(x,2*sum(x)))))
       }
-      Community = rep(names(x),each = length(q))
-      out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, q, C,nboot, conf)))
+      Community = rep(names(x),each = length(q)*length(C))
+      out <- lapply(x, function(x_){
+        est <- invChat.Ind(x_, q, C)
+        if(nboot>1){
+          qtile <- qnorm(1-(1-conf)/2)
+          Prob.hat <- EstiBootComm.Ind(x_)
+          Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
+          ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invChat.Ind(a, q,C)$qD),
+                              nrow = length(q)),1,sd)
+        }else{
+          ses <- rep(0,nrow(est))
+        }
+        est <- cbind(est,qD.LCL=est$qD-qtile*ses,qD.UCL=est$qD+qtile*ses)
+        est
+      })
+      out <- do.call(rbind,out)
+      #out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, q, C)))
       out$site <- Community
-      out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
+      out <- out[,c(ncol(out),seq(1,(ncol(out)-4)),(ncol(out)-2),(ncol(out)-1),(ncol(out)-3))]
       rownames(out) <- NULL
     }else {
       stop("Wrong data format, dataframe/matrix or list would be accepted")
@@ -199,10 +240,28 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       if (is.null(C)) {
         C <- min(unlist(lapply(x, function(x) Chat.Sam(x,2*max(x)))))
       }
-      Community = rep(names(x),each = length(q))
-      out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x,q,C,nboot, conf)))
+      Community = rep(names(x),each = length(q)*length(C))
+      out <- lapply(x, function(x_){
+        est <- invChat.Sam(x_, q, C)
+        if(nboot>1){
+          Prob.hat <- EstiBootComm.Sam(x_)
+          Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, x_[1], p)))
+          Abun.Mat <- matrix(c(rbind(x_[1], Abun.Mat)),ncol=nboot)
+          tmp <- which(colSums(Abun.Mat)==x_[1])
+          if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
+          if(ncol(Abun.Mat)==0){
+            warning("Insufficient data to compute bootstrap s.e.")
+          }
+          ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invChat.Sam(a, q,C)$qD),nrow = length(q)),1,sd)
+        }else{
+          ses <- rep(0,nrow(est))
+        }
+        est <- cbind(est,qD.LCL=est$qD-qtile*ses,qD.UCL=est$qD+qtile*ses)
+      })
+      out <- do.call(rbind,out)
+      #out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x,q,C,nboot, conf)))
       out$site <- Community
-      out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
+      out <- out[,c(ncol(out),seq(1,(ncol(out)-4)),(ncol(out)-2),(ncol(out)-1),(ncol(out)-3))]
       rownames(out) <- NULL
     }else {
       stop("Wrong data format, dataframe/matrix or list would be accepted")
@@ -233,8 +292,23 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
       if (is.null(size)) {
         size <- min(unlist(lapply(x, function(x) 2*sum(x))))
       } 
-      Community = rep(names(x),each = length(q))
-      out <- do.call(rbind, lapply(x, function(x) invSize.Ind(x,q,size,nboot,conf)))
+      Community = rep(names(x),each = length(q)*length(size))
+      out <- lapply(x, function(x_){
+        est <- invSize.Ind(x_, q, size)
+        if(nboot>1){
+          qtile <- qnorm(1-(1-conf)/2)
+          Prob.hat <- EstiBootComm.Ind(x_)
+          Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
+          ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invSize.Ind(a, q,size)$qD),
+                              nrow = length(q)),1,sd)
+        }else{
+          ses <- rep(0,nrow(est))
+        }
+        est <- cbind(est,qD.LCL=est$qD-qtile*ses,qD.UCL=est$qD+qtile*ses)
+        est
+      })
+      out <- do.call(rbind,out)
+      #out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, q, C)))
       out$site <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
@@ -246,8 +320,27 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
       if (is.null(size)) {
         size <- min(unlist(lapply(x, function(x) 2*max(x))))
       }
-      Community = rep(names(x),each = length(q))
-      out <- do.call(rbind, lapply(x, function(x) invSize.Sam(x,q,size,nboot,conf)))
+      Community = rep(names(x),each = length(q)*length(size))
+      out <- lapply(x, function(x_){
+        est <- invSize.Sam(x_, q, size)
+        if(nboot>1){
+          Prob.hat <- EstiBootComm.Sam(x_)
+          Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, x_[1], p)))
+          Abun.Mat <- matrix(c(rbind(x_[1], Abun.Mat)),ncol=nboot)
+          tmp <- which(colSums(Abun.Mat)==x_[1])
+          if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
+          if(ncol(Abun.Mat)==0){
+            warning("Insufficient data to compute bootstrap s.e.")
+          }
+          ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invSize.Sam(a, q,size)$qD),
+                              nrow = length(q)),1,sd)
+        }else{
+          ses <- rep(0,nrow(est))
+        }
+        est <- cbind(est,qD.LCL=est$qD-qtile*ses,qD.UCL=est$qD+qtile*ses)
+      })
+      out <- do.call(rbind,out)
+      #out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x,q,C,nboot, conf)))
       out$site <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
@@ -280,7 +373,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param base comparison base: sample-size-based (\code{base="size"}) or coverage-based \cr (\code{base="coverage"}).
 #' @param nboot the number of bootstrap times to obtain confidence interval. If confidence interval is not desired, use 0 to skip this time-consuming step.
-#' @param level an value specifying a particular sample size or a number (between 0 and 1) specifying a particular value of sample coverage. 
+#' @param level a sequence specifying the particular sample sizes or sample coverages(between 0 and 1). 
 #' If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites extrapolated to double reference sizes. 
 #' If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites extrapolated to double reference sizes. 
 #' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.
@@ -289,11 +382,11 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
 #' @examples
 #' \dontrun{
 #' data(spider)
-#' estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size", level=NULL, conf=0.95)
-#' estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage", level=NULL, conf=0.95)
+#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size", level=NULL, conf=0.95)
+#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage", level=NULL, conf=0.95)
 #' }
 #' data(ant)
-#' estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=NULL)
+#' out <- estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=0.95)
 #' @export
 estimateD <- function (x, q = c(0,1,2), datatype = "abundance", base = "size", level = NULL, nboot=50,
                        conf = 0.95) 
@@ -328,7 +421,7 @@ estimateD <- function (x, q = c(0,1,2), datatype = "abundance", base = "size", l
   else if (base == "coverage") {
     tmp <- invChat(x, q, datatype, C = level, nboot, conf = conf)
   }
-  tmp <- tmp[!duplicated(tmp), ]
+  tmp$qD.LCL[tmp$qD.LCL<0] <- 0
   tmp
 }
 
