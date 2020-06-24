@@ -216,7 +216,6 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       out <- lapply(x, function(x_){
         est <- invChat.Ind(x_, q, C)
         if(nboot>1){
-          qtile <- qnorm(1-(1-conf)/2)
           Prob.hat <- EstiBootComm.Ind(x_)
           Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
           ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invChat.Ind(a, q,C)$qD),
@@ -272,6 +271,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
 
 
 invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
+  qtile <- qnorm(1-(1-conf)/2)
   TYPE <- c("abundance", "incidence")
   if(is.na(pmatch(datatype, TYPE)))
     stop("invalid datatype")
@@ -296,7 +296,6 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
       out <- lapply(x, function(x_){
         est <- invSize.Ind(x_, q, size)
         if(nboot>1){
-          qtile <- qnorm(1-(1-conf)/2)
           Prob.hat <- EstiBootComm.Ind(x_)
           Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
           ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invSize.Ind(a, q,size)$qD),
@@ -382,8 +381,8 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
 #' @examples
 #' \dontrun{
 #' data(spider)
-#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size", level=NULL, conf=0.95)
-#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage", level=NULL, conf=0.95)
+#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size")
+#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage")
 #' }
 #' data(ant)
 #' out <- estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=0.95)

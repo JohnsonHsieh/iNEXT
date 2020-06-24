@@ -55,3 +55,6 @@
 
 # iNEXT 2.1.6
 - Modify the C.I of asymptotic diversity of q = 1 and 2: cancel the trucation
+
+# iNEXT 2.1.7
+- Slightly modify the example of estimateD
