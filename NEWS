@@ -49,3 +49,6 @@
 # iNEXT 2.1.4
 - Now the parameter "level" in estimateD can be a vector.
 - Slightly modify the bootstrap method in estimateD when base="coverage".
+
+# iNEXT 2.1.5
+- Fix a bug about the C.I of estimateD when the length of desired 'level' > 1.

@@ -220,7 +220,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
           Prob.hat <- EstiBootComm.Ind(x_)
           Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
           ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invChat.Ind(a, q,C)$qD),
-                              nrow = length(q)),1,sd)
+                              nrow = length(q) * length(C)),1,sd)
         }else{
           ses <- rep(0,nrow(est))
         }
@@ -252,7 +252,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
           if(ncol(Abun.Mat)==0){
             warning("Insufficient data to compute bootstrap s.e.")
           }
-          ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invChat.Sam(a, q,C)$qD),nrow = length(q)),1,sd)
+          ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invChat.Sam(a, q,C)$qD),nrow = length(q)* length(C)),1,sd)
         }else{
           ses <- rep(0,nrow(est))
         }
@@ -300,7 +300,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
           Prob.hat <- EstiBootComm.Ind(x_)
           Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
           ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invSize.Ind(a, q,size)$qD),
-                              nrow = length(q)),1,sd)
+                              nrow = length(q)* length(size)),1,sd)
         }else{
           ses <- rep(0,nrow(est))
         }
@@ -333,7 +333,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
             warning("Insufficient data to compute bootstrap s.e.")
           }
           ses <- apply(matrix(apply(Abun.Mat,2 ,function(a) invSize.Sam(a, q,size)$qD),
-                              nrow = length(q)),1,sd)
+                              nrow = length(q)* length(size)),1,sd)
         }else{
           ses <- rep(0,nrow(est))
         }
