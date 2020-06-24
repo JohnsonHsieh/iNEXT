@@ -538,7 +538,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = order~method,value.var = 'qD')
     index <- cbind(index[,-1],se = (UCL - index$Estimated)/z,LCL,UCL)
-    index$LCL[index$LCL<index$Empirical] <- index$Empirical[index$LCL<index$Empirical]
+    index$LCL[index$LCL<index$Empirical & index$order==0] <- index$Empirical[index$LCL<index$Empirical & index$order==0]
     colnames(index) <- c("Observed","Estimator","Est_s.e.","95% Lower","95% Upper")
     # index <- rbind(as.matrix(ChaoSpecies(x, datatype, conf)), 
     #                as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)),
@@ -556,7 +556,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = Site+order~method,value.var = 'qD')
     index <- cbind(index,se = (UCL - index$Estimated)/z,LCL,UCL)
-    index$LCL[index$LCL<index$Empirical] <- index$Empirical[index$LCL<index$Empirical]
+    index$LCL[index$LCL<index$Empirical & index$order==0] <- index$Empirical[index$LCL<index$Empirical & index$order==0]
     index$order <- c('Species richness','Shannon diversity','Simpson diversity')
     # arr <- array(0, dim = c(3, 5, ncol(x)))
     # arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype, conf)))
@@ -580,7 +580,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     UCL <- index$qD.UCL[index$method=='Estimated']
     index <- dcast(index,formula = Site+order~method,value.var = 'qD')
     index <- cbind(index,se = (UCL - index$Estimated)/z,LCL,UCL)
-    index$LCL[index$LCL<index$Empirical] <- index$Empirical[index$LCL<index$Empirical]
+    index$LCL[index$LCL<index$Empirical & index$order==0] <- index$Empirical[index$LCL<index$Empirical & index$order==0]
     index$order <- c('Species richness','Shannon diversity','Simpson diversity')
     # arr <- array(0, dim = c(3, 5, length(x)))
     # arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype, conf)))

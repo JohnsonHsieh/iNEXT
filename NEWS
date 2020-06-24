@@ -52,3 +52,6 @@
 
 # iNEXT 2.1.5
 - Fix a bug about the C.I of estimateD when the length of desired 'level' > 1.
+
+# iNEXT 2.1.6
+- Modify the C.I of asymptotic diversity of q = 1 and 2: cancel the trucation
