@@ -14,17 +14,14 @@ invChat.Ind <- function (x, q, C) {
       f2 <- sum(x == 2)
       if (f1 > 0 & f2 > 0) {
         A <- (n - 1) * f1/((n - 1) * f1 + 2 * f2)
-      }
-      if (f1 > 1 & f2 == 0) {
+      }else if (f1 > 1 & f2 == 0) {
         A <- (n - 1) * (f1 - 1)/((n - 1) * (f1 - 1) + 2)
-      }
-      if (f1 == 1 & f2 == 0) {
+      }else if(f1 == 1 & f2 == 0) {
+        A <- 1
+      }else if(f1 == 0 & f2 == 0) {
         A <- 1
       }
-      if (f1 == 0 & f2 == 0) {
-        A <- 1
-      }
-      mm <- (log(n/f1) + log(1 - cvrg))/log(A) - 1
+      mm <- ifelse(A==1,0,(log(n/f1) + log(1 - cvrg))/log(A) - 1)
       mm <- n + mm
       mm <- round(mm)
     }
@@ -36,12 +33,12 @@ invChat.Ind <- function (x, q, C) {
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   
   out <- TD.m.est(x = x,m = mm,qs = q)
-  method <- ifelse(mm>n,'extrapolated',ifelse(mm<n,'interpolated','observed'))
+  method <- ifelse(mm>n,'Extrapolation',ifelse(mm<n,'Rarefaction','Observed'))
   method <- rep(method,length(q))
   m <- rep(mm,length(q))
   order <- rep(q,each = length(mm))
   SC <- rep(SC,length(q))
-  data.frame(m = m,method = method,order = order,
+  data.frame(m = m,Method = method,Order.q = order,
          SC=SC,qD = out,goalSC = rep(C,length(q)))
   # if (nboot==0|is.null(conf)) {
   #   out <- TD.m.est(x = x,m = mm,qs = q)
@@ -71,17 +68,14 @@ invChat.Sam <- function (x, q, C) {
       U <- sum(x) - max(x)
       if (f1 > 0 & f2 > 0) {
         A <- (n - 1) * f1/((n - 1) * f1 + 2 * f2)
-      }
-      if (f1 > 1 & f2 == 0) {
+      }else if(f1 > 1 & f2 == 0) {
         A <- (n - 1) * (f1 - 1)/((n - 1) * (f1 - 1) + 2)
-      }
-      if (f1 == 1 & f2 == 0) {
+      }else if(f1 == 1 & f2 == 0) {
+        A <- 1
+      }else if(f1 == 0 & f2 == 0) {
         A <- 1
       }
-      if (f1 == 0 & f2 == 0) {
-        A <- 1
-      }
-      mm <- (log(U/f1) + log(1 - cvrg))/log(A) - 1
+      mm <- ifelse(A==1,0,(log(U/f1) + log(1 - cvrg))/log(A) - 1)
       mm <- n + mm
       mm <- round(mm)
     }
@@ -92,12 +86,12 @@ invChat.Sam <- function (x, q, C) {
   if (sum(mm > 2 * n)>0) 
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   out <- TD.m.est_inc(y = x,t_ = mm,qs = q)
-  method <- ifelse(mm>n,'extrapolated',ifelse(mm<n,'interpolated','observed'))
+  method <- ifelse(mm>n,'Extrapolation',ifelse(mm<n,'Rarefaction','Observed'))
   method <- rep(method,length(q))
   m <- rep(mm,length(q))
   order <- rep(q,each = length(mm))
   SC <- rep(SC,length(q))
-  data.frame(t = m,method = method,order = order,
+  data.frame(t = m,Method = method,Order.q = order,
              SC=SC,qD = out,goalSC = rep(C,length(q)))
   
   # if (nboot==0|is.null(conf)) {
@@ -121,12 +115,12 @@ invSize.Ind <- function(x, q, size){
   }
   out <- TD.m.est(x = x,m = size,qs = q)
   SC <- Chat.Ind(x,size)
-  method <- ifelse(size>n,'extrapolated',ifelse(size<n,'interpolated','observed'))
+  method <- ifelse(size>n,'Extrapolation',ifelse(size<n,'Rarefaction','Observed'))
   method <- rep(method,length(q))
   m <- rep(size,length(q))
   order <- rep(q,each = length(size))
   SC <- rep(SC,length(q))
-  data.frame(m = m,method = method,order = order,SC=SC,qD = out)
+  data.frame(m = m,Method = method,Order.q = order,SC=SC,qD = out)
   # if(nboot==0|is.null(conf)){
   #   method <- ifelse(size<sum(x), "interpolated", ifelse(size==sum(x), "observed", "extrapolated"))
   #   out <- subset(iNEXT.Ind(x,q,m = c(1,size),se = FALSE), m==size)
@@ -154,12 +148,12 @@ invSize.Sam <- function(x, q, size){
   }
   out <- TD.m.est_inc(y = x,t_ = size,qs = q)
   SC <- Chat.Sam(x,size)
-  method <- ifelse(size>n,'extrapolated',ifelse(size<n,'interpolated','observed'))
+  method <- ifelse(size>n,'Extrapolation',ifelse(size<n,'Rarefaction','Observed'))
   method <- rep(method,length(q))
   m <- rep(size,length(q))
   order <- rep(q,each = length(size))
   SC <- rep(SC,length(q))
-  data.frame(t = m,method = method,order = order,SC=SC,qD = out)
+  data.frame(t = m,Method = method,Order.q = order,SC=SC,qD = out)
   # if(nboot==0|is.null(conf)){
   #   method <- ifelse(size<max(x), "interpolated", ifelse(size==max(x), "observed", "extrapolated"))
   #   out <- subset(iNEXT.Sam(x,q,t = c(1,size),se = FALSE), t==size)

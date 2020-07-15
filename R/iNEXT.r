@@ -287,9 +287,9 @@ Chat.Sam <- function(x, t){
 # iNEXT.Ind(spider$Girdled, q=0, endpoint=500)
 # # q = 1 with specific sample size m and don't calculate standard error
 # iNEXT.Ind(spider$Girdled, q=1, m=c(1, 10, 20, 50, 100, 200, 400, 600), se=FALSE)
-iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE, nboot=200, conf=0.95)
+iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE, nboot=200, conf=0.95, unconditional_var = TRUE)
 {
-  
+  qtile <- qnorm(1-(1-conf)/2)
   n <- sum(Spec)		  	#sample size
   if(is.null(m)) {
     if(endpoint <= n) {
@@ -299,35 +299,61 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
     }
     m <- c(1, m[-1])
   } else if(is.null(m)==FALSE) {	
-    if(max(m)>n & length(m[m==n])==0)  m <- c(m, n-1, n, n+1)
+    if(max(m)>n | length(m[m==n])==0)  m <- c(m, n-1, n, n+1)
     m <- sort(m)
   }
-  
+  m <- unique(m)
+  #====conditional on m====
   Dq.hat <- TD.m.est(Spec,m,q)
   C.hat <- Chat.Ind(Spec, m)
-  
-  if(se==TRUE & nboot > 0 & length(Spec) > 1) {
+  #====unconditional====
+  if(unconditional_var){
+    goalSC <- unique(C.hat)
+    Dq.hat_unc <- unique(invChat.Ind(x = Spec,q = q,C = goalSC))
+  }
+
+  if(se==TRUE & nboot > 1 & length(Spec) > 1) {
     Prob.hat <- EstiBootComm.Ind(Spec)
     Abun.Mat <- rmultinom(nboot, n, Prob.hat)
     
-    error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(x) TD.m.est(x, m, q)), 1, sd, na.rm=TRUE)
-    left  <- Dq.hat - error
-    right <- Dq.hat + error
+    ses_m <- apply(matrix(apply(Abun.Mat,2 ,function(x) TD.m.est(x, m, q)),
+                        nrow = length(Dq.hat)),1,sd, na.rm=TRUE)
     
-    error.C <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)), 1, sd, na.rm=TRUE)
-    left.C  <- C.hat - error.C
-    right.C <- C.hat + error.C
-    out <- cbind("m"=rep(m,length(q)), "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, 
-                 "SC"=rep(C.hat,length(q)), "SC.LCL"=left.C, "SC.UCL"=right.C)
+    ses_C_on_m <- apply(matrix(apply(Abun.Mat, 2, function(x) Chat.Ind(x, m)),nrow = length(m)),
+                        1, sd, na.rm=TRUE)
+    if(unconditional_var){
+      ses_C <- apply(matrix(apply(Abun.Mat,2 ,function(x) invChat.Ind(x, q,unique(Dq.hat_unc$goalSC))$qD),
+                            nrow = nrow(Dq.hat_unc)),1,sd, na.rm=TRUE)
+    }
   } else {
-    out <- cbind("m"=rep(m,length(q)), "qD"=Dq.hat, "SC"=rep(C.hat,length(q)))
+    ses_m <- rep(NA,length(Dq.hat))
+    ses_C_on_m <- rep(NA,length(m))
+    if(unconditional_var){
+      ses_C <- rep(NA,nrow(Dq.hat_unc))
+    }
   }
-  out <- data.frame(out)
-  out$method <- ifelse(out$m<n, "interpolated", ifelse(out$m==n, "observed", "extrapolated"))
-  out$order <- rep(q,each = length(m))
-  id <- match(c("m", "method", "order", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out), nomatch = 0)
-  out <- out[, id]
-  return(out)
+  out_m <- cbind("m"=rep(m,length(q)), "qD"=Dq.hat, "qD.LCL"=Dq.hat-qtile*ses_m,
+                 "qD.UCL"=Dq.hat+qtile*ses_m,"SC"=rep(C.hat,length(q)), 
+                 "SC.LCL"=C.hat-qtile*ses_C_on_m, "SC.UCL"=C.hat+qtile*ses_C_on_m)
+  out_m <- data.frame(out_m)
+  out_m$Method <- ifelse(out_m$m<n, "Rarefaction", ifelse(out_m$m==n, "Observed", "Extrapolation"))
+  out_m$Order.q <- rep(q,each = length(m))
+  id_m <- match(c("m", "Method", "Order.q", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out_m), nomatch = 0)
+  out_m <- out_m[, id_m]
+  out_m$qD.LCL[out_m$qD.LCL<0] <- 0
+  out_m$SC.LCL[out_m$SC.LCL<0] <- 0
+  out_m$SC.UCL[out_m$SC.UCL>1] <- 1
+  
+  if(unconditional_var){
+    out_C <- cbind(Dq.hat_unc,'qD.LCL' = Dq.hat_unc$qD-qtile*ses_C,
+                   'qD.UCL' = Dq.hat_unc$qD+qtile*ses_C) 
+    id_C <- match(c("goalSC","SC","m", "Method", "Order.q", "qD", "qD.LCL", "qD.UCL"), names(out_C), nomatch = 0)
+    out_C <- out_C[, id_C]
+    out_C$qD.LCL[out_C$qD.LCL<0] <- 0
+  }else{
+    out_C <- NULL
+  }
+  return(list(size_based = out_m, coverage_based = out_C))
 }
 
 
@@ -354,9 +380,9 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
 # iNEXT.Sam(ant$h50m, q=0, endpoint=100)
 # # q = 1 with specific sample size m and don't calculate standard error
 # iNEXT.Sam(ant$h500m, q=1, t=round(seq(10, 500, length.out=20)), se=FALSE)
-iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE, nboot=200, conf=0.95)
+iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE, nboot=200, conf=0.95, unconditional_var = TRUE)
 {
-  
+  qtile <- qnorm(1-(1-conf)/2)
   if(which.max(Spec)!=1) 
     stop("invalid data structure!, first element should be number of sampling units")
   
@@ -369,14 +395,25 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
     }
     t <- c(1, t[-1])
   } else if(is.null(t)==FALSE) {	
-    if(max(t)>nT & length(t[t==nT])==0)  t <- c(t, nT-1, nT, nT+1)
+    if(max(t)>nT | length(t[t==nT])==0)  t <- c(t, nT-1, nT, nT+1)
     t <- sort(t)
   }
-  
+  t <- unique(t)
+  #====conditional on m====
   Dq.hat <- TD.m.est_inc(Spec,t,q)
   C.hat <- Chat.Sam(Spec, t)
+  #====unconditional====
+  # if(unconditional_var){
+  #   goalSC <- unique(round(C.hat,4))
+  #   goalSC[goalSC==1] <- 0.9999
+  #   Dq.hat_unc <- unique(invChat.Sam(x = Spec,q = q,C = goalSC))
+  # }
+  if(unconditional_var){
+    goalSC <- unique(C.hat)
+    Dq.hat_unc <- unique(invChat.Sam(x = Spec,q = q,C = goalSC))
+  }
   
-  if(se==TRUE & nboot > 0 & length(Spec) > 2){
+  if(se==TRUE & nboot > 1 & length(Spec) > 2){
     Prob.hat <- EstiBootComm.Sam(Spec)
     Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
     Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
@@ -386,29 +423,46 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
       out <- cbind("t"=t, "qD"=Dq.hat, "SC"=C.hat)
       warning("Insufficient data to compute bootstrap s.e.")
     }else{		
-      error <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(y) TD.m.est_inc(y,t,q)), 1, sd, na.rm=TRUE)
-      left  <- Dq.hat - error
-      right <- Dq.hat + error
-      left[left<=0] <- 0
+      ses_m <- apply(matrix(apply(Abun.Mat,2 ,function(y) TD.m.est_inc(y, t, q)),
+                            nrow = length(Dq.hat)),1,sd, na.rm=TRUE)
       
-      error.C <-  qnorm(1-(1-conf)/2) * apply(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)), 1, sd, na.rm=TRUE)
-      left.C  <- C.hat - error.C
-      right.C <- C.hat + error.C
-      left.C[left.C<=0] <- 0
-      right.C[right.C>=1] <- 1
-      
-      out <- cbind("t"=rep(t,length(q)), "qD"=Dq.hat, "qD.LCL"=left, "qD.UCL"=right, 
-                   "SC"=rep(C.hat,length(q)), "SC.LCL"=left.C, "SC.UCL"=right.C)
+      ses_C_on_m <- apply(matrix(apply(Abun.Mat, 2, function(y) Chat.Sam(y, t)),nrow = length(t)),
+                          1, sd, na.rm=TRUE)
+      if(unconditional_var){
+        ses_C <- apply(matrix(apply(Abun.Mat,2 ,function(y) invChat.Sam(y, q,unique(Dq.hat_unc$goalSC))$qD),
+                              nrow = nrow(Dq.hat_unc)),1,sd, na.rm=TRUE)
+      }
     }
   }else {
-    out <- cbind("t"=rep(t,length(q)), "qD"=Dq.hat, "SC"=rep(C.hat,length(q)))
+    ses_m <- rep(NA,length(Dq.hat))
+    ses_C_on_m <- rep(NA,length(t))
+    if(unconditional_var){
+      ses_C <- rep(NA,nrow(Dq.hat_unc))
+    }
   }
-  out <- data.frame(out)
-  out$method <- ifelse(out$t<nT, "interpolated", ifelse(out$t==nT, "observed", "extrapolated"))
-  out$order <- rep(q,each = length(t))
-  id <- match(c("t", "method", "order", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out), nomatch = 0)
-  out <- out[, id]
-  return(out)
+  
+  out_m <- cbind("t"=rep(t,length(q)), "qD"=Dq.hat, "qD.LCL"=Dq.hat-qtile*ses_m,
+                 "qD.UCL"=Dq.hat+qtile*ses_m,"SC"=rep(C.hat,length(q)), 
+                 "SC.LCL"=C.hat-qtile*ses_C_on_m, "SC.UCL"=C.hat+qtile*ses_C_on_m)
+  out_m <- data.frame(out_m)
+  out_m$Method <- ifelse(out_m$t<nT, "Rarefaction", ifelse(out_m$t==nT, "Observed", "Extrapolation"))
+  out_m$Order.q <- rep(q,each = length(t))
+  id_m <- match(c("t", "Method", "Order.q", "qD", "qD.LCL", "qD.UCL", "SC", "SC.LCL", "SC.UCL"), names(out_m), nomatch = 0)
+  out_m <- out_m[, id_m]
+  out_m$qD.LCL[out_m$qD.LCL<0] <- 0
+  out_m$SC.LCL[out_m$SC.LCL<0] <- 0
+  out_m$SC.UCL[out_m$SC.UCL>1] <- 1
+  
+  if(unconditional_var){
+    out_C <- cbind(Dq.hat_unc,'qD.LCL' = Dq.hat_unc$qD-qtile*ses_C,
+                   'qD.UCL' = Dq.hat_unc$qD+qtile*ses_C) 
+    id_C <- match(c("goalSC","SC","t", "Method", "Order.q", "qD", "qD.LCL", "qD.UCL"), names(out_C), nomatch = 0)
+    out_C <- out_C[, id_C]
+    out_C$qD.LCL[out_C$qD.LCL<0] <- 0
+  }else{
+    out_C <- NULL
+  }
+  return(list(size_based = out_m, coverage_based = out_C))
 }
 
 
@@ -442,16 +496,14 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
 #' @examples
 #' ## example for abundance based data (list of vector)
 #' data(spider)
-#' out1 <- iNEXT(spider, q=0, datatype="abundance")
+#' out1 <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
 #' out1$DataInfo # showing basic data information.
 #' out1$AsyEst # showing asymptotic diversity estimates.
 #' out1$iNextEst # showing diversity estimates with rarefied and extrapolated.
-#' 
 #' ## example for abundance based data (data.frame)
 #' data(bird)
 #' out2 <- iNEXT(bird, q=0, datatype="abundance")
 #' ggiNEXT(out2)
-#' 
 #' \dontrun{
 #' ## example for incidence frequencies based data (list of data.frame)
 #' data(ant)
@@ -503,11 +555,12 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   #     }
   #   }
   
-  Fun <- function(x, q){
+  Fun <- function(x, q, assem_name){
     x <- as.numeric(unlist(x))
+    unconditional_var <- TRUE
     if(datatype == "abundance"){
       if(sum(x)==0) stop("Zero abundance counts in one or more sample sites")
-      out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot, conf=conf)
+      out <- iNEXT.Ind(Spec=x, q=q, m=size, endpoint=ifelse(is.null(endpoint), 2*sum(x), endpoint), knots=knots, se=se, nboot=nboot, conf=conf,unconditional_var)
     }
     if(datatype == "incidence"){
       t <- x[1]
@@ -518,6 +571,11 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       if(sum(x)==0) stop("Zero incidence frequencies in one or more sample sites")
       
       out <- iNEXT.Sam(Spec=x, q=q, t=size, endpoint=ifelse(is.null(endpoint), 2*max(x), endpoint), knots=knots, se=se, nboot=nboot, conf=conf)  
+    }
+    if(unconditional_var){
+      out <- lapply(out, function(out_) cbind(Assemblage = assem_name, out_))
+    }else{
+      out[[1]] <- cbind(Assemblage = assem_name, out[[1]])
     }
     out
   }
@@ -531,7 +589,11 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   
   z <- qnorm(1-(1-0.95)/2)
   if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
-    out <- Fun(x,q)
+    out <- Fun(x,q,'Assemblage1')
+    
+    out <- list(size_based = out[[1]],
+                coverage_based = out[[2]])
+    
     index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq')
                      ,nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
@@ -547,10 +609,16 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   
     
   }else if(class_x=="matrix" | class_x=="data.frame"){
-    out <- apply(as.matrix(x), 2, function(x){
-      tmp <- Fun(x,q)
+    if(is.null(colnames(x))){
+      colnames(x) <- sapply(1:ncol(x), function(i) paste0('assemblage',i))
+    }
+    out <- lapply(1:ncol(x), function(i) {
+      tmp <- Fun(x[,i],q,colnames(x)[i])
       tmp
     })
+    out <- list(size_based = do.call(rbind,lapply(out,  function(out_){out_[[1]]})),
+                coverage_based = do.call(rbind,lapply(out,  function(out_){out_[[2]]})))
+    
     index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
@@ -567,14 +635,21 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     # dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "Lower_CI", "Upper_CI")
     # index <- ftable(arr, row.vars = c(3,1))
     # index <- dcast(as.data.frame(index), formula = Var1+Var2~Var3, value.var = "Freq")
-    colnames(index) <- c("Site", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
+    colnames(index) <- c("Assemblage", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
     
     
   }else if(class_x=="list"){
-    out <- lapply(x, function(x) {
-      tmp <- Fun(x,q)
+    if(is.null(names(x))){
+      names(x) <- sapply(1:length(x), function(i) paste0('assemblage',i))
+    }
+    out <- lapply(1:length(x), function(i) {
+      tmp <- Fun(x[[i]],q,names(x)[i])
       tmp
     })
+    
+    out <- list(size_based = do.call(rbind,lapply(out,  function(out_){out_[[1]]})),
+                coverage_based = do.call(rbind,lapply(out,  function(out_){out_[[2]]})))
+    
     index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
@@ -591,11 +666,12 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     # dimnames(arr)[[2]] <- c("Observed", "Estimator", "Est_s.e.", "Lower_CI", "Upper_CI")
     # index <- ftable(arr, row.vars = c(3,1))
     # index <- dcast(as.data.frame(index), formula = Var1+Var2~Var3, value.var = "Freq")
-    colnames(index) <- c("Site", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
+    colnames(index) <- c("Assemblage", "Diversity", "Observed", "Estimator", "s.e.", "LCL", "UCL")
   }else{
     stop("invalid class of x, x should be a object of numeric, matrix, data.frame, or list")
   }
-  
+  out$size_based$Assemblage <- as.character(out$size_based$Assemblage)
+  out$coverage_based$Assemblage <- as.character(out$coverage_based$Assemblage)
   info <- DataInfo(x, datatype)
   
   
