@@ -222,7 +222,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       })
       out <- do.call(rbind,out)
       #out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, q, C)))
-      out$site <- Community
+      out$Assemblage <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-4)),(ncol(out)-2),(ncol(out)-1),(ncol(out)-3))]
       rownames(out) <- NULL
     }else {
@@ -253,7 +253,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       })
       out <- do.call(rbind,out)
       #out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x,q,C,nboot, conf)))
-      out$site <- Community
+      out$Assemblage <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-4)),(ncol(out)-2),(ncol(out)-1),(ncol(out)-3))]
       rownames(out) <- NULL
     }else {
@@ -302,7 +302,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
       })
       out <- do.call(rbind,out)
       #out <- do.call(rbind, lapply(x, function(x) invChat.Ind(x, q, C)))
-      out$site <- Community
+      out$Assemblage <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
     }else {
@@ -334,7 +334,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
       })
       out <- do.call(rbind,out)
       #out <- do.call(rbind, lapply(x, function(x) invChat.Sam(x,q,C,nboot, conf)))
-      out$site <- Community
+      out$Assemblage <- Community
       out <- out[,c(ncol(out),seq(1,(ncol(out)-1)))]
       rownames(out) <- NULL
     }else {

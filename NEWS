@@ -69,4 +69,8 @@ is $coverage_based, instead of N elements(data.frames), where N is the # of asse
 - An additional character column 'Assemblage' is added into each element(data.frame) of $iNextEst to
 identify different assemblages.
 
+# iNEXT 2.2.1
+- Fix the notations in function 'EstimateD()': 'site'/'Site' -> 'Assemblage'
+
+
 
