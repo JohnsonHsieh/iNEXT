@@ -4,7 +4,7 @@
 \alias{fortify.iNEXT}
 \title{Fortify method for classes from the iNEXT package.}
 \usage{
-fortify.iNEXT(model, data = model$iNextEst, type = 1, ...)
+\method{fortify}{iNEXT}(model, data = model$iNextEst, type = 1, ...)
 }
 \arguments{
 \item{model}{\code{iNEXT} to convert into a dataframe.}
@@ -12,7 +12,8 @@ fortify.iNEXT(model, data = model$iNextEst, type = 1, ...)
 \item{data}{not used by this method}
 
 \item{type}{three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
-sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).}
+sample completeness curve (\code{type = 2}); unconditional coverage-based rarefaction/extrapolation curve (\code{type = 3});
+conditional coverage-based rarefaction/extrapolation curve (\code{type = 4}).}
 
 \item{...}{not used by this method}
 }

@@ -72,5 +72,9 @@ identify different assemblages.
 # iNEXT 2.2.1
 - Fix the notations in function 'EstimateD()': 'site'/'Site' -> 'Assemblage'
 
+# iNEXT 2.2.2
+- Update README.md and README.Rmd at github according to the changes in iNEXT 2.2.0 and iNEXT 2.2.1.
+- Add an additional choice of argument 'type' in ggiNEXT. Now type = 4 will perform the same plotting function as type = 3 from the previous version (before 2.2.0).
+
 
 

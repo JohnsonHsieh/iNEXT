@@ -6,11 +6,23 @@
 \alias{ggiNEXT.default}
 \title{ggplot2 extension for an iNEXT object}
 \usage{
-ggiNEXT(x, type = 1, se = TRUE, facet.var = "None",
-  color.var = "Assemblage", grey = FALSE)
+ggiNEXT(
+  x,
+  type = 1,
+  se = TRUE,
+  facet.var = "None",
+  color.var = "Assemblage",
+  grey = FALSE
+)
 
-\method{ggiNEXT}{iNEXT}(x, type = 1, se = TRUE, facet.var = "None",
-  color.var = "Assemblage", grey = FALSE)
+\method{ggiNEXT}{iNEXT}(
+  x,
+  type = 1,
+  se = TRUE,
+  facet.var = "None",
+  color.var = "Assemblage",
+  grey = FALSE
+)
 
 \method{ggiNEXT}{default}(x, ...)
 }
@@ -18,7 +30,7 @@ ggiNEXT(x, type = 1, se = TRUE, facet.var = "None",
 \item{x}{an \code{iNEXT} object computed by \code{\link{iNEXT}}.}
 
 \item{type}{three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
-sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).}
+sample completeness curve (\code{type = 2}); unconditional coverage-based rarefaction/extrapolation curve (\code{type = 3}); conditional coverage-based rarefaction/extrapolation curve (\code{type = 4}).}
 
 \item{se}{a logical variable to display confidence interval around the estimated sampling curve.}
 
