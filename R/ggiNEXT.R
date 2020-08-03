@@ -7,7 +7,7 @@
 #' \code{ggiNEXT}: the \code{\link[ggplot2]{ggplot}} extension for \code{\link{iNEXT}} Object to plot sample-size- and coverage-based rarefaction/extrapolation curves along with a bridging sample completeness curve
 #' @param x an \code{iNEXT} object computed by \code{\link{iNEXT}}.
 #' @param type three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
-#' sample completeness curve (\code{type = 2}); unconditional coverage-based rarefaction/extrapolation curve (\code{type = 3}); conditional coverage-based rarefaction/extrapolation curve (\code{type = 4}).                
+#' sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).            
 #' @param se a logical variable to display confidence interval around the estimated sampling curve.
 #' @param facet.var create a separate plot for each value of a specified variable: 
 #'  no separation \cr (\code{facet.var="None"}); 
@@ -52,7 +52,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assemblage"
 #' @rdname ggiNEXT
 ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assemblage", grey=FALSE){
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#330066", "#CC79A7",  "#0072B2", "#D55E00"))
-  TYPE <-  c(1, 2, 3, 4)
+  TYPE <-  c(1, 2, 3)
   SPLIT <- c("None", "Order.q", "Assemblage", "Both")
   if(is.na(pmatch(type, TYPE)) | pmatch(type, TYPE) == -1)
     stop("invalid plot type")
@@ -61,7 +61,7 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assem
   if(is.na(pmatch(color.var, SPLIT)) | pmatch(color.var, SPLIT) == -1)
     stop("invalid color variable")
   
-  type <- pmatch(type, 1:4)
+  type <- pmatch(type, 1:3)
   facet.var <- match.arg(facet.var, SPLIT)
   color.var <- match.arg(color.var, SPLIT)
   if(facet.var=="Order.q") color.var <- "Assemblage"
@@ -214,8 +214,7 @@ ggiNEXT.default <- function(x, ...){
 #' @param model \code{iNEXT} to convert into a dataframe.
 #' @param data not used by this method
 #' @param type three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
-#' sample completeness curve (\code{type = 2}); unconditional coverage-based rarefaction/extrapolation curve (\code{type = 3});
-#' conditional coverage-based rarefaction/extrapolation curve (\code{type = 4}).                 
+#' sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).
 #' @param ... not used by this method
 #' @export
 #' @examples
@@ -296,20 +295,21 @@ fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
     }else{
       data <- z[,c("datatype","plottype","Assemblage","Method","Order.q","x","y")]
     }
-  }else if(type==4L){
-    z <- z$size_based
-    z$x <- z$SC
-    z$y <- z$qD
-    z$datatype <- datatype
-    z$plottype <- type
-    if(se){
-      z$y.lwr <- z$qD.LCL
-      z$y.upr <- z$qD.UCL
-      data <- z[,c("datatype","plottype","Assemblage","Method","Order.q","x","y","y.lwr","y.upr")]
-    }else{
-      data <- z[,c("datatype","plottype","Assemblage","Method","Order.q","x","y")]
-    }
   }
+  # else if(type==4L){
+  #   z <- z$size_based
+  #   z$x <- z$SC
+  #   z$y <- z$qD
+  #   z$datatype <- datatype
+  #   z$plottype <- type
+  #   if(se){
+  #     z$y.lwr <- z$qD.LCL
+  #     z$y.upr <- z$qD.UCL
+  #     data <- z[,c("datatype","plottype","Assemblage","Method","Order.q","x","y","y.lwr","y.upr")]
+  #   }else{
+  #     data <- z[,c("datatype","plottype","Assemblage","Method","Order.q","x","y")]
+  #   }
+  # }
   data
 }
 

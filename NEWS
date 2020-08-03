@@ -76,5 +76,7 @@ identify different assemblages.
 - Update README.md and README.Rmd at github according to the changes in iNEXT 2.2.0 and iNEXT 2.2.1.
 - Add an additional choice of argument 'type' in ggiNEXT. Now type = 4 will perform the same plotting function as type = 3 from the previous version (before 2.2.0).
 
+# iNEXT 2.2.3
+- Remove the second change in iNEXT 2.2.2. 
 
 

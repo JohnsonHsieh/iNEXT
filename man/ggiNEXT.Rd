@@ -30,7 +30,7 @@ ggiNEXT(
 \item{x}{an \code{iNEXT} object computed by \code{\link{iNEXT}}.}
 
 \item{type}{three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
-sample completeness curve (\code{type = 2}); unconditional coverage-based rarefaction/extrapolation curve (\code{type = 3}); conditional coverage-based rarefaction/extrapolation curve (\code{type = 4}).}
+sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).}
 
 \item{se}{a logical variable to display confidence interval around the estimated sampling curve.}
 
