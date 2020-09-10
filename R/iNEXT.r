@@ -115,15 +115,17 @@ TD.m.est = function(x, m, qs){ ## here q is allowed to be a vector containing no
   ifi <- table(x);ifi <- cbind(i = as.numeric(names(ifi)),fi = ifi)
   obs <- Diversity_profile_MLE(x,qs)
   RFD_m <- RTD(ifi, n, n-1, qs)
-  RFD_m2 <- RTD(ifi, n, n-2, qs)
-  whincr <- which(RFD_m != RFD_m2)
-  Dn1 <- obs; Dn1[whincr] <- obs + (obs - RFD_m)^2/(RFD_m - RFD_m2)
+  # RFD_m2 <- RTD(ifi, n, n-2, qs)
+  # whincr <- which(RFD_m != RFD_m2)
+  # Dn1 <- obs; Dn1[whincr] <- obs + (obs - RFD_m)^2/(RFD_m - RFD_m2)
   #asymptotic value
   asy <- Diversity_profile(x,qs)
   #beta
   beta <- rep(0,length(qs))
-  beta0plus <- which(asy != obs)
-  beta[beta0plus] <- (Dn1[beta0plus]-obs[beta0plus])/(asy[beta0plus]-obs[beta0plus])
+  # beta0plus <- which(asy != obs)
+  # beta[beta0plus] <- (Dn1[beta0plus]-obs[beta0plus])/(asy[beta0plus]-obs[beta0plus])
+  beta0plus <- which(asy != RFD_m)
+  beta[beta0plus] <- (obs[beta0plus]-RFD_m[beta0plus])/(asy[beta0plus]-RFD_m[beta0plus])
   #Extrapolation, 
   ETD = function(m,qs){
     m = m-n
@@ -169,13 +171,15 @@ TD.m.est_inc <- function(y, t_, qs){
   iQi <- table(y);iQi <- cbind(i = as.numeric(names(iQi)),Qi = iQi)
   obs <- Diversity_profile_MLE.inc(c(nT,y),qs)
   RFD_m <- RTD_inc(iQi, nT, nT-1, qs)
-  RFD_m2 <- RTD_inc(iQi, nT, nT-2, qs)
-  whincr <- which(RFD_m != RFD_m2)
-  Dn1 <- obs; Dn1[whincr] <- obs + (obs - RFD_m)^2/(RFD_m - RFD_m2)
+  # RFD_m2 <- RTD_inc(iQi, nT, nT-2, qs)
+  # whincr <- which(RFD_m != RFD_m2)
+  # Dn1 <- obs; Dn1[whincr] <- obs + (obs - RFD_m)^2/(RFD_m - RFD_m2)
   asy <- Diversity_profile.inc(c(nT,y),qs)
   beta <- rep(0,length(qs))
-  beta0plus <- which(asy != obs)
-  beta[beta0plus] <- (Dn1[beta0plus]-obs[beta0plus])/(asy[beta0plus]-obs[beta0plus])
+  # beta0plus <- which(asy != obs)
+  # beta[beta0plus] <- (Dn1[beta0plus]-obs[beta0plus])/(asy[beta0plus]-obs[beta0plus])
+  beta0plus <- which(asy != RFD_m)
+  beta[beta0plus] <- (obs[beta0plus]-RFD_m[beta0plus])/(asy[beta0plus]-RFD_m[beta0plus])
   ETD = function(m,qs){
     m = m-nT
     out <- sapply(1:length(qs), function(i){
@@ -310,6 +314,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
   if(unconditional_var){
     goalSC <- unique(C.hat)
     Dq.hat_unc <- unique(invChat.Ind(x = Spec,q = q,C = goalSC))
+    Dq.hat_unc$Method[round(Dq.hat_unc$m) == n] = "Observed"
   }
 
   if(se==TRUE & nboot > 1 & length(Spec) > 1) {
@@ -411,6 +416,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
   if(unconditional_var){
     goalSC <- unique(C.hat)
     Dq.hat_unc <- unique(invChat.Sam(x = Spec,q = q,C = goalSC))
+    Dq.hat_unc$Method[Dq.hat_unc$t == nT] = "Observed"
   }
   
   if(se==TRUE & nboot > 1 & length(Spec) > 2){

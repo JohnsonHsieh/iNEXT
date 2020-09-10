@@ -8,7 +8,7 @@ invChat.Ind <- function (x, q, C) {
     if (refC > cvrg) {
       opt <- optimize(f, C = cvrg, lower = 0, upper = sum(x))
       mm <- opt$minimum
-      mm <- round(mm)
+      # mm <- round(mm)
     }else if (refC <= cvrg) {
       f1 <- sum(x == 1)
       f2 <- sum(x == 2)
@@ -23,13 +23,13 @@ invChat.Ind <- function (x, q, C) {
       }
       mm <- ifelse(A==1,0,(log(n/f1) + log(1 - cvrg))/log(A) - 1)
       mm <- n + mm
-      mm <- round(mm)
+      # mm <- round(mm)
     }
     mm
   })
-  mm[mm==0] <- 1
+  mm[mm < 1] <- 1
   SC <- Chat.Ind(x,mm)
-  if (sum(mm > 2 * n)>0) 
+  if (sum(round(mm) > 2 * n)>0) 
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   
   out <- TD.m.est(x = x,m = mm,qs = q)
@@ -61,7 +61,7 @@ invChat.Sam <- function (x, q, C) {
     if (refC > cvrg) {
       opt <- optimize(f, C = cvrg, lower = 0, upper = max(x))
       mm <- opt$minimum
-      mm <- round(mm)
+      # mm <- round(mm)
     }else if (refC <= cvrg) {
       f1 <- sum(x == 1)
       f2 <- sum(x == 2)
@@ -77,13 +77,13 @@ invChat.Sam <- function (x, q, C) {
       }
       mm <- ifelse(A==1,0,(log(U/f1) + log(1 - cvrg))/log(A) - 1)
       mm <- n + mm
-      mm <- round(mm)
+      # mm <- round(mm)
     }
     mm
   })
-  mm[mm==0] <- 1
+  mm[mm < 1] <- 1
   SC <- Chat.Sam(x,mm)
-  if (sum(mm > 2 * n)>0) 
+  if (sum(round(mm) > 2 * n)>0) 
     warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   out <- TD.m.est_inc(y = x,t_ = mm,qs = q)
   method <- ifelse(mm>n,'Extrapolation',ifelse(mm<n,'Rarefaction','Observed'))

@@ -100,14 +100,15 @@ NumericVector RTD(NumericMatrix x , int n  , double m , NumericVector q) {
   // x is x*i_vi; return length q
   int nrows = x.nrow();
   int qlength = q.length();
-  NumericVector fhat(m);
+  NumericVector fhat(ceil(m));
   NumericVector out(qlength);
   //Rcout << "out in cpp: " << out << std::endl;
-  for (int k = 0; k < m ; k++) {
+  for (double k = 0; k < floor(m) ; k++) {
     for (int i = 0; i < nrows; i++) {
       if (x(i,0) >= k+1 && x(i,0) <= n-m+k+1 )
       {
-        fhat[k] += x(i,1)*exp(Rf_lchoose(x(i,0), k+1)+Rf_lchoose(n-x(i,0), m-k-1)-Rf_lchoose(n, m)) ;
+        // fhat[k] += x(i,1)*exp(Rf_lchoose(x(i,0), k+1)+Rf_lchoose(n-x(i,0), m-k-1)-Rf_lchoose(n, m)) ;
+        fhat[k] += x(i,1)*exp(lgamma(x(i,0)+1)+lgamma(n-x(i,0)+1)+lgamma(m+1)+lgamma(n-m+1)-lgamma(k+2)-lgamma(x(i,0)-k)-lgamma(m-k)-lgamma(n-x(i,0)-m+k+2)-lgamma(n+1)) ;
       }
       else
       {
@@ -117,20 +118,25 @@ NumericVector RTD(NumericMatrix x , int n  , double m , NumericVector q) {
   }
   //Rcpp::Rcout << "hhat in cpp: " << hhat << std::endl;
   for (int j = 0; j < qlength; j++ ){  
-    for(int k = 0; k < m; k++){
+    for(int k = 0; k < floor(m); k++){
       if(q[j] == 0){
         out[j] = fhat[k] + out[j];
       }else if(q[j] == 1){
         //Rcout << "q1 in cpp: " <<log ( (k+1) )<< std::endl;
         out[j] = -( (k+1) / m ) * log ( (k+1) / m ) * fhat[k] + out[j];
       }else if(q[j] == 2){
-        out[j] = pow( ( (k+1) / m ),2) * fhat[k] + out[j];
+        // out[j] = pow( ( (k+1) / m ),2) * fhat[k] + out[j];
+        out[j] = 1 / m;
       }else{
         out[j] = pow( ( (k+1) / m ),q[j]) * fhat[k] + out[j];
       }
     }
+    if (q[j] == 2){
+      for (int i = 0; i < nrows; i++) {
+        out[j] = (m - 1) / m * x(i,1) * x(i,0) * (x(i,0)  - 1) / n / (n - 1) + out[j];
+      }
+    }
   }
-  //Rcout << "out in cpp: " << out << std::endl;
   for(int j = 0; j < qlength; j++ ){
     if(q[j] == 0){
       out[j] = out[j] ;
@@ -149,14 +155,15 @@ NumericVector RTD_inc(NumericMatrix y , int nT , double t_ , NumericVector q) {
   // x is x*i_vi; return length q
   int nrows = y.nrow();
   int qlength = q.length();
-  NumericVector Qhat(t_);
+  NumericVector Qhat(ceil(t_));
   NumericVector out(qlength);
   //Rcout << "out in cpp: " << out << std::endl;
-  for (int k = 0; k < t_ ; k++) {
+  for (int k = 0; k < floor(t_) ; k++) {
     for (int i = 0; i < nrows; i++) {
       if (y(i,0) >= k+1 && y(i,0) <= nT-t_+k+1 )
       {
-        Qhat[k] += y(i,1)*exp(Rf_lchoose(y(i,0), k+1)+Rf_lchoose(nT-y(i,0), t_-k-1)-Rf_lchoose(nT, t_)) ;
+        // Qhat[k] += y(i,1)*exp(Rf_lchoose(y(i,0), k+1)+Rf_lchoose(nT-y(i,0), t_-k-1)-Rf_lchoose(nT, t_)) ;
+        Qhat[k] += y(i,1)*exp(lgamma(y(i,0)+1)+lgamma(nT-y(i,0)+1)+lgamma(t_+1)+lgamma(nT-t_+1)-lgamma(k+2)-lgamma(y(i,0)-k)-lgamma(t_-k)-lgamma(nT-y(i,0)-t_+k+2)-lgamma(nT+1)) ;
       }
       else
       {
@@ -171,16 +178,22 @@ NumericVector RTD_inc(NumericMatrix y , int nT , double t_ , NumericVector q) {
   }
   double Ut_ = t_*U/nT;
   for (int j = 0; j < qlength; j++ ){  
-    for(int k = 0; k < t_; k++){
+    for(int k = 0; k < floor(t_); k++){
       if(q[j] == 0){
         out[j] = Qhat[k] + out[j];
       }else if(q[j] == 1){
         //Rcout << "q1 in cpp: " <<log ( (k+1) )<< std::endl;
         out[j] = -( (k+1) / Ut_ ) * log ( (k+1) / Ut_ ) * Qhat[k] + out[j];
       }else if(q[j] == 2){
-        out[j] = pow( ( (k+1) / Ut_ ),2) * Qhat[k] + out[j];
+        // out[j] = pow( ( (k+1) / Ut_ ),2) * Qhat[k] + out[j];
+        out[j] = 1 / t_ * nT / U;
       }else{
         out[j] = pow( ( (k+1) / Ut_ ),q[j]) * Qhat[k] + out[j];
+      }
+    }
+    if (q[j] == 2){
+      for (int i = 0; i < nrows; i++) {
+        out[j] = (t_ - 1) / t_ * y(i,1) * y(i,0) * (y(i,0)  - 1) / pow(U, 2) / (1 - 1 / nT) + out[j];
       }
     }
   }
