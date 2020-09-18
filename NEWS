@@ -79,4 +79,6 @@ identify different assemblages.
 # iNEXT 2.2.3
 - Remove the second change in iNEXT 2.2.2. 
 
+# iNEXT 2.2.5
+- Fix a minor potential bug invChat.Ind and invChat.Sam that may occur when f1 = 0, f2 > 0. 
 
