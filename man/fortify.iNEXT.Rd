@@ -4,7 +4,7 @@
 \alias{fortify.iNEXT}
 \title{Fortify method for classes from the iNEXT package.}
 \usage{
-\method{fortify}{iNEXT}(model, data = model$iNextEst, type = 1, ...)
+fortify.iNEXT(model, data = model$iNextEst, type = 1, ...)
 }
 \arguments{
 \item{model}{\code{iNEXT} to convert into a dataframe.}

@@ -140,12 +140,18 @@ TD.m.est = function(x, m, qs){ ## here q is allowed to be a vector containing no
   }
   Sub = function(m){
     if(m<n){
-      RTD(ifi,n,m,qs) 
+      if(m == round(m)) { mRTD[-1,mRTD[1,]==m] 
+        } else { (ceiling(m)-m)*mRTD[-1,mRTD[1,]==floor(m)]+(m-floor(m))*mRTD[-1,mRTD[1,]==ceiling(m)] }
     }else if(m==n){
       obs
     }else{
       ETD(m,qs)
     }
+  }
+  
+  if (sum(m < n) != 0) {
+    int.m = sort(unique(c(floor(m[m<n]), ceiling(m[m<n]))))
+    mRTD = rbind(int.m, sapply(int.m, function(k) RTD(ifi,n,k,qs)))
   }
   as.vector(t(sapply(m, Sub))) 
 }
@@ -193,12 +199,18 @@ TD.m.est_inc <- function(y, t_, qs){
   }
   Sub = function(m){
     if(m<nT){
-      RTD_inc(iQi,nT,m,qs) 
+      if(m == round(m)) { mRTD_inc[-1,mRTD_inc[1,]==m] 
+      } else { (ceiling(m)-m)*mRTD_inc[-1,mRTD_inc[1,]==floor(m)]+(m-floor(m))*mRTD_inc[-1,mRTD_inc[1,]==ceiling(m)] }
     }else if(m==nT){
       obs
     }else{
       ETD(m,qs)
     }
+  }
+  
+  if (sum(t_ < nT) != 0) {
+    int.t_ = sort(unique(c(floor(t_[t_<nT]), ceiling(t_[t_<nT]))))
+    mRTD_inc = rbind(int.t_, sapply(int.t_, function(k) RTD_inc(iQi,nT,k,qs)))
   }
   as.vector(t(sapply(t_, Sub)))
 }
@@ -535,8 +547,6 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   }
   if(datatype=="incidence_freq") datatype <- "incidence"
   
-  if(datatype=="incidence_freq") datatype <- "incidence"
-  
   if(datatype=="incidence_raw"){
     if(class_x=="list"){
       x <- lapply(x, as.incfreq)
@@ -600,13 +610,13 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     out <- list(size_based = out[[1]],
                 coverage_based = out[[2]])
     
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq')
-                     ,nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsyD(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq')
+                     ,nboot = 100,conf = 0.95)
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
-    index <- dcast(index,formula = order~method,value.var = 'qD')
+    index <- dcast(index,formula = Order.q~method,value.var = 'qD')
     index <- cbind(index[,-1],se = (UCL - index$Estimated)/z,LCL,UCL)
-    index$LCL[index$LCL<index$Empirical & index$order==0] <- index$Empirical[index$LCL<index$Empirical & index$order==0]
+    index$LCL[index$LCL<index$Empirical & index$Order.q==0] <- index$Empirical[index$LCL<index$Empirical & index$Order.q==0]
     colnames(index) <- c("Observed","Estimator","Est_s.e.","95% Lower","95% Upper")
     # index <- rbind(as.matrix(ChaoSpecies(x, datatype, conf)), 
     #                as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)),
@@ -625,13 +635,13 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     out <- list(size_based = do.call(rbind,lapply(out,  function(out_){out_[[1]]})),
                 coverage_based = do.call(rbind,lapply(out,  function(out_){out_[[2]]})))
     
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsyD(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95)
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
-    index <- dcast(index,formula = Site+order~method,value.var = 'qD')
+    index <- dcast(index,formula = Assemblage+Order.q~method,value.var = 'qD')
     index <- cbind(index,se = (UCL - index$Estimated)/z,LCL,UCL)
-    index$LCL[index$LCL<index$Empirical & index$order==0] <- index$Empirical[index$LCL<index$Empirical & index$order==0]
-    index$order <- c('Species richness','Shannon diversity','Simpson diversity')
+    index$LCL[index$LCL<index$Empirical & index$Order.q==0] <- index$Empirical[index$LCL<index$Empirical & index$Order.q==0]
+    index$Order.q <- c('Species richness','Shannon diversity','Simpson diversity')
     # arr <- array(0, dim = c(3, 5, ncol(x)))
     # arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype, conf)))
     # arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)))
@@ -656,13 +666,13 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     out <- list(size_based = do.call(rbind,lapply(out,  function(out_){out_[[1]]})),
                 coverage_based = do.call(rbind,lapply(out,  function(out_){out_[[2]]})))
     
-    index <- AsymDiv(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95,method = 'Both')
+    index <- AsyD(x = x,q = c(0,1,2),datatype = ifelse(datatype=='abundance','abundance','incidence_freq'),nboot = 100,conf = 0.95)
     LCL <- index$qD.LCL[index$method=='Estimated']
     UCL <- index$qD.UCL[index$method=='Estimated']
-    index <- dcast(index,formula = Site+order~method,value.var = 'qD')
+    index <- dcast(index,formula = Assemblage+Order.q~method,value.var = 'qD')
     index <- cbind(index,se = (UCL - index$Estimated)/z,LCL,UCL)
-    index$LCL[index$LCL<index$Empirical & index$order==0] <- index$Empirical[index$LCL<index$Empirical & index$order==0]
-    index$order <- c('Species richness','Shannon diversity','Simpson diversity')
+    index$LCL[index$LCL<index$Empirical & index$Order.q==0] <- index$Empirical[index$LCL<index$Empirical & index$Order.q==0]
+    index$Order.q <- c('Species richness','Shannon diversity','Simpson diversity')
     # arr <- array(0, dim = c(3, 5, length(x)))
     # arr[1,,] <- t(as.matrix(ChaoSpecies(x, datatype, conf)))
     # arr[2,,] <- t(as.matrix(ChaoEntropy(x, datatype, transform=TRUE, conf)))
@@ -710,171 +720,173 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
   out 
 }
 
+#
+#
 ###############################################
-# Asymptotic diversity q profile 
-# 
-# \code{AsymDiv} The estimated and empirical diversity of order q 
-# 
-# @param x a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, then the first entry of the input data must be total number of sampling units in each column or list.
-# @param q a numerical vector of the order of Hill number
-# @param datatype  data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
-# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
-# @param nboot the number of bootstrap resampling times, default is 50
-# @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.
-# @return a table of diversity q profile
-# @examples
-# # abundance data
-# data(spider)
-# out1 <- AsymDiv(spider)
-# # incidence frequency data
-# data(ant)
-# out2 <- AsymDiv(ant,datatype = "incidence_freq")
-AsymDiv <- function(x, q=seq(0,2,0.2), datatype="abundance",nboot=50, conf=0.95,method = 'Both'){
-  
-  class_x <- class(x)[1]
-  
-  if (class(x) == "numeric" | class(x) == "integer"){
-    x <- list(data = x)
+#' Asymptotic diversity q profile 
+#' 
+#' \code{AsyD} The estimated and empirical diversity of order q 
+#' 
+#' @param x a matrix/data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, then the first entry of the input data must be total number of sampling units in each column or list.
+#' @param q a nonnegative value or sequence specifying the diversity order. Default is seq(0, 2, by = 0.2).
+#' @param datatype  data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
+#' or species-by-site incidence frequencies data (\code{datatype = "incidence_freq"}). Default is "abundance".
+#' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
+#' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
+#' @return a table of diversity q profile by 'Estimated' and 'Empirical'
+#' 
+#' @examples
+#' ## example for abundance based data (list of vector)
+#' # abundance data
+#' data(spider)
+#' out1 <- AsyD(spider, datatype = "abundance")
+#' out1
+#' 
+#' ## Not run:
+#' ## example for incidence frequencies based data (list of data.frame)
+#' data(ant)
+#' out2 <- AsyD(ant, datatype = "incidence_freq")
+#' out2
+#' 
+#' ## End(Not run)
+#' 
+#' @references
+#' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
+#' @export
+AsyD <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf = 0.95){
+  if(datatype == "incidence"){
+    stop('datatype="incidence" was no longer supported, 
+         please try datatype = "incidence_freq".')  
   }
+  if(datatype == "incidence_raw"){
+    stop('datatype="incidence_raw" was no longer supported, 
+         please try datatype = "incidence_freq".')  
+  }
+  TYPE <- c("abundance", "incidence_freq")
+  if(is.na(pmatch(datatype, TYPE)))
+    stop("invalid datatype")
+  if(pmatch(datatype, TYPE) == -1)
+    stop("ambiguous datatype")
+  datatype <- match.arg(datatype, TYPE)
+  if(class(q) != "numeric")
+    stop("invlid class of order q, q should be a postive value/vector of numeric object")
+  if(min(q) < 0){
+    warning("ambigous of order q, we only compute postive q")
+    q <- q[q >= 0]
+  }
+  if(nboot < 0 | round(nboot) - nboot != 0)
+    stop("Please enter non-negative integer for nboot.")
+  if(conf < 0 | conf > 1)
+    stop("Please enter value between zero and one for confident interval.")
+  
   if (class(x) == "data.frame" | class(x) ==  "matrix"){
     datalist <- lapply(1:ncol(x), function(i) x[,i])
     if(is.null(colnames(x))) names(datalist) <-  paste0("data",1:ncol(x)) else names(datalist) <- colnames(x)
     x <- datalist
-  }
-  if(method=='Both'){
-    if(datatype=="abundance"){
-      out <- lapply(1:length(x),function(i){
-        dq <- c(Diversity_profile(x[[i]],q),Diversity_profile_MLE(x[[i]],q))
-        if(nboot>1){
-          Prob.hat <- EstiBootComm.Ind(x[[i]])
-          Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
-          
-          error <- qnorm(1-(1-conf)/2) * 
-            apply(apply(Abun.Mat, 2, function(xb) c(Diversity_profile(xb, q),Diversity_profile_MLE(xb,q))), 1, sd, na.rm=TRUE)
-          
-        }else{error = 0}
-        out <- data.frame("order" = rep(q,2), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
-                          "Site" = names(x)[i],"method" = rep(c("Estimated","Empirical"),each = length(q)))
-        out$qD.LCL[out$qD.LCL<0] <- 0
-        out
-      })
-      out <- do.call(rbind,out)
-    }else if(datatype=="incidence_freq"){
-      out <- lapply(1:length(x),function(i){
-        dq <- c(Diversity_profile.inc(x[[i]],q),Diversity_profile_MLE.inc(x[[i]],q))
-        if(nboot>1){
-          nT <- x[[i]][1]
-          Prob.hat <- EstiBootComm.Sam(x[[i]])
-          Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
-          Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
-          tmp <- which(colSums(Abun.Mat)==nT)
-          if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
-          if(ncol(Abun.Mat)==0){
-            error = 0
-            warning("Insufficient data to compute bootstrap s.e.")
-          }else{		
-            error <- qnorm(1-(1-conf)/2) * 
-              apply(apply(Abun.Mat, 2, function(yb) c(Diversity_profile.inc(yb, q),Diversity_profile_MLE.inc(yb,q))), 1, sd, na.rm=TRUE)
-          }
-        }else{error = 0}
-        out <- data.frame("order" = rep(q,2), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
-                          "Site" = names(x)[i],"method" = rep(c("Estimated","Empirical"),each = length(q)))
-        out$qD.LCL[out$qD.LCL<0] <- 0
-        out
-      })
-      out <- do.call(rbind,out)
-    }
-  }else if(method=='Empirical'){
-    if(datatype=="abundance"){
-      out <- lapply(1:length(x),function(i){
-        dq <- Diversity_profile_MLE(x[[i]],q)
-        if(nboot>1){
-          Prob.hat <- EstiBootComm.Ind(x[[i]])
-          Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
-          
-          error <- qnorm(1-(1-conf)/2) * 
-            apply(matrix(apply(Abun.Mat, 2, function(xb) Diversity_profile_MLE(xb,q)),nrow = length(q)), 1, sd, na.rm=TRUE)
-          
-        }else{error = 0}
-        out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
-                          "Site" = names(x)[i],"method" = rep(c("Empirical"),each = length(q)))
-        out$qD.LCL[out$qD.LCL<0] <- 0
-        out
-      })
-      out <- do.call(rbind,out)
-    }else if(datatype=="incidence_freq"){
-      out <- lapply(1:length(x),function(i){
-        dq <- Diversity_profile_MLE.inc(x[[i]],q)
-        if(nboot>1){
-          nT <- x[[i]][1]
-          Prob.hat <- EstiBootComm.Sam(x[[i]])
-          Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
-          Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
-          tmp <- which(colSums(Abun.Mat)==nT)
-          if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
-          if(ncol(Abun.Mat)==0){
-            error = 0
-            warning("Insufficient data to compute bootstrap s.e.")
-          }else{		
-            error <- qnorm(1-(1-conf)/2) * 
-              apply(matrix(apply(Abun.Mat, 2, function(yb) Diversity_profile_MLE.inc(yb,q)),nrow = length(q)), 1, sd, na.rm=TRUE)
-          }
-        }else{error = 0}
-        out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
-                          "Site" = names(x)[i],"method" = rep(c("Empirical"),each = length(q)))
-        out$qD.LCL[out$qD.LCL<0] <- 0
-        out
-      })
-      out <- do.call(rbind,out)
-    }
-  }else if(method == 'Estimated'){
-    if(datatype=="abundance"){
-      out <- lapply(1:length(x),function(i){
-        dq <- Diversity_profile(x[[i]],q)
-        if(nboot>1){
-          Prob.hat <- EstiBootComm.Ind(x[[i]])
-          Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
-          
-          error <- qnorm(1-(1-conf)/2) * 
-            apply(matrix(apply(Abun.Mat, 2, function(xb) Diversity_profile(xb, q)),nrow = length(q)), 1, sd, na.rm=TRUE)
-          
-        }else{error = 0}
-        out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
-                          "Site" = names(x)[i],"method" = rep(c("Estimated"),each = length(q)))
-        out$qD.LCL[out$qD.LCL<0] <- 0
-        out
-      })
-      out <- do.call(rbind,out)
-    }else if(datatype=="incidence_freq"){
-      out <- lapply(1:length(x),function(i){
-        dq <- Diversity_profile.inc(x[[i]],q)
-        if(nboot>1){
-          nT <- x[[i]][1]
-          Prob.hat <- EstiBootComm.Sam(x[[i]])
-          Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
-          Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
-          tmp <- which(colSums(Abun.Mat)==nT)
-          if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
-          if(ncol(Abun.Mat)==0){
-            error = 0
-            warning("Insufficient data to compute bootstrap s.e.")
-          }else{		
-            error <- qnorm(1-(1-conf)/2) * 
-              apply(matrix(apply(Abun.Mat, 2, function(yb) Diversity_profile.inc(yb, q)),nrow = length(q)), 1, sd, na.rm=TRUE)
-          }
-        }else{error = 0}
-        out <- data.frame("order" = rep(q,1), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
-                          "Site" = names(x)[i],"method" = rep(c("Estimated"),each = length(q)))
-        out$qD.LCL[out$qD.LCL<0] <- 0
-        out
-      })
-      out <- do.call(rbind,out)
-    }
+  } else if (class(x) == "numeric" | class(x) == "integer" | class(x) == "double") {
+    x <- list(data = x)
   }
   
-  
-  out
+  if(datatype=="abundance"){
+    out <- lapply(1:length(x),function(i){
+      dq <- c(Diversity_profile(x[[i]],q),Diversity_profile_MLE(x[[i]],q))
+      if(nboot > 1){
+        Prob.hat <- EstiBootComm.Ind(x[[i]])
+        Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
+        
+        error <- qnorm(1-(1-conf)/2) * 
+          apply(apply(Abun.Mat, 2, function(xb) c(Diversity_profile(xb, q),Diversity_profile_MLE(xb,q))), 1, sd, na.rm=TRUE)
+        
+      } else {error = 0}
+      out <- data.frame("Order.q" = rep(q,2), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
+                        "Assemblage" = names(x)[i], "method" = rep(c("Estimated","Empirical"),each = length(q)))
+      out$qD.LCL[out$qD.LCL<0] <- 0
+      out
+    })
+    out <- do.call(rbind,out)
+  }else if(datatype=="incidence_freq"){
+    out <- lapply(1:length(x),function(i){
+      dq <- c(Diversity_profile.inc(x[[i]],q),Diversity_profile_MLE.inc(x[[i]],q))
+      if(nboot > 1){
+        nT <- x[[i]][1]
+        Prob.hat <- EstiBootComm.Sam(x[[i]])
+        Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
+        Abun.Mat <- matrix(c(rbind(nT, Abun.Mat)),ncol=nboot)
+        tmp <- which(colSums(Abun.Mat)==nT)
+        if(length(tmp)>0) Abun.Mat <- Abun.Mat[,-tmp]
+        if(ncol(Abun.Mat)==0){
+          error = 0
+          warning("Insufficient data to compute bootstrap s.e.")
+        }else{		
+          error <- qnorm(1-(1-conf)/2) * 
+            apply(apply(Abun.Mat, 2, function(yb) c(Diversity_profile.inc(yb, q),Diversity_profile_MLE.inc(yb,q))), 1, sd, na.rm=TRUE)
+        }
+      } else {error = 0}
+      out <- data.frame("Order.q" = rep(q,2), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
+                        "Assemblage" = names(x)[i],"method" = rep(c("Estimated","Empirical"),each = length(q)))
+      out$qD.LCL[out$qD.LCL<0] <- 0
+      out
+    })
+    out <- do.call(rbind,out)
+  }
+  return(out)
 }
+
+
+#
+#
+###############################################
+#' ggplot for Asymptotic diversity
+#'
+#' \code{ggAsyD} Plots q-profile based on the outcome of \code{AsyD} using the ggplot2 package.\cr
+#' It will only show the confidence interval of 'Estimated'.
+#'
+#' @param outcome the outcome of the functions \code{AsyD} .\cr
+#' @return a figure of estimated sample completeness with order q\cr\cr
+#'
+#' @examples
+#' ## Type (1) example for abundance-based data
+#' ## Ex.1
+#' data(spider)
+#' out1 <- AsyD(spider, datatype = "abundance")
+#' ggAsyD(out1)
+#' 
+#' ## Type (2) example for incidence-based data
+#'
+#' ## Not run:
+#' ## Ex.2
+#' data(ant)
+#' out2 <- AsyD(ant, datatype = "incidence_freq")
+#' ggAsyD(out2)
+#'
+#' ## End(Not run)
+#' @export
+
+ggAsyD <- function(outcome){
+  cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
+                     "#330066", "#CC79A7", "#0072B2", "#D55E00"))
+  if (sum(unique(outcome$method) %in% c("Estimated", "Empirical")) == 0)
+    stop("Please use the outcome from specified function 'AsyD'")
+  ggplot(outcome, aes(x=Order.q, y=qD, colour=Assemblage, lty=method)) +
+    geom_line(size=1.2) +
+    scale_colour_manual(values = cbPalette) +
+    geom_ribbon(data = outcome[outcome$method=="Estimated",],
+                aes(ymin=qD.LCL, ymax=qD.UCL, fill=Assemblage), alpha=0.2, linetype=0) +
+    # geom_ribbon(data = outcome[outcome$method=="Empirical",],
+    #             aes(ymin=qD.LCL, ymax=qD.UCL, fill=Assemblage), alpha=0.2, linetype=0) +
+    scale_fill_manual(values = cbPalette) +
+    scale_linetype_manual(values = c("Estimated"=1, "Empirical"=2)) +
+    labs(x="Order q", y="Species diversity") +
+    # theme_bw(base_size = 18) +
+    theme(text=element_text(size=18)) +
+    theme(legend.position="bottom", legend.box = "vertical",
+          legend.key.width = unit(1.2,"cm"),
+          # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
+          legend.title=element_blank(),
+          legend.margin=margin(0,0,0,0),
+          legend.box.margin = margin(-10,-10,-5,-10))
+}
+
 
 
 ##
