@@ -5,11 +5,13 @@ invChat.Ind <- function (x, q, C) {
   refC <- Chat.Ind(x, n)
   f <- function(m, C) abs(Chat.Ind(x, m) - C)
   mm <- sapply(C, function(cvrg){
-    if (refC > cvrg) {
+    if (refC == cvrg) {
+      mm <- n
+    }else if (refC > cvrg) {
       opt <- optimize(f, C = cvrg, lower = 0, upper = sum(x))
       mm <- opt$minimum
       # mm <- round(mm)
-    }else if (refC <= cvrg) {
+    }else if (refC < cvrg) {
       f1 <- sum(x == 1)
       f2 <- sum(x == 2)
       if (f1 > 0 & f2 > 0) {
@@ -60,11 +62,13 @@ invChat.Sam <- function (x, q, C) {
   refC <- Chat.Sam(x, n)
   f <- function(m, C) abs(Chat.Sam(x, m) - C)
   mm <- sapply(C, function(cvrg){
-    if (refC > cvrg) {
+    if (refC == cvrg) {
+      mm <- n
+    }else if (refC > cvrg) {
       opt <- optimize(f, C = cvrg, lower = 0, upper = max(x))
       mm <- opt$minimum
       # mm <- round(mm)
-    }else if (refC <= cvrg) {
+    }else if (refC < cvrg) {
       f1 <- sum(x == 1)
       f2 <- sum(x == 2)
       U <- sum(x) - max(x)
