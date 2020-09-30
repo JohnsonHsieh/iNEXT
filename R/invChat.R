@@ -33,8 +33,8 @@ invChat.Ind <- function (x, q, C) {
   })
   mm[mm < 1] <- 1
   SC <- Chat.Ind(x,mm)
-  if (sum(round(mm) > 2 * n)>0) 
-    warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+  # if (sum(round(mm) > 2 * n)>0) 
+  #   warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   
   out <- TD.m.est(x = x,m = mm,qs = q)
   method <- ifelse(mm>n,'Extrapolation',ifelse(mm<n,'Rarefaction','Observed'))
@@ -89,8 +89,8 @@ invChat.Sam <- function (x, q, C) {
   })
   mm[mm < 1] <- 1
   SC <- Chat.Sam(x,mm)
-  if (sum(round(mm) > 2 * n)>0) 
-    warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+  # if (sum(round(mm) > 2 * n)>0) 
+  #   warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   out <- TD.m.est_inc(y = x,t_ = mm,qs = q)
   method <- ifelse(mm>n,'Extrapolation',ifelse(mm<n,'Rarefaction','Observed'))
   method <- rep(method,length(q))
@@ -215,6 +215,9 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       Community = rep(names(x),each = length(q)*length(C))
       out <- lapply(x, function(x_){
         est <- invChat.Ind(x_, q, C)
+        if (sum(round(est$m) > 2 * sum(x_))>0) 
+          warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+        
         if(nboot>1){
           Prob.hat <- EstiBootComm.Ind(x_)
           Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
@@ -242,6 +245,9 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       Community = rep(names(x),each = length(q)*length(C))
       out <- lapply(x, function(x_){
         est <- invChat.Sam(x_, q, C)
+        if (sum(round(est$t) > 2 * max(x_))>0) 
+          warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+        
         if(nboot>1){
           Prob.hat <- EstiBootComm.Sam(x_)
           Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, x_[1], p)))
