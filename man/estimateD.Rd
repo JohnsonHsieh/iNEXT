@@ -44,9 +44,12 @@ method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, an
 \examples{
 \dontrun{
 data(spider)
-out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size")
-out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage")
+out1 <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size")
+out1
+out2 <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage")
+out2
 }
 data(ant)
 out <- estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=0.95)
+out
 }

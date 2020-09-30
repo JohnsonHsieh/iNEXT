@@ -742,13 +742,11 @@ EstDis <- function(x, datatype=c("abundance", "incidence")){
 #' out1 <- AsyD(spider, datatype = "abundance")
 #' out1
 #' 
-#' ## Not run:
 #' ## example for incidence frequencies based data (list of data.frame)
 #' data(ant)
-#' out2 <- AsyD(ant, datatype = "incidence_freq")
+#' out2 <- AsyD(ant, datatype = "incidence_freq", nboot = 0)
 #' out2
 #' 
-#' ## End(Not run)
 #' 
 #' @references
 #' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
@@ -853,13 +851,11 @@ AsyD <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf
 #' 
 #' ## Type (2) example for incidence-based data
 #'
-#' ## Not run:
 #' ## Ex.2
 #' data(ant)
-#' out2 <- AsyD(ant, datatype = "incidence_freq")
+#' out2 <- AsyD(ant, datatype = "incidence_freq", nboot = 0)
 #' ggAsyD(out2)
 #'
-#' ## End(Not run)
 #' @export
 
 ggAsyD <- function(outcome){

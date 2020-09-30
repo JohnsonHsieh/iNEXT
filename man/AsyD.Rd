@@ -31,13 +31,11 @@ data(spider)
 out1 <- AsyD(spider, datatype = "abundance")
 out1
 
-## Not run:
 ## example for incidence frequencies based data (list of data.frame)
 data(ant)
-out2 <- AsyD(ant, datatype = "incidence_freq")
+out2 <- AsyD(ant, datatype = "incidence_freq", nboot = 0)
 out2
 
-## End(Not run)
 
 }
 \references{

@@ -25,11 +25,9 @@ ggAsyD(out1)
 
 ## Type (2) example for incidence-based data
 
-## Not run:
 ## Ex.2
 data(ant)
-out2 <- AsyD(ant, datatype = "incidence_freq")
+out2 <- AsyD(ant, datatype = "incidence_freq", nboot = 0)
 ggAsyD(out2)
 
-## End(Not run)
 }
