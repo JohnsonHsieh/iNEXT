@@ -12,7 +12,7 @@ Diversity_profile <- function(x,q){
       length(x) + (n-1)/n*ifelse(f2>0, f1^2/2/f2, f1*(f1-1)/2)
     }else if(q==1){
       A <- sum(tab*sortx/n*(digamma(n)-digamma(sortx)))
-      B <- D1_2nd(n,f1,p1)
+      B <- D1_2nd(n,f1,f2)
       exp(A+B)
     }else if(abs(q-round(q))==0){
       A <- sum(tab[sortx>=q]*exp(lchoose(sortx[sortx>=q],q)-lchoose(n,q)))

@@ -795,7 +795,7 @@ AsyD <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf
         error <- qnorm(1-(1-conf)/2) * 
           apply(apply(Abun.Mat, 2, function(xb) c(Diversity_profile(xb, q),Diversity_profile_MLE(xb,q))), 1, sd, na.rm=TRUE)
         
-      } else {error = 0}
+      } else {error = NA}
       out <- data.frame("Order.q" = rep(q,2), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
                         "Assemblage" = names(x)[i], "method" = rep(c("Estimated","Empirical"),each = length(q)))
       out$qD.LCL[out$qD.LCL<0] <- 0
@@ -819,7 +819,7 @@ AsyD <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf
           error <- qnorm(1-(1-conf)/2) * 
             apply(apply(Abun.Mat, 2, function(yb) c(Diversity_profile.inc(yb, q),Diversity_profile_MLE.inc(yb,q))), 1, sd, na.rm=TRUE)
         }
-      } else {error = 0}
+      } else {error = NA}
       out <- data.frame("Order.q" = rep(q,2), "qD" = dq,"qD.LCL" = dq - error, "qD.UCL" = dq + error,
                         "Assemblage" = names(x)[i],"method" = rep(c("Estimated","Empirical"),each = length(q)))
       out$qD.LCL[out$qD.LCL<0] <- 0

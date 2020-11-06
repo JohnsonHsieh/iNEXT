@@ -6,15 +6,15 @@
 using namespace Rcpp;
 
 // D1_2nd
-double D1_2nd(double n, double f1, double A);
-RcppExport SEXP _iNEXT_D1_2nd(SEXP nSEXP, SEXP f1SEXP, SEXP ASEXP) {
+double D1_2nd(double n, double f1, double f2);
+RcppExport SEXP _iNEXT_D1_2nd(SEXP nSEXP, SEXP f1SEXP, SEXP f2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type n(nSEXP);
     Rcpp::traits::input_parameter< double >::type f1(f1SEXP);
-    Rcpp::traits::input_parameter< double >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(D1_2nd(n, f1, A));
+    Rcpp::traits::input_parameter< double >::type f2(f2SEXP);
+    rcpp_result_gen = Rcpp::wrap(D1_2nd(n, f1, f2));
     return rcpp_result_gen;
 END_RCPP
 }
