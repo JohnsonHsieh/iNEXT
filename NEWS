@@ -26,3 +26,59 @@
 
 # iNEXT 2.0.20
 - Modify Error in R 4.0.0 (issue #46).
+
+# iNEXT 2.1.0
+- Add the parameter q to estimateD function. And its output form is correspondingly slightly changed.
+- Change the facet label of diversity order in ggiNEXT from `0`, `1`, `2` to `q = 0`,`q = 1`, `q = 2`, respectively.
+- Change the default colors of ggiNEXT to make them color-blind friendly.
+- Improve the efficiency of `Dqhat.Ind` and rename it as `TD.m.est`. (Similarly, `Dqhat.Sam` is renamed as `TD.m.est_inc`)
+
+# iNEXT 2.1.1
+- Change default value of `level` of `estimateD` if it is not specified by users.
+- Correct version number in description file.
+
+# iNEXT 2.1.2
+- Correct the facet label when `type = 2` in `ggiNEXT`, which is supposed not to appear.
+- Slighty modification on the confidence interval method for asymptotic estimates.
+- Fix a bug in the incidence extrapolation.
+- Fix a bug in the asymptotic profile.
+
+# iNEXT 2.1.3
+- Fix a bug in estimateD when the necessary size for a small coverage is 1.
+
+# iNEXT 2.1.4
+- Now the parameter "level" in estimateD can be a vector.
+- Slightly modify the bootstrap method in estimateD when base="coverage".
+
+# iNEXT 2.1.5
+- Fix a bug about the C.I of estimateD when the length of desired 'level' > 1.
+
+# iNEXT 2.1.6
+- Modify the C.I of asymptotic diversity of q = 1 and 2: cancel the trucation.
+
+# iNEXT 2.1.7
+- Slightly modify the example of estimateD.
+
+# iNEXT 2.2.0
+- Add the coverage-based bootstrap method into function 'iNEXT()'.
+- Notation changes in column names: 'site'/'Site' -> 'Assemblage', 'order' -> 'Order.q', 'method' -> 'Method'.
+- Notation changes in arguments 'facet.var' and 'color.var' of function 'ggiNEXT()': 
+'none' -> 'None', 'order' -> 'Order.q', 'site' -> 'Assemblage', 'both' -> 'Both'. 
+- Now there two elements(data.frames) in $iNextEst, the first is $size_based and the second
+is $coverage_based, instead of N elements(data.frames), where N is the # of assemblages.
+- An additional character column 'Assemblage' is added into each element(data.frame) of $iNextEst to
+identify different assemblages.
+
+# iNEXT 2.2.1
+- Fix the notations in function 'EstimateD()': 'site'/'Site' -> 'Assemblage'
+
+# iNEXT 2.2.2
+- Update README.md and README.Rmd at github according to the changes in iNEXT 2.2.0 and iNEXT 2.2.1.
+- Add an additional choice of argument 'type' in ggiNEXT. Now type = 4 will perform the same plotting function as type = 3 from the previous version (before 2.2.0).
+
+# iNEXT 2.2.3
+- Remove the second change in iNEXT 2.2.2. 
+
+# iNEXT 2.2.5
+- Fix a minor potential bug invChat.Ind and invChat.Sam that may occur when f1 = 0, f2 > 0. 
+

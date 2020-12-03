@@ -69,11 +69,11 @@ DataInfo <- function(x, datatype="abundance"){
     }
     if(nrow(out) > 1){
       out <- data.frame(site=rownames(out), out)
-      colnames(out) <-  c("site", "n", "S.obs", "SC", paste("f",1:10, sep=""))
+      colnames(out) <-  c("Assemblage", "n", "S.obs", "SC", paste("f",1:10, sep=""))
       rownames(out) <- NULL
     }else{
       out <- data.frame(site="site.1", out)
-      colnames(out) <-  c("site", "n", "S.obs", "SC", paste("f",1:10, sep=""))
+      colnames(out) <-  c("Assemblage", "n", "S.obs", "SC", paste("f",1:10, sep=""))
     }
     as.data.frame(out)
   }else if(datatype == "incidence"){
@@ -86,11 +86,11 @@ DataInfo <- function(x, datatype="abundance"){
     }
     if(nrow(out) > 1){
       out <- data.frame(site=rownames(out), out)
-      colnames(out) <-  c("site","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
+      colnames(out) <-  c("Assemblage","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
       rownames(out) <- NULL
     }else{
       out <- data.frame(site="site.1", out)
-      colnames(out) <-  c("site","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
+      colnames(out) <-  c("Assemblage","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
     }
     as.data.frame(out)
   }

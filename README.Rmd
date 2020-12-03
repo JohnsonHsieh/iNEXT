@@ -136,14 +136,14 @@ library(ggplot2)
 ```{r ex1}
 data(spider)
 out <- iNEXT(spider, q=c(0, 1, 2), datatype="abundance", endpoint=500)
-# Sample-size-based R/E curves, separating plots by "site"
-ggiNEXT(out, type=1, facet.var="site")
+# Sample-size-based R/E curves, separating plots by "Assemblage"
+ggiNEXT(out, type=1, facet.var="Assemblage")
 ```
 
 
 ```{r ex1b}
-# Sample-size-based R/E curves, separating plots by "order"
-ggiNEXT(out, type=1, facet.var="order")
+# Sample-size-based R/E curves, separating plots by "Order.q"
+ggiNEXT(out, type=1, facet.var="Order.q")
 ```
 <br>
 To link the sample-sized and coverage-based sampling curves, it would be informative to first examine the sample completeness curve using the following command:
@@ -151,30 +151,30 @@ To link the sample-sized and coverage-based sampling curves, it would be informa
 ggiNEXT(out, type=2)
 ```
 <br>
-The following commands return the coverage-based R/E sampling curves. The argument facet.var="site" in the ggiNEXT() function creates a separate plot for each site, as shown below:
+The following commands return the coverage-based R/E sampling curves. The argument facet.var="Assemblage" in the ggiNEXT() function creates a separate plot for each site, as shown below:
 
 ```{r eval=FALSE}
-ggiNEXT(out, type=3, facet.var="site")
+ggiNEXT(out, type=3, facet.var="Assemblage")
 ```
 ```{r ex3, echo=FALSE}
-ggiNEXT(out, type=3, facet.var="site")
+ggiNEXT(out, type=3, facet.var="Assemblage")
 ```
 <br>
-The argument facet.var="order" creates a separate plot for each diversity order, and within each plot, as shown below.
+The argument facet.var="Order.q" creates a separate plot for each diversity order, and within each plot, as shown below.
 ```{r eval=FALSE}
-ggiNEXT(out, type=3, facet.var="order")
+ggiNEXT(out, type=3, facet.var="Order.q")
 ```
 ```{r ex3-2, echo=FALSE}
-ggiNEXT(out, type=3, facet.var="order")
+ggiNEXT(out, type=3, facet.var="Order.q")
 ```
 <br>
 The above graphical displays depict the typical color plots to standardize biodiversity samples in order to compare equally-large (sample-size-based) or equally-complete (coverage-based) samples.  More graphic display options are described below.
 ```{r eval=FALSE}
 # Separating plots by "order", and display black-white plots
-ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
+ggiNEXT(out, type=1, facet.var="Order.q", grey=TRUE)
 ```
 ```{r ex5, echo=FALSE}
-ggiNEXT(out, type=1, facet.var="order", grey=TRUE)
+ggiNEXT(out, type=1, facet.var="Order.q", grey=TRUE)
 ```
 <br>
 More details and examples/options are provided in the iNEXT Manual in CRAN, and also in [iNEXT User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/iNEXT_UserGuide.pdf). Both are available from [Anne Chao's website](http://chao.stat.nthu.edu.tw/wordpress/software_download/). 

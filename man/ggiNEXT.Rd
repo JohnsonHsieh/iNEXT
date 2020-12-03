@@ -6,11 +6,23 @@
 \alias{ggiNEXT.default}
 \title{ggplot2 extension for an iNEXT object}
 \usage{
-ggiNEXT(x, type = 1, se = TRUE, facet.var = "none",
-  color.var = "site", grey = FALSE)
+ggiNEXT(
+  x,
+  type = 1,
+  se = TRUE,
+  facet.var = "None",
+  color.var = "Assemblage",
+  grey = FALSE
+)
 
-\method{ggiNEXT}{iNEXT}(x, type = 1, se = TRUE, facet.var = "none",
-  color.var = "site", grey = FALSE)
+\method{ggiNEXT}{iNEXT}(
+  x,
+  type = 1,
+  se = TRUE,
+  facet.var = "None",
+  color.var = "Assemblage",
+  grey = FALSE
+)
 
 \method{ggiNEXT}{default}(x, ...)
 }
@@ -23,16 +35,16 @@ sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapol
 \item{se}{a logical variable to display confidence interval around the estimated sampling curve.}
 
 \item{facet.var}{create a separate plot for each value of a specified variable: 
-no separation \cr (\code{facet.var="none"}); 
-a separate plot for each diversity order (\code{facet.var="order"}); 
-a separate plot for each site (\code{facet.var="site"}); 
-a separate plot for each combination of order x site (\code{facet.var="both"}).}
+no separation \cr (\code{facet.var="None"}); 
+a separate plot for each diversity order (\code{facet.var="Order.q"}); 
+a separate plot for each assemblage (\code{facet.var="Assemblage"}); 
+a separate plot for each combination of order x assemblage (\code{facet.var="Both"}).}
 
 \item{color.var}{create curves in different colors for values of a specified variable:
-all curves are in the same color (\code{color.var="none"}); 
-use different colors for diversity orders (\code{color.var="order"}); 
-use different colors for sites (\code{color.var="site"}); 
-use different colors for combinations of order x site (\code{color.var="both"}).}
+all curves are in the same color (\code{color.var="None"}); 
+use different colors for diversity orders (\code{color.var="Order.q"}); 
+use different colors for sites (\code{color.var="Assemblage"}); 
+use different colors for combinations of order x assemblage (\code{color.var="Both"}).}
 
 \item{grey}{a logical variable to display grey and white ggplot2 theme.}
 
@@ -57,11 +69,11 @@ ggiNEXT(x=out1, type=3)
 data(ant)
 size <- round(seq(10, 500, length.out=20))
 y <- iNEXT(ant$h500m, q=c(0,1,2), datatype="incidence_freq", size=size, se=FALSE)
-ggiNEXT(y, se=FALSE, color.var="order")
+ggiNEXT(y, se=FALSE, color.var="Order.q")
 
 # multiple-assemblage abundance data with three orders q
 z <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
-ggiNEXT(z, facet.var="site", color.var="order")
-ggiNEXT(z, facet.var="both", color.var="both")
+ggiNEXT(z, facet.var="Assemblage", color.var="Order.q")
+ggiNEXT(z, facet.var="Both", color.var="Both")
 }
 }

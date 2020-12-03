@@ -25,7 +25,7 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   if(class(x) != "iNEXT")
     stop("invalid object class")
   TYPE <-  c(1, 2, 3)
-  SPLIT <- c("none", "order", "site", "both")
+  # SPLIT <- c("none", "order", "site", "both")
   if(is.na(pmatch(type, TYPE)) | pmatch(type, TYPE) == -1)
     stop("invalid plot type")
   
@@ -34,54 +34,57 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   y <- method <- site <- shape <- y.lwr <- y.upr <- NULL
   site <<- NULL
   
-  z <- x$iNextEst
-  if(class(z) == "list"){
-    z <- data.frame(do.call("rbind", z), site=rep(names(z), sapply(z, nrow)))
-    rownames(z) <- NULL
-  }else{
-    z$site <- ""
-    z$site <- factor(z$site)
-  }
+  # z <- x$iNextEst
+  # if(class(z) == "list"){
+  #   z <- data.frame(do.call("rbind", z), site=rep(names(z), sapply(z, nrow)))
+  #   rownames(z) <- NULL
+  # }else{
+  #   z$site <- ""
+  #   z$site <- factor(z$site)
+  # }
   
-  if("qD.LCL" %in% names(z) == FALSE & se) {
+  z <- fortify(x, type=type)
+  
+  
+  if("y.lwr" %in% names(z) == FALSE & se) {
     warning("invalid se setting, the iNEXT object do not consist confidence interval")
     se <- FALSE
-  }else if("qD.LCL" %in% names(z) & se) {
+  }else if("y.lwr" %in% names(z) & se) {
     se <- TRUE
   }else{
     se <- FALSE
   }
   
   if(type==1L) {
-    z$x <- z[,1]
-    z$y <- z$qD
+    #z$x <- z[,1]
+    #z$y <- z$qD
     if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[2]=="n", "Number of individuals", "Number of sampling units")
     if(!is.null(ylab)) ylab <- "Species diversity"
-    if(se){
-      z$y.lwr <- z[,5]
-      z$y.upr <- z[,6]
-    }
+    # if(se){
+    #   z$y.lwr <- z[,5]
+    #   z$y.upr <- z[,6]
+    # }
   }else if(type==2L){
-    if(length(unique(z$order))>1){
-      z <- subset(z, order==unique(z$order)[1])
+    if(length(unique(z$Order.q))>1){
+      z <- subset(z, Order.q==unique(z$Order.q)[1])
     }
-    z$x <- z[,1]
-    z$y <- z$SC
+    # z$x <- z[,1]
+    # z$y <- z$SC
     if(!is.null(xlab)) xlab <- ifelse(names(x$DataInfo)[2]=="n", "Number of individuals", "Number of sampling units")
     if(!is.null(ylab)) ylab <- "Sample coverage"
-    if(se){
-      z$y.lwr <- z[,8]
-      z$y.upr <- z[,9]
-    }
+    # if(se){
+    #   z$y.lwr <- z[,8]
+    #   z$y.upr <- z[,9]
+    # }
   }else if(type==3L){
-    z$x <- z$SC
-    z$y <- z$qD
+    # z$x <- z$SC
+    # z$y <- z$qD
     if(!is.null(xlab)) xlab <- "Sample coverage"
     if(!is.null(ylab)) ylab <- "Species diversity"
-    if(se){
-      z$y.lwr <- z[,5]
-      z$y.upr <- z[,6]
-    }
+    # if(se){
+    #   z$y.lwr <- z[,5]
+    #   z$y.upr <- z[,6]
+    # }
   }
   
   gg_color_hue <- function(n) {
@@ -97,8 +100,8 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
     polygon(c(x,rev(x)),c(LCL,rev(UCL)), ...)
   }
   
-  SITE <- levels(z$site)
-  ORDER <- unique(z$order)
+  SITE <- unique(z$Assemblage)
+  ORDER <- unique(z$Order.q)
   
   if(is.null(col)){
     col <- gg_color_hue(length(SITE))
@@ -109,31 +112,31 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   
   for(j in 1:length(ORDER)){
     if(se==TRUE){
-      tmp.sub <- subset(z, order==ORDER[j])
-      tmp.j <- data.frame(site=tmp.sub$site, order=tmp.sub$order,
-                          method=tmp.sub$method, 
+      tmp.sub <- subset(z, Order.q==ORDER[j])
+      tmp.j <- data.frame(Assemblage=tmp.sub$Assemblage, Order.q=tmp.sub$Order.q,
+                          Method=tmp.sub$Method, 
                           x=tmp.sub$x, y=tmp.sub$y,
                           y.lwr=tmp.sub$y.lwr, y.upr=tmp.sub$y.upr)
       
       plot(y.upr~x, data=tmp.j, type="n", xlab="", ylab="", ...)
     }else{
-      tmp.sub <- subset(z, order==ORDER[j])
+      tmp.sub <- subset(z, Order.q==ORDER[j])
       
-      tmp.j <- data.frame(site=tmp.sub$site, order=tmp.sub$order,
-                          method=tmp.sub$method, 
+      tmp.j <- data.frame(Assemblage=tmp.sub$Assemblage, Order.q=tmp.sub$Order.q,
+                          Method=tmp.sub$Method, 
                           x=tmp.sub$x, y=tmp.sub$y)
       
       plot(y~x, data=tmp.j, type="n", xlab="", ylab="", ...)
     }
     
     for(i in 1:length(SITE)){
-      tmp <- subset(tmp.j, site==SITE[i])
+      tmp <- subset(tmp.j, Assemblage==SITE[i])
       if(se==TRUE){
         conf.reg(x=tmp$x, LCL=tmp$y.lwr, UCL=tmp$y.upr, border=NA, col=adjustcolor(col[i], 0.25))
       }
-      lines(y~x, data=subset(tmp, method=="interpolated"), lty=1, lwd=2, col=col[i])
-      lines(y~x, data=subset(tmp, method=="extrapolated"), lty=2, lwd=2, col=col[i])
-      points(y~x, data=subset(tmp, method=="observed"), pch=pch[i], cex=2, col=col[i])
+      lines(y~x, data=subset(tmp, Method=="Rarefaction"), lty=1, lwd=2, col=col[i])
+      lines(y~x, data=subset(tmp, Method=="Extrapolation"), lty=2, lwd=2, col=col[i])
+      points(y~x, data=subset(tmp, Method=="Observed"), pch=pch[i], cex=2, col=col[i])
       
     }
     if(show.legend==TRUE){
@@ -159,9 +162,7 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
 #' @export
 print.iNEXT <- function(x, ...){
   site.n <- nrow(x$DataInfo)
-  order.n <- ifelse(site.n > 1, 
-                    paste(unique(x$iNextEst[[1]]$order), collapse = ", "),
-                    paste(unique(x$iNextEst$order), collapse = ", "))
+  order.n <- paste(unique(x$iNextEst$size_based$Order.q), collapse = ", ")
   cat("Compare ", site.n, " assemblages with Hill number order q = ", order.n,".\n", sep="")
   cat("$class: iNEXT\n\n")
   cat("$DataInfo: basic data information\n")
@@ -174,8 +175,13 @@ print.iNEXT <- function(x, ...){
     res <- y[y[,1]%in%m,]
   }else{
     res <- lapply((x$iNextEst), function(y){
-      m <- quantile(y[,1], type = 1)
-      y[y[,1]%in%m,]
+      Assemblages <- unique(x$iNextEst$size_based$Assemblage)
+      tmp <- lapply(1:length(Assemblages),function(i){
+        y_each <- subset(y, Assemblage==Assemblages[i])
+        m <- quantile(y_each[,2], type = 1)
+        y_each[y_each[,2]%in%m,]
+      })
+      do.call(rbind,tmp)
     })
   }
   print(res)

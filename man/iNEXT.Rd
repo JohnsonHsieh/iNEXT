@@ -4,14 +4,22 @@
 \alias{iNEXT}
 \title{iNterpolation and EXTrapolation of Hill number}
 \usage{
-iNEXT(x, q = 0, datatype = "abundance", size = NULL,
-  endpoint = NULL, knots = 40, se = TRUE, conf = 0.95,
-  nboot = 50)
+iNEXT(
+  x,
+  q = 0,
+  datatype = "abundance",
+  size = NULL,
+  endpoint = NULL,
+  knots = 40,
+  se = TRUE,
+  conf = 0.95,
+  nboot = 50
+)
 }
 \arguments{
-\item{x}{a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list.}
+\item{x}{a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, then the first entry of the input data must be total number of sampling units in each column or list.}
 
-\item{q}{a numeric value specifying the diversity order of Hill number .}
+\item{q}{a numerical vector of the order of Hill number.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).}
@@ -44,16 +52,14 @@ and \code{$AsyEst} for showing asymptotic diversity estimates along with related
 \examples{
 ## example for abundance based data (list of vector)
 data(spider)
-out1 <- iNEXT(spider, q=0, datatype="abundance")
+out1 <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
 out1$DataInfo # showing basic data information.
 out1$AsyEst # showing asymptotic diversity estimates.
 out1$iNextEst # showing diversity estimates with rarefied and extrapolated.
-
 ## example for abundance based data (data.frame)
 data(bird)
 out2 <- iNEXT(bird, q=0, datatype="abundance")
 ggiNEXT(out2)
-
 \dontrun{
 ## example for incidence frequencies based data (list of data.frame)
 data(ant)
