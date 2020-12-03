@@ -5,32 +5,36 @@ invChat.Ind <- function (x, q, C) {
   refC <- Chat.Ind(x, n)
   f <- function(m, C) abs(Chat.Ind(x, m) - C)
   mm <- sapply(C, function(cvrg){
-    if (refC > cvrg) {
+    if (refC == cvrg) {
+      mm <- n
+    }else if (refC > cvrg) {
       opt <- optimize(f, C = cvrg, lower = 0, upper = sum(x))
       mm <- opt$minimum
-      mm <- round(mm)
-    }else if (refC <= cvrg) {
+      # mm <- round(mm)
+    }else if (refC < cvrg) {
       f1 <- sum(x == 1)
       f2 <- sum(x == 2)
       if (f1 > 0 & f2 > 0) {
         A <- (n - 1) * f1/((n - 1) * f1 + 2 * f2)
       }else if (f1 > 1 & f2 == 0) {
         A <- (n - 1) * (f1 - 1)/((n - 1) * (f1 - 1) + 2)
-      }else if (f1 == 0){
+      }else if (f1 == 0 & f2 > 0) {
         A <- 0
       }else if(f1 == 1 & f2 == 0) {
+        A <- 0
+      }else if(f1 == 0 & f2 == 0) {
         A <- 0
       }
       mm <- ifelse(A==0,0,(log(n/f1) + log(1 - cvrg))/log(A) - 1)
       mm <- n + mm
-      mm <- round(mm)
+      # mm <- round(mm)
     }
     mm
   })
-  mm[mm==0] <- 1
+  mm[mm < 1] <- 1
   SC <- Chat.Ind(x,mm)
-  if (sum(mm > 2 * n)>0) 
-    warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+  # if (sum(round(mm) > 2 * n)>0) 
+  #   warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   
   out <- TD.m.est(x = x,m = mm,qs = q)
   method <- ifelse(mm>n,'Extrapolation',ifelse(mm<n,'Rarefaction','Observed'))
@@ -58,11 +62,13 @@ invChat.Sam <- function (x, q, C) {
   refC <- Chat.Sam(x, n)
   f <- function(m, C) abs(Chat.Sam(x, m) - C)
   mm <- sapply(C, function(cvrg){
-    if (refC > cvrg) {
+    if (refC == cvrg) {
+      mm <- n
+    }else if (refC > cvrg) {
       opt <- optimize(f, C = cvrg, lower = 0, upper = max(x))
       mm <- opt$minimum
-      mm <- round(mm)
-    }else if (refC <= cvrg) {
+      # mm <- round(mm)
+    }else if (refC < cvrg) {
       f1 <- sum(x == 1)
       f2 <- sum(x == 2)
       U <- sum(x) - max(x)
@@ -77,14 +83,14 @@ invChat.Sam <- function (x, q, C) {
       }
       mm <- ifelse(A==0,0,(log(U/f1) + log(1 - cvrg))/log(A) - 1)
       mm <- n + mm
-      mm <- round(mm)
+      # mm <- round(mm)
     }
     mm
   })
-  mm[mm==0] <- 1
+  mm[mm < 1] <- 1
   SC <- Chat.Sam(x,mm)
-  if (sum(mm > 2 * n)>0) 
-    warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+  # if (sum(round(mm) > 2 * n)>0) 
+  #   warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
   out <- TD.m.est_inc(y = x,t_ = mm,qs = q)
   method <- ifelse(mm>n,'Extrapolation',ifelse(mm<n,'Rarefaction','Observed'))
   method <- rep(method,length(q))
@@ -209,6 +215,9 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       Community = rep(names(x),each = length(q)*length(C))
       out <- lapply(x, function(x_){
         est <- invChat.Ind(x_, q, C)
+        if (sum(round(est$m) > 2 * sum(x_))>0) 
+          warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+        
         if(nboot>1){
           Prob.hat <- EstiBootComm.Ind(x_)
           Abun.Mat <- rmultinom(nboot, sum(x_), Prob.hat)
@@ -236,6 +245,9 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       Community = rep(names(x),each = length(q)*length(C))
       out <- lapply(x, function(x_){
         est <- invChat.Sam(x_, q, C)
+        if (sum(round(est$t) > 2 * max(x_))>0) 
+          warning("The maximum size of the extrapolation exceeds double reference sample size, the results for q = 0 may be subject to large prediction bias.")
+        
         if(nboot>1){
           Prob.hat <- EstiBootComm.Sam(x_)
           Abun.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, x_[1], p)))
@@ -375,11 +387,14 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
 #' @examples
 #' \dontrun{
 #' data(spider)
-#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size")
-#' out <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage")
+#' out1 <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="size")
+#' out1
+#' out2 <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage")
+#' out2
 #' }
 #' data(ant)
 #' out <- estimateD(ant, q = c(0,1,2), "incidence_freq", base="coverage", level=0.985, conf=0.95)
+#' out
 #' @export
 estimateD <- function (x, q = c(0,1,2), datatype = "abundance", base = "size", level = NULL, nboot=50,
                        conf = 0.95) 
