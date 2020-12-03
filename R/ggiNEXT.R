@@ -216,6 +216,7 @@ ggiNEXT.default <- function(x, ...){
 #' @param type three types of plots: sample-size-based rarefaction/extrapolation curve (\code{type = 1}); 
 #' sample completeness curve (\code{type = 2}); coverage-based rarefaction/extrapolation curve (\code{type = 3}).
 #' @param ... not used by this method
+#' @import ggplot2
 #' @export
 #' @examples
 #' data(spider)

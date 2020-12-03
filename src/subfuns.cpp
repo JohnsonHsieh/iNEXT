@@ -2,9 +2,17 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double D1_2nd(double n, double f1, double A) {
-  double q1 = 0;
+double D1_2nd(double n, double f1, double f2) {
+  long double A = 0;
+  long double q1 = 0;
   double h2 = 0;
+  if (f2 > 0) {
+    A = 2*f2/( (n-1) * f1 + 2 * f2);
+  } else if (f2 == 0 && f1 != 0) {
+    A = 2/( (n-1)*(f1-1) + 2);
+  } else {
+    A = 1;
+  }
   if(A==1||f1==0){
     h2 = 0;
   }else{
