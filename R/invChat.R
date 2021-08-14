@@ -379,8 +379,8 @@ as.incfreq <- function(x){
     # names(y) <- c("nT", rownames(x))
     y
   }else if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
-    warnings("Ambiguous data type, the input object is a vector. Total number of sampling units set to 1.")
-    c(1, x) 
+    warning("Ambiguous data type, the input object is a vector. Total number of sampling units set to 1.")
+    c(1, x)
   }else{
     stop("Invalid data type, should be a data.frame or matrix.")
   }
