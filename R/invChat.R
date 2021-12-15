@@ -332,8 +332,6 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
     tmp <- invChat(x, datatype, C=level, conf=conf)
   }
   
-  tmp <- tmp[!duplicated(tmp),]
-  
   nam <- names(x)
   if(is.null(nam)){
     tmp
