@@ -4,9 +4,17 @@
 \alias{iNEXT}
 \title{iNterpolation and EXTrapolation of Hill number}
 \usage{
-iNEXT(x, q = 0, datatype = "abundance", size = NULL,
-  endpoint = NULL, knots = 40, se = TRUE, conf = 0.95,
-  nboot = 50)
+iNEXT(
+  x,
+  q = 0,
+  datatype = "abundance",
+  size = NULL,
+  endpoint = NULL,
+  knots = 40,
+  se = TRUE,
+  conf = 0.95,
+  nboot = 50
+)
 }
 \arguments{
 \item{x}{a matrix, data.frame (species by sites), or list of species abundances or incidence frequencies. If \code{datatype = "incidence"}, then the first entry of the input data must be total number of sampling units in each column or list.}

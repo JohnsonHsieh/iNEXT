@@ -4,8 +4,14 @@
 \alias{estimateD}
 \title{Compute species diversity with a particular of sample size/coverage}
 \usage{
-estimateD(x, datatype = "abundance", base = "size", level = NULL,
-  conf = 0.95)
+estimateD(
+  x,
+  datatype = "abundance",
+  base = "size",
+  level = NULL,
+  conf = 0.95,
+  removeDups = FALSE
+)
 }
 \arguments{
 \item{x}{a \code{data.frame} or \code{list} of species abundances or incidence frequencies.\cr 
@@ -22,6 +28,8 @@ If \code{base="size"} and \code{level=NULL}, then this function computes the div
 If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites.}
 
 \item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95. Remove C.I. by setting conf=NULL.}
+
+\item{removeDups}{Logical, remove (some) duplicates?}
 }
 \value{
 a \code{data.frame} of species diversity table including the sample size, sample coverage,

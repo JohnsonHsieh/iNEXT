@@ -287,6 +287,7 @@ invSize <- function(x, datatype="abundance", size=NULL, conf=NULL){
 #' If \code{base="size"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample size among all sites. 
 #' If \code{base="coverage"} and \code{level=NULL}, then this function computes the diversity estimates for the minimum sample coverage among all sites. 
 #' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95. Remove C.I. by setting conf=NULL.
+#' @param removeDups Logical, remove (some) duplicates? 
 #' @return a \code{data.frame} of species diversity table including the sample size, sample coverage,
 #' method (rarefaction or extrapolation), and diversity estimates with q = 0, 1, and 2 for the user-specified sample size or sample coverage.
 #' @examples
@@ -298,7 +299,7 @@ invSize <- function(x, datatype="abundance", size=NULL, conf=NULL){
 #' data(ant)
 #' estimateD(ant, "incidence_freq", base="coverage", level=0.985, conf=NULL)
 #' @export
-estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.95){
+estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.95, removeDups = FALSE){
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   #TYPE <- c("abundance", "incidence")
   if(is.na(pmatch(datatype, TYPE)))
@@ -331,19 +332,25 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
   }else if(base=="coverage"){
     tmp <- invChat(x, datatype, C=level, conf=conf)
   }
+  tmp2 <- tmp[!duplicated(tmp),]
+  if(!all.equal(tmp, tmp2)){message("diversity output contains duplicate rows that were removed)")}
+  if(removeDups){
+    nam <- names(x[[!duplicated(tmp)]])}
+  else{tmp2 <- tmp
+  nam <-names(x)}
   
-  tmp <- tmp[!duplicated(tmp),]
-  
-  nam <- names(x)
+ 
+    
+
   if(is.null(nam)){
-    tmp
-  }else if(ncol(tmp)==6){
-    tmp <- cbind(site=nam, tmp)
+    tmp2
+  }else if(ncol(tmp2)==6){
+    tmp2 <- cbind(site=nam, tmp2)
   }else{
-    tmp <- cbind(site=rep(nam, each=3), tmp)
+    tmp2 <- cbind(site=rep(nam, each=3), tmp2)
   }
-  rownames(tmp) <- NULL
-  tmp
+  rownames(tmp2) <- NULL
+  tmp2
 }
 
 

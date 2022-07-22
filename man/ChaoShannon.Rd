@@ -5,11 +5,9 @@
 \alias{ChaoEntropy}
 \title{Estimation of Shannon entropy/diversity}
 \usage{
-ChaoShannon(x, datatype = "abundance", transform = FALSE,
-  conf = 0.95, B = 200)
+ChaoShannon(x, datatype = "abundance", transform = FALSE, conf = 0.95, B = 200)
 
-ChaoEntropy(x, datatype = "abundance", transform = FALSE,
-  conf = 0.95, B = 200)
+ChaoEntropy(x, datatype = "abundance", transform = FALSE, conf = 0.95, B = 200)
 }
 \arguments{
 \item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
