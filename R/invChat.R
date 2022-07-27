@@ -354,9 +354,9 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
 ###############################################
 #' Transform incidence raw data to incidence frequencies (iNEXT input format) 
 #' 
-#' \code{as.incfreq}: transform incidence raw data (a species by sites presence-absence matrix) to incidence frequencies data (iNEXT input format, a row-sum frequencies vector contains total number of sampling units).
-#' @param x a \code{data.frame} or \code{matirx} of species by sites presence-absence matrix.
-#' @return a \code{vector} of species incidence frequencies, the first entry of the input data must be total number of sampling units.
+#' \code{as.incfreq}: transform incidence raw data (a species by sites presence-absence matrix) to incidence frequencies data (iNEXT input format, a row-sum frequencies vector that contains the total number of sampling units).
+#' @param x a \code{data.frame} or \code{matrix} of species by sites presence-absence matrix.
+#' @return a \code{vector} of species incidence frequencies, the first element being the total number of sampling units.
 #' @examples
 #' data(ciliates)
 #' lapply(ciliates, as.incfreq)
@@ -366,9 +366,9 @@ estimateD <- function(x, datatype="abundance", base="size", level=NULL, conf=0.9
 as.incfreq <- function(x){
   class_x <- class(x)[1]
   if(class_x == "data.frame" | class_x == "matrix"){
-    a <- sort(as.numeric(unique(c(unlist(x)))))
-    if(!identical(a, c(0,1))){
-      warning("Invalid data type, the element of species by sites presence-absence matrix should be 0 or 1. Set nonzero elements as 1.")
+    a <- na.omit(as.numeric(unique(c(unlist(x)))))
+    if(!all(a %in% c(0,1))){
+      warning("Invalid data type: the elements of the species by sites presence-absence matrix should be 0 or 1. Nonzero elements were set to 1.")
       x <- (x > 0)
     }
     nT <- ncol(x)
@@ -377,10 +377,10 @@ as.incfreq <- function(x){
     # names(y) <- c("nT", rownames(x))
     y
   }else if(class_x=="numeric" | class_x=="integer" | class_x=="double"){
-    warnings("Ambiguous data type, the input object is a vector. Set total number of sampling units as 1.")
-    c(1, x) 
+    warning("Ambiguous data type, the input object is a vector. Total number of sampling units set to 1.")
+    c(1, x)
   }else{
-    stop("Invalid data type, it should be a data.frame or matrix.")
+    stop("Invalid data type, should be a data.frame or matrix.")
   }
 }
 
