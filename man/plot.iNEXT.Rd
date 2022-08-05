@@ -4,8 +4,15 @@
 \alias{plot.iNEXT}
 \title{Plotting iNEXT object}
 \usage{
-\method{plot}{iNEXT}(x, type = 1, se = TRUE, show.legend = TRUE,
-  show.main = TRUE, col = NULL, ...)
+\method{plot}{iNEXT}(
+  x,
+  type = 1,
+  se = TRUE,
+  show.legend = TRUE,
+  show.main = TRUE,
+  col = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an \code{iNEXT} object computed by \code{\link{iNEXT}}.}

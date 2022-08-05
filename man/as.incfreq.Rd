@@ -10,10 +10,11 @@ as.incfreq(x)
 \item{x}{a \code{data.frame} or \code{matirx} of species by sites presence-absence matrix.}
 }
 \value{
-a \code{vector} of species incidence frequencies, the first entry of the input data must be total number of sampling units.
+a \code{vector} of species incidence frequencies, the first element is the total number of sampling units.
 }
 \description{
-\code{as.incfreq}: transform incidence raw data (a species by sites presence-absence matrix) to incidence frequencies data (iNEXT input format, a row-sum frequencies vector contains total number of sampling units).
+\code{as.incfreq}: transform incidence raw data (a species by sites detection/non-detection or presence/absence matrix) to incidence frequencies data (iNEXT input format):
+the first element is the total number of sampling units, followed by the vector of species frequencies. Here species frequencies represent the row sums of the incidence raw matrix.
 }
 \examples{
 data(ciliates)

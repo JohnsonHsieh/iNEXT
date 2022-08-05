@@ -1,16 +1,16 @@
 \name{bird}
 \alias{bird}
 \docType{data}
-\title{Bird abundance-based data}
+\title{Bird data (datatype = "abundance")}
 \description{
-This data set describes 41 birds as reported by Jetz et al. (2012). It gives the two sites of species abundance to these 41 species in November 2012 at Barrington Tops National Park, Australia.
+This data set includes the abundances of 41 bird species collected in two sites (the North and South sites) at the Barrington Tops National Park, Australia (Chao et al. 2015)
 }
 \usage{data(bird)}
 \format{
-  a data frame with 41 species and two sites: North and South sites.
+  a data.frame with 41 species (rows) and two sites (columns).
 }
 \source{
-Jetz, W., Thomas, G.H., Joy, J.B., Hartmann, K. & Mooers A.O. (2012). The global diversity of birds in space and time. Nature, 491, 444-448.
+Chao, A., Chiu, C.-H., Hsieh, T. C., Davis, T., Nipperess, D., and Faith, D. (2015) Rarefaction and extrapolation of phylogenetic diversity. Methods in Ecology and Evolution, 6, 380-388. 
 }
 \examples{
 data(bird)

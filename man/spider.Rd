@@ -2,15 +2,15 @@
 \alias{spider}
 \docType{data}
 \title{
-Spider species abundances/frequencies 
+Spider data (datatype = "abundance") 
 }
 \description{
-Spider species abundances/frequencies in two canopy manipulation treatments, Girdled and Logged, of hemlock trees (Ellison et al. 2010, Sackett et al. 2011). In the Girdled treatment site, there were 26 species among 168 individuals; in the Logged treatment site, there were 37 species among 252 individuals.
+The data include spider species abundances in two canopy manipulation treatments (Girdled and Logged) of hemlock trees (Ellison et al. 2010, Sackett et al. 2011). In the Girdled treatment site, there were 26 species among 168 individuals; in the Logged treatment site, there were 37 species among 252 individuals.
 }
 \usage{data(spider)}
 \format{
   The format for each site is a list of species abundances:\cr
-List of 2\cr
+A list of 2 vectors\cr
  $ Girdled: num [1:26] 46 22 17 15 15 9 8 6 6 4 ...\cr
  $ Logged : num [1:37] 88 22 16 15 13 10 8 8 7 7 ...\cr
 }
