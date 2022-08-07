@@ -226,7 +226,7 @@ ggiNEXT.default <- function(x, ...){
 fortify.iNEXT <- function(model, data = model$iNextEst, type = 1, ...) {
   datatype <- ifelse(names(model$DataInfo)[2]=="n","abundance","incidence")
   z <- data
-  # if(class(z) == "list"){
+  # if(inherits(z, "list")){
   #   if(datatype=='abundance'){
   #     id_match <- match(c("Assemblage","m", "Method", "Order.q", "qD", "qD.LCL", "qD.UCL", "SC"), names(z$coverage_based), nomatch = 0)  
   #   }else if (datatype=='incidence'){

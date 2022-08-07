@@ -31,7 +31,7 @@
 #' @export
 plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col=NULL,...){
   
-  if(class(x) != "iNEXT")
+  if(!inherits(x, "iNEXT"))
     stop("invalid object class")
   TYPE <-  c(1, 2, 3)
   # SPLIT <- c("none", "order", "site", "both")
@@ -44,7 +44,7 @@ plot.iNEXT <- function(x, type=1, se=TRUE, show.legend=TRUE, show.main=TRUE, col
   site <<- NULL
   
   # z <- x$iNextEst
-  # if(class(z) == "list"){
+  # if(inherits(z, "list")){
   #   z <- data.frame(do.call("rbind", z), site=rep(names(z), sapply(z, nrow)))
   #   rownames(z) <- NULL
   # }else{
@@ -187,7 +187,7 @@ print.iNEXT <- function(x, ...){
   cat("$iNextEst: diversity estimates with rarefied and extrapolated samples.\n")
   cat("$size_based (LCL and UCL are obtained for fixed size.)\n")
   cat("\n")
-  if(class(x$iNextEst)=="data.frame"){
+  if(inherits(x$iNextEst, "data.frame")){
     y <- x$iNextEst
     m <- quantile(y[,1], type = 1)
     res <- y[y[,1]%in%m,]

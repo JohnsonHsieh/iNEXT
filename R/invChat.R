@@ -199,16 +199,16 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
   if (pmatch(datatype, TYPE) == -1) 
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  if (class(x) == "numeric" | class(x) == "integer"){
+  if (inherits(x, "numeric") | inherits(x, "integer")){
     x <- list(data = x)
   }
-  if (class(x) == "data.frame" | class(x) ==  "matrix"){
+  if (inherits(x, "data.frame") | inherits(x, "matrix")){
     datalist <- lapply(1:ncol(x), function(i) x[,i])
     if(is.null(colnames(x))) names(datalist) <-  paste0("data",1:ncol(x)) else names(datalist) <- colnames(x)
     x <- datalist
   }
   if (datatype == "abundance") {
-    if (class(x) == "list") {
+    if (inherits(x, "list")) {
       if (is.null(C)) {
         C <- min(unlist(lapply(x, function(x) Chat.Ind(x,2*sum(x)))))
       }
@@ -238,7 +238,7 @@ invChat <- function (x, q, datatype = "abundance", C = NULL,nboot=0, conf = NULL
       stop("Wrong data format, dataframe/matrix or list would be accepted")
     }
   }else if (datatype == "incidence") {
-    if (class(x) == "list") {
+    if (inherits(x, "list")) {
       if (is.null(C)) {
         C <- min(unlist(lapply(x, function(x) Chat.Sam(x,2*max(x)))))
       }
@@ -285,16 +285,16 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
   class_x <- class(x)[1]
-  if (class(x) == "numeric" | class(x) == "integer"){
+  if (inherits(x, "numeric") | inherits(x, "integer")){
     x <- list(data = x)
   }
-  if (class(x) == "data.frame" | class(x) ==  "matrix"){
+  if (inherits(x, "data.frame") | inherits(x, "matrix")){
     datalist <- lapply(1:ncol(x), function(i) x[,i])
     if(is.null(colnames(x))) names(datalist) <-  paste0("data",1:ncol(x)) else names(datalist) <- colnames(x)
     x <- datalist
   }
   if(datatype=="abundance"){
-    if (class(x) == "list") {
+    if (inherits(x, "list")) {
       if (is.null(size)) {
         size <- min(unlist(lapply(x, function(x) 2*sum(x))))
       } 
@@ -321,7 +321,7 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
       stop("Wrong data format, dataframe/matrix or list would be accepted")
     }
   }else if (datatype == "incidence") {
-    if (class(x) == "list") {
+    if (inherits(x, "list")) {
       if (is.null(size)) {
         size <- min(unlist(lapply(x, function(x) 2*max(x))))
       }
@@ -392,10 +392,12 @@ invSize <- function(x, q, datatype="abundance", size=NULL, nboot=0, conf=NULL){
 #' out2 <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage")
 #' out2
 #' 
+#' ## Not run: 
 #' data(ant)
 #' out <- estimateD(ant, q = c(0,1,2), datatype = "incidence_freq", base="coverage", 
 #'                  level=0.985, conf=0.95)
 #' out
+#' ## End(Not run)
 #' @export
 estimateD <- function (x, q = c(0,1,2), datatype = "abundance", base = "size", level = NULL, nboot=50,
                        conf = 0.95) 
@@ -412,9 +414,9 @@ estimateD <- function (x, q = c(0,1,2), datatype = "abundance", base = "size", l
   if (datatype == "incidence_freq") 
     datatype <- "incidence"
   if (datatype == "incidence_raw") {
-    if (class(x) == "data.frame" | class(x) == "matrix") 
+    if (inherits(x, "data.frame") | inherits(x, "matrix")) 
       x <- as.incfreq(x)
-    else if (class(x) == "list") 
+    else if (inherits(x, "list")) 
       x <- lapply(x, as.incfreq)
     datatype <- "incidence"
   }

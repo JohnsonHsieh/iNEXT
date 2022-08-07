@@ -6,7 +6,7 @@ Author: T. C. Hsieh, K. H. Ma and Anne Chao
 Description: Provides simple functions to compute and plot two types 
     (sample-size- and coverage-based) rarefaction and extrapolation curves for species
     diversity (Hill numbers) based on individual-based abundance data or sampling-unit-
-    based incidence data; see Chao et al. (2014, Ecological Monographs) for pertinent
+    based incidence data; see Chao and others (2014, Ecological Monographs) for pertinent
     theory and methodologies, and Hsieh, Ma and Chao (2016, Methods in Ecology and Evolution)
     for an introduction of the R package.
 License: GPL (>= 3)

@@ -49,8 +49,10 @@ out1
 out2 <- estimateD(spider, q = c(0,1,2), datatype = "abundance", base="coverage")
 out2
 
+## Not run: 
 data(ant)
 out <- estimateD(ant, q = c(0,1,2), datatype = "incidence_freq", base="coverage", 
                  level=0.985, conf=0.95)
 out
+## End(Not run)
 }

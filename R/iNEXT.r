@@ -614,7 +614,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
     out
   }
   
-  if(class(q) != "numeric")
+  if(!inherits(q, "numeric"))
     stop("invlid class of order q, q should be a postive value/vector of numeric object")
   if(min(q) < 0){
     warning("ambigous of order q, we only compute postive q")
@@ -759,7 +759,7 @@ AsyD <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf
   if(pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  if(class(q) != "numeric")
+  if(!inherits(q, "numeric"))
     stop("invlid class of order q, q should be a postive value/vector of numeric object")
   if(min(q) < 0){
     warning("ambigous of order q, we only compute postive q")
@@ -770,11 +770,11 @@ AsyD <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf
   if(conf < 0 | conf > 1)
     stop("Please enter value between zero and one for confident interval.")
   
-  if (class(x) == "data.frame" | class(x) ==  "matrix"){
+  if (inherits(x, "data.frame") | inherits(x, "matrix")){
     datalist <- lapply(1:ncol(x), function(i) x[,i])
     if(is.null(colnames(x))) names(datalist) <-  paste0("data",1:ncol(x)) else names(datalist) <- colnames(x)
     x <- datalist
-  } else if (class(x) == "numeric" | class(x) == "integer" | class(x) == "double") {
+  } else if (inherits(x, "numeric") | inherits(x, "integer") | inherits(x, "double")) {
     x <- list(data = x)
   }
   

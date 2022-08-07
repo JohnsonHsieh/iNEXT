@@ -25,7 +25,7 @@ DataInfo <- function(x, datatype="abundance"){
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -60,14 +60,14 @@ DataInfo <- function(x, datatype="abundance"){
   }
   
   if(datatype == "abundance"){
-    if(class(x) == "numeric" | class(x) == "integer"){
+    if(inherits(x, "numeric") | inherits(x, "integer")){
       out <- matrix(Fun.abun(x), nrow=1)
-    }else if(class(x) == "list"){
+    }else if(inherits(x, "list")){
       out <- do.call("rbind", lapply(x, Fun.abun))
-    } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+    } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
       out <- t(apply(as.matrix(x), 2, Fun.abun))  
     }
-    if(nrow(out) > 1 | class(x) == "list"){
+    if(nrow(out) > 1 | inherits(x, "list")){
       out <- data.frame(site=rownames(out), out)
       colnames(out) <-  c("Assemblage", "n", "S.obs", "SC", paste("f",1:10, sep=""))
       rownames(out) <- NULL
@@ -77,14 +77,14 @@ DataInfo <- function(x, datatype="abundance"){
     }
     as.data.frame(out)
   }else if(datatype == "incidence"){
-    if(class(x) == "numeric" | class(x) == "integer"){
+    if(inherits(x, "numeric") | inherits(x, "integer")){
       out <- matrix(Fun.ince(x), nrow=1)
-    }else if(class(x) == "list"){
+    }else if(inherits(x, "list")){
       out <- do.call("rbind", lapply(x, Fun.ince))
-    } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+    } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
       out <- t(apply(as.matrix(x), 2, Fun.ince))  
     }
-    if(nrow(out) > 1 | class(x) == "list"){
+    if(nrow(out) > 1 | inherits(x, "list")){
       out <- data.frame(site=rownames(out), out)
       colnames(out) <-  c("Assemblage","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
       rownames(out) <- NULL
@@ -134,7 +134,7 @@ ChaoRichness=function(x, datatype="abundance", conf=0.95){
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -206,13 +206,13 @@ ChaoRichness=function(x, datatype="abundance", conf=0.95){
     return(out)
   }
   
-  if(class(x) == "numeric"){
+  if(inherits(x, "numeric")){
     out <- myFun(x)
-  }else if(class(x) == "integer"){
+  }else if(inherits(x, "integer")){
 	out <- myFun(x)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+  } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
     out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
@@ -251,7 +251,7 @@ BootstrapFun <- function(x, FunName, datatype, B){
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -362,7 +362,7 @@ ChaoShannon <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -463,13 +463,13 @@ ChaoShannon <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
     return(out)
   }
   
-  if(class(x) == "numeric"){
+  if(inherits(x, "numeric")){
     out <- myFun(x)
-  }else if(class(x) == "integer"){
+  }else if(inherits(x, "integer")){
 	out <- myFun(x)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+  } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
     out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
@@ -512,7 +512,7 @@ ChaoSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -596,13 +596,13 @@ ChaoSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
     return(out)
   }
   
-  if(class(x) == "numeric"){
+  if(inherits(x, "numeric")){
     out <- myFun(x)
-  }else if(class(x) == "integer"){
+  }else if(inherits(x, "integer")){
 	out <- myFun(x)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+  } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
     out <-do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
