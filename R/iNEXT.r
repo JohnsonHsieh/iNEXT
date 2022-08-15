@@ -326,6 +326,7 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
   if(unconditional_var){
     goalSC <- unique(C.hat)
     Dq.hat_unc <- unique(invChat.Ind(x = Spec,q = q,C = goalSC))
+    Dq.hat_unc$m = round(Dq.hat_unc$m)
     Dq.hat_unc$Method[Dq.hat_unc$m == n] = "Observed"
   }
 
@@ -367,7 +368,6 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
     id_C <- match(c("SC","m", "Method", "Order.q", "qD", "qD.LCL", "qD.UCL"), names(out_C), nomatch = 0)
     out_C <- out_C[, id_C]
     out_C$qD.LCL[out_C$qD.LCL<0] <- 0
-    out_C$m = out_m$m
   }else{
     out_C <- NULL
   }
@@ -429,6 +429,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
   if(unconditional_var){
     goalSC <- unique(C.hat)
     Dq.hat_unc <- unique(invChat.Sam(x = Spec,q = q,C = goalSC))
+    Dq.hat_unc$t = round(Dq.hat_unc$t)
     Dq.hat_unc$Method[Dq.hat_unc$t == nT] = "Observed"
   }
   
@@ -478,7 +479,6 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
     id_C <- match(c("SC","t", "Method", "Order.q", "qD", "qD.LCL", "qD.UCL"), names(out_C), nomatch = 0)
     out_C <- out_C[, id_C]
     out_C$qD.LCL[out_C$qD.LCL<0] <- 0
-    out_C$t = out_m$t
   }else{
     out_C <- NULL
   }
