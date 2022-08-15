@@ -326,7 +326,8 @@ iNEXT.Ind <- function(Spec, q=0, m=NULL, endpoint=2*sum(Spec), knots=40, se=TRUE
   if(unconditional_var){
     goalSC <- unique(C.hat)
     Dq.hat_unc <- unique(invChat.Ind(x = Spec,q = q,C = goalSC))
-    Dq.hat_unc$Method[round(Dq.hat_unc$m) == n] = "Observed"
+    Dq.hat_unc$m = rep(m, length(q))
+    Dq.hat_unc$Method[Dq.hat_unc$m == n] = "Observed"
   }
 
   if(se==TRUE & nboot > 1 & length(Spec) > 1) {
@@ -428,6 +429,7 @@ iNEXT.Sam <- function(Spec, t=NULL, q=0, endpoint=2*max(Spec), knots=40, se=TRUE
   if(unconditional_var){
     goalSC <- unique(C.hat)
     Dq.hat_unc <- unique(invChat.Sam(x = Spec,q = q,C = goalSC))
+    Dq.hat_unc$t = rep(t, length(q))
     Dq.hat_unc$Method[Dq.hat_unc$t == nT] = "Observed"
   }
   
