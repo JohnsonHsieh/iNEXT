@@ -1,0 +1,8 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Introduction Aug. 2022}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\includepdf[pages=-, fitpaper=true]{mypaper.pdf}
+\end{document}
