@@ -5,7 +5,7 @@
 #' 
 #' \code{DataInfo}: exhibits basic data information
 #' 
-#' @param x a vector/matrix/list of species abundances or incidence frequencies.\cr If \code{datatype = "incidence"}, 
+#' @param x a vector/matrix/data.frame/list of species abundances or incidence frequencies.\cr If \code{datatype = "incidence_freq"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
@@ -25,7 +25,7 @@ DataInfo <- function(x, datatype="abundance"){
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -60,37 +60,37 @@ DataInfo <- function(x, datatype="abundance"){
   }
   
   if(datatype == "abundance"){
-    if(class(x) == "numeric" | class(x) == "integer"){
+    if(inherits(x, "numeric") | inherits(x, "integer")){
       out <- matrix(Fun.abun(x), nrow=1)
-    }else if(class(x) == "list"){
+    }else if(inherits(x, "list")){
       out <- do.call("rbind", lapply(x, Fun.abun))
-    } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+    } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
       out <- t(apply(as.matrix(x), 2, Fun.abun))  
     }
-    if(nrow(out) > 1){
+    if(nrow(out) > 1 | inherits(x, "list")){
       out <- data.frame(site=rownames(out), out)
-      colnames(out) <-  c("site", "n", "S.obs", "SC", paste("f",1:10, sep=""))
+      colnames(out) <-  c("Assemblage", "n", "S.obs", "SC", paste("f",1:10, sep=""))
       rownames(out) <- NULL
     }else{
       out <- data.frame(site="site.1", out)
-      colnames(out) <-  c("site", "n", "S.obs", "SC", paste("f",1:10, sep=""))
+      colnames(out) <-  c("Assemblage", "n", "S.obs", "SC", paste("f",1:10, sep=""))
     }
     as.data.frame(out)
   }else if(datatype == "incidence"){
-    if(class(x) == "numeric" | class(x) == "integer"){
+    if(inherits(x, "numeric") | inherits(x, "integer")){
       out <- matrix(Fun.ince(x), nrow=1)
-    }else if(class(x) == "list"){
+    }else if(inherits(x, "list")){
       out <- do.call("rbind", lapply(x, Fun.ince))
-    } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+    } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
       out <- t(apply(as.matrix(x), 2, Fun.ince))  
     }
-    if(nrow(out) > 1){
+    if(nrow(out) > 1 | inherits(x, "list")){
       out <- data.frame(site=rownames(out), out)
-      colnames(out) <-  c("site","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
+      colnames(out) <-  c("Assemblage","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
       rownames(out) <- NULL
     }else{
       out <- data.frame(site="site.1", out)
-      colnames(out) <-  c("site","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
+      colnames(out) <-  c("Assemblage","T", "U", "S.obs", "SC", paste("Q",1:10, sep=""))
     }
     as.data.frame(out)
   }
@@ -106,12 +106,12 @@ DataInfo <- function(x, datatype="abundance"){
 #' 
 #' \code{ChaoRichness}: estimation of species richness based on the methods proposed in Chao (1984, 1987)
 #' 
-#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+#' @param x a \code{matrix}, \code{data.frame} (species by sites), or \code{list} of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies. 
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
-#' @return A vector of observed species richness, species richness estimate, s.e. and the associated confidence interval.
+#' @return A data.frame of observed species richness, species richness estimate, s.e. and the associated confidence interval.
 #' @seealso \code{\link{ChaoShannon}, \link{ChaoSimpson}}
 #' @examples 
 #' data(spider)
@@ -134,7 +134,7 @@ ChaoRichness=function(x, datatype="abundance", conf=0.95){
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -206,13 +206,13 @@ ChaoRichness=function(x, datatype="abundance", conf=0.95){
     return(out)
   }
   
-  if(class(x) == "numeric"){
+  if(inherits(x, "numeric")){
     out <- myFun(x)
-  }else if(class(x) == "integer"){
+  }else if(inherits(x, "integer")){
 	out <- myFun(x)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+  } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
     out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
@@ -251,7 +251,7 @@ BootstrapFun <- function(x, FunName, datatype, B){
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -332,14 +332,14 @@ BootstrapFun <- function(x, FunName, datatype, B){
 #' 
 #' \code{ChaoShannon}: estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
 #' 
-#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+#' @param x a \code{matrix}, \code{data.frame} (species by sites), or \code{list} of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies. 
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param transform a \code{logical} constant to compute traditional Shannon entropy index (\code{transform=FALSE}) or the transformed Shannon diversity (\code{transform=TRUE}). 
 #' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
 #' @param B an integer specifying the number of bootstrap replications.
-#' @return A vector of observed Shannon entropy/diversity, estimate of entropy/diversity, s.e. and the associated confidence interval.
+#' @return A data.frame of observed Shannon entropy/diversity, estimate of entropy/diversity, s.e. and the associated confidence interval.
 #' @seealso \code{\link{ChaoRichness}, \link{ChaoSimpson}} 
 #' @examples 
 #' data(spider)
@@ -362,7 +362,7 @@ ChaoShannon <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -463,13 +463,13 @@ ChaoShannon <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
     return(out)
   }
   
-  if(class(x) == "numeric"){
+  if(inherits(x, "numeric")){
     out <- myFun(x)
-  }else if(class(x) == "integer"){
+  }else if(inherits(x, "integer")){
 	out <- myFun(x)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+  } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
     out <- do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
@@ -482,14 +482,14 @@ ChaoShannon <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
 #' 
 #' \code{ChaoSimpson}: estimation of Gini-Simpson index or the transformed Simpson diversity based on the methods proposed in Good (1953) and Chao et al. (2014)
 #' 
-#' @param x a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+#' @param x a \code{matrix}, \code{data.frame} (species by sites), or \code{list} of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, 
 #' then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),  
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
 #' @param transform a \code{logical} constant to compute traditional Gini-Simpson index (\code{transform=FALSE}) or the transformed Simpson diversity (\code{transform=TRUE}). 
 #' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval. 
 #' @param B an integer specifying the number of bootstrap replications.
-#' @return a vector of observed Gini-Simpson index/diversity, index/diversity estimator, s.e. and the associated confidence interval.
+#' @return a data.frame of observed Gini-Simpson index/diversity, index/diversity estimator, s.e. and the associated confidence interval.
 #' @seealso \code{\link{ChaoRichness}, \link{ChaoShannon}}
 #' @examples 
 #' data(spider)
@@ -512,7 +512,7 @@ ChaoSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
   if(datatype=="incidence_freq") datatype <- "incidence"
   
   if(datatype=="incidence_raw"){
-    if(class(x)=="list"){
+    if(inherits(x, "list")){
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
@@ -596,26 +596,26 @@ ChaoSimpson <- function(x, datatype="abundance", transform=FALSE, conf=0.95, B=2
     return(out)
   }
   
-  if(class(x) == "numeric"){
+  if(inherits(x, "numeric")){
     out <- myFun(x)
-  }else if(class(x) == "integer"){
+  }else if(inherits(x, "integer")){
 	out <- myFun(x)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     out <- do.call("rbind", lapply(x, myFun))
-  } else if(class(x)[1] == "matrix" | class(x) == "data.frame"){
+  } else if(inherits(x, "matrix") | inherits(x, "data.frame")){
     out <-do.call("rbind", apply(as.matrix(x), 2, myFun))  
   }
   return(out)
 }
 
-#' @export
-#' @rdname ChaoRichness
-ChaoSpecies <- ChaoRichness
-
-#' @export
-#' @rdname ChaoShannon
-ChaoEntropy <- ChaoShannon
-
-#' @export
-#' @rdname ChaoSimpson
-EstSimpson <- ChaoSimpson
+#' #' @export
+#' #' @rdname ChaoRichness
+#' ChaoSpecies <- ChaoRichness
+#' 
+#' #' @export
+#' #' @rdname ChaoShannon
+#' ChaoEntropy <- ChaoShannon
+#' 
+#' #' @export
+#' #' @rdname ChaoSimpson
+#' EstSimpson <- ChaoSimpson

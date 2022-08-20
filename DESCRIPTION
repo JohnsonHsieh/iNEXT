@@ -1,12 +1,14 @@
 Package: iNEXT
 Type: Package
 Title: Interpolation and Extrapolation for Species Diversity
-Version: 2.0.20
+Version: 3.0.0
 Author: T. C. Hsieh, K. H. Ma and Anne Chao
-Description: Provides simple functions to compute and plot two
-    types (sample-size- and coverage-based) rarefaction and extrapolation of species
-    diversity (Hill numbers) for individual-based (abundance) data or sampling-unit-
-    based (incidence) data. (Hsieh, Ma and Chao 2014) <doi: 10.1111/2041-210X.12613>.
+Description: Provides simple functions to compute and plot two types 
+    (sample-size- and coverage-based) rarefaction and extrapolation curves for species
+    diversity (Hill numbers) based on individual-based abundance data or sampling-unit-
+    based incidence data; see Chao and others (2014, Ecological Monographs) for pertinent
+    theory and methodologies, and Hsieh, Ma and Chao (2016, Methods in Ecology and Evolution)
+    for an introduction of the R package.
 License: GPL (>= 3)
 URL: http://chao.stat.nthu.edu.tw/wordpress/software_download/
 Maintainer: T. C. Hsieh <euler96@gmail.com>
@@ -16,10 +18,11 @@ Imports:
     stats,
     graphics,
     ggplot2,
-    reshape2
+    reshape2,
+    Rcpp
 BugReports: https://github.com/JohnsonHsieh/iNEXT/issues
 LazyLoad: yes
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.0
 Suggests: testthat,
     knitr,
     rmarkdown,
@@ -27,3 +30,5 @@ Suggests: testthat,
     ggthemes
 VignetteBuilder: knitr
 ByteCompile: true
+LinkingTo: 
+    Rcpp

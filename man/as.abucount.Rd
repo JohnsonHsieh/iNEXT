@@ -7,13 +7,13 @@
 as.abucount(x)
 }
 \arguments{
-\item{x}{a \code{data.frame} or \code{matirx} of species by sites matrix.}
+\item{x}{a \code{data.frame} or \code{matirx} (species by sites matrix).}
 }
 \value{
 a \code{vector} of species abundance row-sum counts.
 }
 \description{
-\code{as.abucount}: transform abundance raw data (a species by sites matrix) to abundance rwo-sum counts data (iNEXT input format).
+\code{as.abucount}: transform species abundance raw data (a species by sites matrix) to row-sum counts (iNEXT input format) as species abundances.
 }
 \examples{
 data(ciliates)

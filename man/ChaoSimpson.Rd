@@ -2,17 +2,12 @@
 % Please edit documentation in R/EstIndex.R
 \name{ChaoSimpson}
 \alias{ChaoSimpson}
-\alias{EstSimpson}
 \title{Estimation of Gini-Simpson index or Simpson diversity}
 \usage{
-ChaoSimpson(x, datatype = "abundance", transform = FALSE,
-  conf = 0.95, B = 200)
-
-EstSimpson(x, datatype = "abundance", transform = FALSE, conf = 0.95,
-  B = 200)
+ChaoSimpson(x, datatype = "abundance", transform = FALSE, conf = 0.95, B = 200)
 }
 \arguments{
-\item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+\item{x}{a \code{matrix}, \code{data.frame} (species by sites), or \code{list} of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, 
 then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
@@ -25,7 +20,7 @@ sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq
 \item{B}{an integer specifying the number of bootstrap replications.}
 }
 \value{
-a vector of observed Gini-Simpson index/diversity, index/diversity estimator, s.e. and the associated confidence interval.
+a data.frame of observed Gini-Simpson index/diversity, index/diversity estimator, s.e. and the associated confidence interval.
 }
 \description{
 \code{ChaoSimpson}: estimation of Gini-Simpson index or the transformed Simpson diversity based on the methods proposed in Good (1953) and Chao et al. (2014)

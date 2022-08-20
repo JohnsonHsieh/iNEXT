@@ -2,17 +2,12 @@
 % Please edit documentation in R/EstIndex.R
 \name{ChaoShannon}
 \alias{ChaoShannon}
-\alias{ChaoEntropy}
 \title{Estimation of Shannon entropy/diversity}
 \usage{
-ChaoShannon(x, datatype = "abundance", transform = FALSE,
-  conf = 0.95, B = 200)
-
-ChaoEntropy(x, datatype = "abundance", transform = FALSE,
-  conf = 0.95, B = 200)
+ChaoShannon(x, datatype = "abundance", transform = FALSE, conf = 0.95, B = 200)
 }
 \arguments{
-\item{x}{a vector of species abundances or incidence frequencies. If \code{datatype = "incidence"}, 
+\item{x}{a \code{matrix}, \code{data.frame} (species by sites), or \code{list} of species abundances or incidence frequencies. If \code{datatype = "incidence_freq"}, 
 then the first entry of the input data must be total number of sampling units, followed by species incidence frequencies.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
@@ -25,7 +20,7 @@ sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq
 \item{B}{an integer specifying the number of bootstrap replications.}
 }
 \value{
-A vector of observed Shannon entropy/diversity, estimate of entropy/diversity, s.e. and the associated confidence interval.
+A data.frame of observed Shannon entropy/diversity, estimate of entropy/diversity, s.e. and the associated confidence interval.
 }
 \description{
 \code{ChaoShannon}: estimation of Shannon entropy or transformed Shannon diversity based on the method proposed by Chao et al. (2013)
