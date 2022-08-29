@@ -53,6 +53,7 @@ NOTE: From version 3.0.0, \code{$iNextEst} has been expanded to include \code{$s
 \code{iNEXT}: Interpolation and extrapolation of Hill number with order q
 }
 \examples{
+\dontrun{
 ## example for abundance based data (list of vector)
 data(spider)
 out1 <- iNEXT(spider, q=c(0,1,2), datatype="abundance")
@@ -65,7 +66,7 @@ out1$iNextEst$size_based
 out1$iNextEst$coverage_based 
 # showing diversity estimates with rarefied and extrapolated samples;
 # confidence limits are obtained for fixed sample coverage.
-
+}
 ## example for abundance based data (data.frame)
 data(bird)
 out2 <- iNEXT(bird, q=0, datatype="abundance")
