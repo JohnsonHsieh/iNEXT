@@ -51,7 +51,7 @@ ggiNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assemblage"
 #' @export
 #' @rdname ggiNEXT
 ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assemblage", grey=FALSE){
-  cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#330066", "#CC79A7",  "#0072B2", "#D55E00"))
+  
   TYPE <-  c(1, 2, 3)
   SPLIT <- c("None", "Order.q", "Assemblage", "Both")
   if(is.na(pmatch(type, TYPE)) | pmatch(type, TYPE) == -1)
@@ -69,6 +69,16 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assem
   
   options(warn = -1)
   z <- fortify(x, type=type)
+  
+  ggplotColors <- function(g){
+    d <- 360/g
+    h <- cumsum(c(15, rep(d,g - 1)))
+    hcl(h = h, c = 100, l = 65)
+  }
+  
+  if (length(unique(z$Assemblage)) <= 8) cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#330066", "#CC79A7",  "#0072B2", "#D55E00")) else
+    cbPalette <- ggplotColors(length(unique(z$Assemblage)))
+  
   options(warn = 0)
   if(!('y.lwr' %in% names(z))) { se <- FALSE }
   datatype <- unique(z$datatype)
