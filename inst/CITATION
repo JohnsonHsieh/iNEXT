@@ -3,31 +3,31 @@ note <- sprintf("R package version %s", meta$Version)
 
 citHeader("To cite iNEXT in publications use:")
 
-citEntry(
-		 entry = 'manual',
-		 title = paste('iNEXT:', meta$Title),
-		 author = personList(as.person("T. C. Hsieh"),
-  		                     as.person("K. H. Ma"),
-    	                     as.person("Anne Chao")),
-		 year = year,
-		 note = note,
-		 url = "http://chao.stat.nthu.edu.tw/wordpress/software_download/",
-		 textVersion = paste("T. C. Hsieh, K. H. Ma and Anne Chao.", year, "iNEXT: iNterpolation and EXTrapolation for species diversity.", note, "URL: http://chao.stat.nthu.edu.tw/wordpress/software-download/.")
+bibentry(
+  bibtype = "Manual",
+  title = paste('iNEXT:', meta$Title),
+  author = c(person("T. C.", "Hsieh"),
+             person("K. H.", "Ma"),
+             person("Anne", "Chao")),
+  year = year,
+  note = note,
+  url = "http://chao.stat.nthu.edu.tw/wordpress/software_download/",
+  textVersion = paste("T. C. Hsieh, K. H. Ma and Anne Chao.", year, "iNEXT: iNterpolation and EXTrapolation for species diversity.", note, "URL: http://chao.stat.nthu.edu.tw/wordpress/software-download/.")
 )
 
-citEntry(
-		 entry = 'Article',
-		 title = 'Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies',,
-         author = personList(as.person("Anne Chao"),
-                             as.person("Nicholas J. Gotelli"),
-  		                     as.person("T. C. Hsieh"),
-  		                     as.person("Elizabeth L. Sande"),
-  		                     as.person("K. H. Ma"),
-    	                     as.person("Robert K. Colwell"),
-                             as.person("Aaron M. Ellison")),
-		 journal = 'Ecological Monographs',
-		 year = '2014',
-		 volume = '84',
-		 pages = '45--67',
+bibentry(
+  bibtype = "Article",
+  title = 'Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies',
+  author = c(person("Anne", "Chao"),
+             person("Nicholas J.", "Gotelli"),
+             person("T. C.", "Hsieh"),
+             person("Elizabeth L.", "Sander"),
+             person("K. H.", "Ma"),
+             person("Robert K.", "Colwell"),
+             person("Aaron M.", "Ellison")),
+  journal = "Ecological Monographs",
+  year = "2014",
+  volume = "84",
+  pages = "45--67",
   textVersion = paste('Anne Chao, Nicholas J. Gotelli, T. C. Hsieh, Elizabeth L. Sander, K. H. Ma, Robert K. Colwell, and Aaron M. Ellison 2014. Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. Ecological Monographs 84:45-67.')
 )
