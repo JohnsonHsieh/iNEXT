@@ -572,6 +572,7 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
       x <- lapply(x, as.incfreq)
     }else{
       x <- as.incfreq(x)
+      class_x <- class(x)
     }
     datatype <- "incidence"
   }
@@ -617,9 +618,9 @@ iNEXT <- function(x, q=0, datatype="abundance", size=NULL, endpoint=NULL, knots=
   }
   
   if(!inherits(q, "numeric"))
-    stop("invlid class of order q, q should be a postive value/vector of numeric object")
+    stop("invalid class of order q, q should be a positive value/vector of numeric object")
   if(min(q) < 0){
-    warning("ambigous of order q, we only compute postive q")
+    warning("ambiguous of order q, we only compute positive q")
     q <- q[q >= 0]
   }
   
