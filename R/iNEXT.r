@@ -233,16 +233,28 @@ Chat.Ind <- function(x, m){
   f2 <- sum(x == 2)
   f0.hat <- ifelse(f2 == 0, (n - 1) / n * f1 * (f1 - 1) / 2, (n - 1) / n * f1 ^ 2/ 2 / f2)  #estimation of unseen species via Chao1
   A <- ifelse(f1>0, n*f0.hat/(n*f0.hat+f1), 1)
+  
+  
   Sub <- function(m){
-    #if(m < n) out <- 1-sum(x / n * exp(lchoose(n - x, m)-lchoose(n - 1, m)))
     if(m < n) {
-      xx <- x[(n-x)>=m]
-      out <- 1-sum(xx / n * exp(lgamma(n-xx+1)-lgamma(n-xx-m+1)-lgamma(n)+lgamma(n-m)))
+      if (m == round(m)) {
+        xx <- x[(n-x)>=m]
+        out <- 1-sum(xx / n * exp(lgamma(n-xx+1)-lgamma(n-xx-m+1)-lgamma(n)+lgamma(n-m)))
+      } else {
+        cbym = rbind(c(floor(m), ceiling(m)), 
+                     sapply(c(floor(m), ceiling(m)), function(k) {
+                       xx <- x[(n-x)>=k]
+                       if (k == n) 1-f1/n*A else 1-sum(xx / n * exp(lgamma(n-xx+1)-lgamma(n-xx-k+1)-lgamma(n)+lgamma(n-k)))
+                     }))
+        out <- (ceiling(m) - m)*cbym[-1, cbym[1,] == floor(m)] + (m - floor(m))*cbym[-1, cbym[1,] == ceiling(m)] 
+      }
     }
     if(m == n) out <- 1-f1/n*A
     if(m > n) out <- 1-f1/n*A^(m-n+1)
     out
   }
+  
+  
   sapply(m, Sub)		
 }
 
@@ -258,6 +270,7 @@ Chat.Ind <- function(x, m){
 # @param t a integer vector of rarefaction/extrapolation sample size
 # @return a vector of estimated sample coverage function
 # @export
+
 Chat.Sam <- function(x, t){
   nT <- x[1]
   y <- x[-1]
@@ -267,17 +280,35 @@ Chat.Sam <- function(x, t){
   Q2 <- sum(y == 2)
   Q0.hat <- ifelse(Q2 == 0, (nT - 1) / nT * Q1 * (Q1 - 1) / 2, (nT - 1) / nT * Q1 ^ 2/ 2 / Q2)  #estimation of unseen species via Chao2
   A <- ifelse(Q1>0, nT*Q0.hat/(nT*Q0.hat+Q1), 1)
+  
+  
   Sub <- function(t){
-    if(t < nT) {
-      yy <- y[(nT-y)>=t]
-      out <- 1 - sum(yy / U * exp(lgamma(nT-yy+1)-lgamma(nT-yy-t+1)-lgamma(nT)+lgamma(nT-t)))     
-    }
-    #if(t < nT) out <- 1 - sum(y / U * exp(lchoose(nT - y, t) - lchoose(nT - 1, t)))
-    if(t == nT) out <- 1 - Q1 / U * A
-    if(t > nT) out <- 1 - Q1 / U * A^(t - nT + 1)
-    out
-  }
-  sapply(t, Sub)		
+        if(t < nT) {
+           if (t == round(t)) {
+             yy <- y[(nT-y)>=t]
+             out <- 1-sum(yy / U * exp(lgamma(nT-yy+1)-lgamma(nT-yy-t+1)-lgamma(nT)+lgamma(nT-t)))
+           } else {
+             cbym = rbind(c(floor(t), ceiling(t)),
+                          sapply(c(floor(t), ceiling(t)), function(k) {
+                            yy <- y[(nT-y)>=k]
+                            if (k == nT) 1-Q1/U*A else 1-sum(yy / U * exp(lgamma(nT-yy+1)-lgamma(nT-yy-k+1)-lgamma(nT)+lgamma(nT-k)))
+                          }))
+             out <- (ceiling(t) - t)*cbym[-1, cbym[1,] == floor(t)] + (t - floor(t))*cbym[-1, cbym[1,] == ceiling(t)]
+           }
+         }
+    # if (t < nT) {
+    #   yy <- y[(nT - y) >= t]
+    #   out <- 1 - sum(yy/U * exp(lgamma(nT - yy + 1) - lgamma(nT - 
+    #                                                            yy - t + 1) - lgamma(nT) + lgamma(nT - t)))
+    # }
+         if(t == nT) out <- 1-Q1/U*A
+         if(t > nT) out <- 1-Q1/U*A^(t-nT+1)
+         out
+       }
+  
+
+  
+   sapply(t, Sub)		
 }
 
 
