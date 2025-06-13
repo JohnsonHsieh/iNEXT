@@ -89,3 +89,5 @@ identify different assemblages.
 - Improved color palette generation in `ggiNEXT`. This update addresses the limitation of the fixed 8-color palette, enhancing clarity and user experience in data representation.
 - Update CITATION file in accordance with the CRAN policies.
 
+# iNEXT 3.0.2
+- Fix the coverage computation.
