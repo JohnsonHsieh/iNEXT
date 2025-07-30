@@ -3,6 +3,16 @@ Type: Package
 Title: Interpolation and Extrapolation for Species Diversity
 Version: 3.0.2
 Author: T. C. Hsieh, K. H. Ma and Anne Chao
+Authors@R: c(person(given = c("T.", "C."),
+          family = "Hsieh",
+          role = c("aut", "cre"),
+          email = "euler96@gmail.com"),
+      person(given = c("K.", "H."),
+          family = "Ma",
+          role = "aut"),
+      person(given = "Anne",
+          family = "Chao",
+          role = "aut"))
 Description: Provides simple functions to compute and plot two types 
     (sample-size- and coverage-based) rarefaction and extrapolation curves for species
     diversity (Hill numbers) based on individual-based abundance data or sampling-unit-
