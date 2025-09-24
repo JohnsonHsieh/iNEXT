@@ -142,12 +142,12 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assem
   z$col <- factor(z$col)
   data.sub <- zz[which(zz$Method=="Observed"),]
   
-  g <- ggplot(z, aes_string(x="x", y="y", colour="col")) + 
-    geom_point(aes_string(shape="shape"), size=5, data=data.sub)+
+  g <- ggplot(z, aes(x="x", y="y", colour="col")) + 
+    geom_point(aes(shape="shape"), size=5, data=data.sub)+
     scale_colour_manual(values=cbPalette)
   
   
-  g <- g + geom_line(aes_string(linetype="lty"), lwd=1.5) +
+  g <- g + geom_line(aes(linetype="lty"), lwd=1.5) +
     guides(linetype=guide_legend(title=NULL),
            colour=guide_legend(title=NULL), 
            fill=guide_legend(title=NULL), 
@@ -168,7 +168,7 @@ ggiNEXT.iNEXT <- function(x, type=1, se=TRUE, facet.var="None", color.var="Assem
   }
   
   if(se)
-    g <- g + geom_ribbon(aes_string(ymin="y.lwr", ymax="y.upr", fill="factor(col)", colour="NULL"), alpha=0.2)+
+    g <- g + geom_ribbon(aes(ymin="y.lwr", ymax="y.upr", fill="factor(col)", colour="NULL"), alpha=0.2)+
     scale_fill_manual(values=cbPalette)
   
   
