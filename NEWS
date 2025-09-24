@@ -91,3 +91,7 @@ identify different assemblages.
 
 # iNEXT 3.0.2
 - Fix the coverage computation.
+
+# iNEXT 3.0.3
+- Updated away from aes_string() usage, now breaks in ggplot2 v4
+- Updated manual documentation

@@ -1,7 +1,7 @@
 Package: iNEXT
 Type: Package
 Title: Interpolation and Extrapolation for Species Diversity
-Version: 3.0.2
+Version: 3.0.3
 Authors@R: c(person(given = c("T.", "C."),
           family = "Hsieh",
           role = "aut",
@@ -20,6 +20,7 @@ Description: Provides simple functions to compute and plot two types
     theory and methodologies, and Hsieh, Ma and Chao (2016, Methods in Ecology and Evolution)
     for an introduction of the R package.
 License: GPL (>= 3)
+Encoding: UTF-8
 URL: https://sites.google.com/view/chao-lab-website/software/inext
 Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
 Depends:
@@ -32,7 +33,7 @@ Imports:
     Rcpp
 BugReports: https://github.com/AnneChao/iNEXT/issues
 LazyLoad: yes
-RoxygenNote: 7.2.0
+RoxygenNote: 7.3.2
 Suggests: testthat,
     knitr,
     rmarkdown,
